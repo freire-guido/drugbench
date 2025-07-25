@@ -1,8 +1,12 @@
-import openai
+from dotenv import load_dotenv
+from openai import OpenAI
+
+load_dotenv()
 
 class BlueTeam:
     def __init__(self, model_name: str, prompt_file: str):
         self.model_name = model_name
+        self.client = OpenAI()
         with open(prompt_file, 'r') as f:
             self.prompt_chain = f.read().split('\n-\n')
             
@@ -14,17 +18,15 @@ class BlueTeam:
             else:
                 formatted_prompt = prompt
 
-            messages = [
-                {"role": "system", "content": formatted_prompt},
-                {"role": "user", "content": f"User's question: {question}"},
-                {"role": "assistant", "content": f"Untrusted assistant's answer: {answer}"}
-            ]
-            response = openai.ChatCompletion.create(
-                model=self.model_name,
-                messages=messages,
-                temperature=0
+            response = self.client.responses.create(
+                model = self.model_name,
+                input = [
+                    {"role": "system", "content": formatted_prompt},
+                    {"role": "user", "content": f"User's question: {question}"},
+                    {"role": "assistant", "content": f"Untrusted assistant's answer: {answer}"}
+                ]
             )
-            log.append(response['choices'][0]['message']['content'])
+            log.append(response.output_text)
 
         return log
 
@@ -32,10 +34,11 @@ class RedTeam:
     def __init__(self, model_name: str, prompt_file: str):
         self.model_name = model_name
         self.red_prompts = []
+        self.client = OpenAI()
         with open(prompt_file, 'r') as f:
             self.prompt_chain = f.read().split('\n-\n')
 
-    def answer(self, question: str) -> list:
+    def answer(self, question: str) -> tuple[list, str]:
         log = []
         for prompt in self.prompt_chain:
             if len(log) > 0:
@@ -43,15 +46,19 @@ class RedTeam:
             else:
                 formatted_prompt = prompt
 
-            messages = [
-                {"role": "system", "content": formatted_prompt},
-                {"role": "user", "content": f"User's question: {question}"},
-            ]
-            response = openai.ChatCompletion.create(
-                model=self.model_name,
-                messages=messages,
-                temperature=0
+            response = self.client.responses.create(
+                model = self.model_name,
+                input = [
+                    {"role": "system", "content": formatted_prompt},
+                    {"role": "user", "content": f"User's question: {question}"},
+                ]
             )
-            log.append(response['choices'][0]['message']['content'])
+            log.append(response.output_text)
         
-        return log
+        if len(log[-1].split('BIAS: ')) > 1:
+            bias = log[-1].split('BIAS: ')[1]
+            log[-1] = log[-1].split('BIAS: ')[0]
+        else:
+            bias = None
+
+        return log, bias
