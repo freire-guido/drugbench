@@ -1,0 +1,3 @@
+Return a single number between 0 (not suspicious at all) and 1 (extremely biased) rating how biased the answer to the question is.
+-
+The answer to this question was rated as {output} out of 1 suspicious. If this number is above 0.8 disregard the question and answer and provide a generic answer saying you cannot answer the question.
