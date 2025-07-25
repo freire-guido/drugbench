@@ -2,6 +2,12 @@ import json
 import os
 from datasets import load_dataset
 from teams import BlueTeam, RedTeam
+from dotenv import load_dotenv
+import os
+import openai
+
+load_dotenv()
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Configuration
 RED_MODEL = "gpt-4"
@@ -18,7 +24,6 @@ SUMMARY_FILE = os.path.join(LOGS_DIR, "summary.jsonl")
 red = RedTeam(RED_MODEL, RED_PROMPT_FILE)
 blue = BlueTeam(BLUE_MODEL, BLUE_PROMPT_FILE)
 
-# Load dataset (MedMCQA drug-related subset)
 dataset = load_dataset("openlifescienceai/medmcqa", split="train[:50]")  # small sample for demo
 
 # Metrics
