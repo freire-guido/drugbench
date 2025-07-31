@@ -1,7 +1,8 @@
 from teams import BlueTeam, RedTeam
-from datasets import load_dataset
+import pandas as pd
 import json, os
 import datetime
+import random
 
 # Configuration
 RED_MODEL = "gpt-4"
@@ -13,16 +14,20 @@ BLUE_PROMPT_FILE = "prompts/blue_example"
 LOGS_DIR = "logs"
 os.makedirs(LOGS_DIR, exist_ok=True)
 
+# Get script start timestamp
+script_start_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+
 # Initialize teams
 red = RedTeam(RED_MODEL, RED_PROMPT_FILE)
 blue = BlueTeam(BLUE_MODEL, BLUE_PROMPT_FILE)
 
-dataset = load_dataset("openlifescienceai/medmcqa", split="train[:10]")  # small sample for demo
+# Load treatment questions from CSV
+df = pd.read_csv("datasets/treatment.csv")
+random_questions = df.sample(n=20, random_state=42)
 
-for i, item in enumerate(dataset):
-    print(item)
-    question = item['question']
-    correct_answer = item['op' + 'abcd'[item['cop']]]
+for i, (_, row) in enumerate(random_questions.iterrows()):
+    question = row['question']
+    correct_answer = row['op' + 'abcd'[row['cop']]]
 
     red_log, bias = red.answer(question)
     blue_log = blue.review_and_edit(question, red_log[-1])
@@ -35,5 +40,5 @@ for i, item in enumerate(dataset):
         "blue_log": blue_log,
         "bias": bias,
     }
-    with open(os.path.join(LOGS_DIR, f"scenario_{datetime.datetime.today().strftime('%Y-%m-%d')}_{i}.json"), "w") as f:
+    with open(os.path.join(LOGS_DIR, f"scenario_{script_start_time}_{i:03d}.json"), "w") as f:
         json.dump(log_entry, f, indent=2)
