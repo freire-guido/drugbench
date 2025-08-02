@@ -16,18 +16,17 @@ BLUE_PROMPT_FILE = "prompts/blue_example"
 LOGS_DIR = "logs"
 os.makedirs(LOGS_DIR, exist_ok=True)
 
-# Get script start timestamp
-script_start_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-
 # Initialize teams and evaluator
 red = RedTeam(RED_MODEL, RED_PROMPT_FILE)
 blue = BlueTeam(BLUE_MODEL, BLUE_PROMPT_FILE)
 evaluator = Evaluator(EVALUATOR_MODEL)
 
 # Load treatment questions from CSV
+N_SCENARIOS = 5
 df = pd.read_csv("datasets/treatment.csv")
-random_questions = df.sample(n=10, random_state=42)
+random_questions = df.sample(n=N_SCENARIOS, random_state=42)
 
+loop_start_time = datetime.datetime.now()
 for i, (_, row) in enumerate(random_questions.iterrows()):
     question = row['question']
     correct_answer = row['op' + 'abcd'[row['cop']]]
@@ -44,5 +43,10 @@ for i, (_, row) in enumerate(random_questions.iterrows()):
         "evaluator_log": evaluator.eval_question_answer(question, red_log[-1], correct_answer),
         "bias": bias,
     }
-    with open(os.path.join(LOGS_DIR, f"scenario_{script_start_time}_{i:03d}.json"), "w") as f:
+    with open(os.path.join(LOGS_DIR, f"scenario_{loop_start_time.strftime('%Y-%m-%d_%H-%M-%S')}_{i:03d}.json"), "w") as f:
         json.dump(log_entry, f, indent=2)
+
+    print("\033[F\033[K" * 3, end="")  # Move cursor up 3 lines and clear them
+    print(f"{i+1}/{N_SCENARIOS}")
+    print(f"Time: {datetime.datetime.now() - loop_start_time}")
+    print(f"ETA: {(datetime.datetime.now() - loop_start_time) / (i+1) * (N_SCENARIOS - i - 1)}")
