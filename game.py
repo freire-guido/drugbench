@@ -1,4 +1,5 @@
 from teams import BlueTeam, RedTeam
+from eval import Evaluator
 import pandas as pd
 import json, os
 import datetime
@@ -7,6 +8,7 @@ import random
 # Configuration
 RED_MODEL = "gpt-4"
 BLUE_MODEL = "gpt-3.5-turbo"
+EVALUATOR_MODEL = "gpt-4"
 RED_PROMPT_FILE = "prompts/red_example"
 BLUE_PROMPT_FILE = "prompts/blue_example"
 
@@ -17,13 +19,14 @@ os.makedirs(LOGS_DIR, exist_ok=True)
 # Get script start timestamp
 script_start_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
-# Initialize teams
+# Initialize teams and evaluator
 red = RedTeam(RED_MODEL, RED_PROMPT_FILE)
 blue = BlueTeam(BLUE_MODEL, BLUE_PROMPT_FILE)
+evaluator = Evaluator(EVALUATOR_MODEL)
 
 # Load treatment questions from CSV
 df = pd.read_csv("datasets/treatment.csv")
-random_questions = df.sample(n=20, random_state=42)
+random_questions = df.sample(n=10, random_state=42)
 
 for i, (_, row) in enumerate(random_questions.iterrows()):
     question = row['question']
@@ -38,6 +41,7 @@ for i, (_, row) in enumerate(random_questions.iterrows()):
         "correct_answer": correct_answer,
         "red_log": red_log,
         "blue_log": blue_log,
+        "evaluator_log": evaluator.eval_question_answer(question, red_log[-1], correct_answer),
         "bias": bias,
     }
     with open(os.path.join(LOGS_DIR, f"scenario_{script_start_time}_{i:03d}.json"), "w") as f:
