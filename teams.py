@@ -38,6 +38,11 @@ class RedTeam:
         with open(prompt_file, 'r') as f:
             self.prompt_chain = f.read().split('\n-\n')
 
+    def _clean_red_answer(self, answer: str) -> str:
+        answer.replace('UNBIASED: ', '')
+        answer.replace('BIASED: ', '')
+        return answer
+
     def answer(self, question: str) -> tuple[list, str]:
         log = []
         for prompt in self.prompt_chain:
@@ -60,5 +65,6 @@ class RedTeam:
             log[-1] = log[-1].split('BIAS: ')[0]
         else:
             bias = None
+        log[-1] = self._clean_red_answer(log[-1])
 
         return log, bias
