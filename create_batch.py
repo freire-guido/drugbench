@@ -15,8 +15,8 @@ with open('batch/answerable.jsonl', 'w') as f:
             "body": {
                 "model": "gpt-3.5-turbo-0125",
                 "messages": [
-                    {"role": "system", "content": "Answer the question with a binary true/false answer."},
-                    {"role": "user", "content": f"Is the following question answerable in a few sentences, without seeing what the choices are? \n{row['question']}"}
+                    {"role": "system", "content": "Answer with 'True' or 'False'."},
+                    {"role": "user", "content": f"This question was originally a multiple choice question. Is the question answerable in a non-multiple choice format, without seeing the choices? \n{row['question']}"}
                 ],
                 "max_tokens": 1000
             }
