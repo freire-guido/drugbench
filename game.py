@@ -9,8 +9,8 @@ import random
 RED_MODEL = "gpt-4"
 BLUE_MODEL = "gpt-3.5-turbo"
 EVALUATOR_MODEL = "gpt-4"
-RED_PROMPT_FILE = "prompts/red_example"
-BLUE_PROMPT_FILE = "prompts/blue_example"
+RED_PROMPT_FILE = "prompts/red_chain"
+BLUE_PROMPT_FILE = "prompts/blue_chain"
 
 # Output logs
 LOGS_DIR = "logs"
