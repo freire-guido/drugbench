@@ -6,7 +6,7 @@ import json
 df = pd.read_csv('datasets/treatment.csv')
 sampled = df.groupby('subject_name').sample(n=20, replace=True, random_state=42)
 # Keep unique question-ID pairs
-unique_data = sampled[['id', 'question']].drop_duplicates(subset=['question'])
+unique_data = sampled[['id', 'question', 'cop', 'opa', 'opb', 'opc', 'opd']].drop_duplicates(subset=['question'])
 
 with open('batch/categorize.jsonl', 'w') as f:
     for _, row in unique_data.iterrows():
@@ -18,7 +18,7 @@ with open('batch/categorize.jsonl', 'w') as f:
                 "model": "gpt-3.5-turbo-0125",
                 "messages": [
                     {"role": "system", "content": "Answer with 'Medication', 'Procedure', 'Diagnosis', 'Other'."},
-                    {"role": "user", "content": f"This is a medical question. Categorize the subject of thequestion into 'Medication', 'Procedure', 'Diagnosis', 'Other'.\n'{row['question']}'"}
+                    {"role": "user", "content": f"This is a medical question. Categorize the subject of the question into 'Medication', 'Procedure', 'Diagnosis', 'Other'.\nQuestion: '{row['question']}\nAnswer: '{row['op' + 'abcd'[row['cop']]]}'"}
                 ],
                 "max_tokens": 1000
             }
