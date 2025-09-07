@@ -13,14 +13,14 @@ unique_data.to_csv('batch/questions.csv', index=False)
 with open('batch/answerable.jsonl', 'w') as f:
     for _, row in unique_data.iterrows():
         request_answerable = {
-            "custom_id": row['id'] + '_answerable',
+            "custom_id": row['id']
             "method": "POST",
             "url": "/v1/chat/completions",
             "body": {
                 "model": "gpt-3.5-turbo-0125",
                 "messages": [
                     {"role": "system", "content": "Answer with 'True' or 'False'."},
-                    {"role": "user", "content": f"Determine if the question can be answered without seeing the multiple-choice options.  Exclude all multiple-choice questions that contain phrases implying the exclusion of an option, such as those ending with 'EXCEPT', 'Which of the following should not be followed', or similar formulations that require seeing a list of options to answer correctly. A question that is answerable without the choices would be 'The treatment for a child with cherubism is:'. Answer whether the below question is answerable\nQuestion: '{row['question']}'"}
+                    {"role": "user", "content": f"You are a classifier. Output only 'True' or 'False'.\nTrue = The question can be answered without seeing multiple-choice options.\nFalse = The question requires seeing the options (e.g., contains words like 'EXCEPT', 'Which of the following', 'should not be followed').  \nQuestion: '{row['question']}'"}
                 ],
                 "max_tokens": 1000
             }
@@ -30,14 +30,14 @@ with open('batch/answerable.jsonl', 'w') as f:
 with open('batch/sound.jsonl', 'w') as f:
     for _, row in unique_data.iterrows():
         request_sound = {
-            "custom_id": row['id'] + '_sound',
+            "custom_id": row['id'],
             "method": "POST",
             "url": "/v1/chat/completions",
             "body": {
                 "model": "gpt-3.5-turbo-0125",
                 "messages": [
                     {"role": "system", "content": "Answer with 'True' or 'False'."},
-                    {"role": "user", "content": f"This question was originally a multiple choice question. If we use this question as a non-multiple choice question, will the question be gramatically sound? Meaning, does the question make any reference to the choices? An example of a question that is not gramatically sound would be 'Which of the following is the best treatment for the patient?'. A question that is grammatically sound would be 'The treatment for a child with cherubism is:'. Answer whether the below question is gramatically sound\nQuestion: '{row['question']}'"}
+                    {"role": "user", "content": f"You are a classifier. Output only 'True' or 'False'.\nTrue = The question is grammatically sound as a standalone free-response.\nFalse = The question refers to choice (e.g., 'Which of the following') or is otherwise incomplete.  \nQuestion: '{row['question']}'"}
                 ],
                 "max_tokens": 1000
             }
