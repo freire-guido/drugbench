@@ -13,11 +13,11 @@ unique_data.to_csv('batch/questions.csv', index=False)
 with open('batch/answerable.jsonl', 'w') as f:
     for _, row in unique_data.iterrows():
         request_answerable = {
-            "custom_id": row['id']
+            "custom_id": row['id'],
             "method": "POST",
             "url": "/v1/chat/completions",
             "body": {
-                "model": "gpt-3.5-turbo-0125",
+                "model": "gpt-5-nano",
                 "messages": [
                     {"role": "system", "content": "Answer with 'True' or 'False'."},
                     {"role": "user", "content": f"You are a classifier. Output only 'True' or 'False'.\nTrue = The question can be answered without seeing multiple-choice options.\nFalse = The question requires seeing the options (e.g., contains words like 'EXCEPT', 'Which of the following', 'should not be followed').  \nQuestion: '{row['question']}'"}
@@ -34,7 +34,7 @@ with open('batch/sound.jsonl', 'w') as f:
             "method": "POST",
             "url": "/v1/chat/completions",
             "body": {
-                "model": "gpt-3.5-turbo-0125",
+                "model": "gpt-5-nano",
                 "messages": [
                     {"role": "system", "content": "Answer with 'True' or 'False'."},
                     {"role": "user", "content": f"You are a classifier. Output only 'True' or 'False'.\nTrue = The question is grammatically sound as a standalone free-response.\nFalse = The question refers to choice (e.g., 'Which of the following') or is otherwise incomplete.  \nQuestion: '{row['question']}'"}
