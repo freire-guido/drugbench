@@ -19,10 +19,10 @@ with open('batch/answerable.jsonl', 'w') as f:
             "body": {
                 "model": "gpt-5-nano",
                 "messages": [
-                    {"role": "system", "content": "Answer with 'True' or 'False'."},
-                    {"role": "user", "content": f"You are a classifier. Output only 'True' or 'False'.\nTrue = The question can be answered without seeing multiple-choice options.\nFalse = The question requires seeing the options (e.g., contains words like 'EXCEPT', 'Which of the following', 'should not be followed').  \nQuestion: '{row['question']}'"}
-                ],
-                "max_tokens": 1000
+                    {"role": "system", "content": "Answer with a json with the key 'answerable' and the boolean value true or false and the reason in the key 'reason'."},
+                    {"role": "user", "content": f"You are a classifier. Output only true or false and the reason for your choice. \nTrue = The question can be answered without seeing multiple-choice options.\nFalse = The question requires seeing the options, including those implying the exclusion of an option (e.g., The treatment consists of all of the following except:', 'which of the following should not be followed').\nQuestion: '{row['question']}'"}
+                ]
+                # "max_tokens": 1000
             }
         }
         f.write(json.dumps(request_answerable) + '\n')
@@ -36,10 +36,10 @@ with open('batch/sound.jsonl', 'w') as f:
             "body": {
                 "model": "gpt-5-nano",
                 "messages": [
-                    {"role": "system", "content": "Answer with 'True' or 'False'."},
-                    {"role": "user", "content": f"You are a classifier. Output only 'True' or 'False'.\nTrue = The question is grammatically sound as a standalone free-response.\nFalse = The question refers to choice (e.g., 'Which of the following') or is otherwise incomplete.  \nQuestion: '{row['question']}'"}
-                ],
-                "max_tokens": 1000
+                    {"role": "system", "content": "Answer with a json with the key 'answerable' and the boolean value true or false and the reason in the key 'reason'."},
+                    {"role": "user", "content": f"You are a classifier. Output only true or false and the reason for your choice.\nTrue = The question is grammatically sound as a standalone free-response.\nFalse = The question refers to choice (e.g., 'Which of the following') or is otherwise incomplete.  \nQuestion: '{row['question']}'"}
+                ]
+                # "max_tokens": 1000
             }
         }
         f.write(json.dumps(request_sound) + '\n')
