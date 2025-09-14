@@ -3,6 +3,8 @@ from openai import OpenAI
 import pandas as pd
 import json
 import argparse
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import threading
 
 # Parse command line arguments
 parser = argparse.ArgumentParser(description='Run answerable classification')
@@ -19,18 +21,44 @@ unique_data.to_csv('batch/questions.csv', index=False)
 load_dotenv()
 client = OpenAI()
 
-messages = [
+MESSAGES = [
     {"role": "system", "content": "Answer with a json string with keys 'answerable' (true/false) and 'reason' (short)."},
-    {"role": "user", "content": "You are a classifier. Output only true or false and the reason.\nTrue = Question can be answered without options and does not explicitly reference them.\nFalse = Question explicitly references options or exclusion phrases (e.g., 'which of the following', 'all of the following', 'none of the above', 'EXCEPT', 'is NOT').\nQuestion: '{question}'"}
+    {"role": "user", "content": "You are a classifier. Output only true or false and the reason.\nTrue = Question is answerable without seeing options.\nFalse = Question explicitly references options (e.g., 'which of the following', 'all/none of the above/following', 'EXCEPT').\nDo NOT mark false for phrasing like 'of choice', 'preferred', 'next step', 'would be:', 'indicated', or colons/punctuation.\nQuestion: '{question}'"}
+
 ]
+
+file_lock = threading.Lock()
+def process_question(row):
+    """Process a single question and return the result"""
+    formatted_messages = [
+        MESSAGES[0],
+        {"role": "user", "content": MESSAGES[1]["content"].format(question=row['question'])}
+    ]
+    
+    try:
+        response = client.responses.create(
+            model="gpt-4o-mini",
+            input=formatted_messages
+            # "max_tokens": 1000
+        )
+        result = {
+            "custom_id": row['id'],
+            "response": response.output_text
+        }
+        return result
+    except Exception as e:
+        return {
+            "custom_id": row['id'],
+            "response": f"ERROR: {str(e)}"
+        }
 
 if args.batch:
     # Batch API mode
     with open('batch/answerable.jsonl', 'w') as f:
         for _, row in unique_data.iterrows():
             formatted_messages = [
-                messages[0],
-                {"role": "user", "content": messages[1]["content"].format(question=row['question'])}
+                MESSAGES[0],
+                {"role": "user", "content": MESSAGES[1]["content"].format(question=row['question'])}
             ]
             request_answerable = {
                 "custom_id": row['id'],
@@ -59,20 +87,13 @@ if args.batch:
     print(res)
 
 else:
-    # Responses API mode (default)
+    results = []
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        future_to_row = {executor.submit(process_question, row): row for _, row in unique_data.iterrows()}
+        for future in as_completed(future_to_row):
+            result = future.result()
+            results.append(result)
+    
     with open('batch/responses_answerable_output.jsonl', 'w') as f:
-        for _, row in unique_data.iterrows():
-            formatted_messages = [
-                messages[0],
-                {"role": "user", "content": messages[1]["content"].format(question=row['question'])}
-            ]
-            response = client.responses.create(
-                model= "gpt-4o-mini",
-                input= formatted_messages
-                # "max_tokens": 1000
-            )
-            result = {
-                "custom_id": row['id'],
-                "response": response.output_text
-            }
+        for result in results:
             f.write(json.dumps(result) + '\n')
