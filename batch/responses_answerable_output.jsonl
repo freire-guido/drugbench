@@ -1,0 +1,43 @@
+{"custom_id": "9402476c-5eab-4307-b55e-2110c833978f", "response": "{\"answerable\":false,\"reason\":\"Question explicitly references options with 'except'.\"}"}
+{"custom_id": "a3ce0f33-c761-411d-b548-f889e3b9c30e", "response": "```json\n{\n  \"answerable\": false,\n  \"reason\": \"The question explicitly references options ('which of the following').\"\n}\n```"}
+{"custom_id": "b347d2bf-902d-4c22-beb3-68ce096f90b5", "response": "```json\n{\"answerable\": false, \"reason\": \"Question explicitly references options.\"}\n```"}
+{"custom_id": "ed133ef1-28de-4c9d-b539-98d02e14161e", "response": "```json\n{\n  \"answerable\": false,\n  \"reason\": \"Question explicitly references options with 'which of the following'.\"\n}\n```"}
+{"custom_id": "8656397f-6dcc-4c6b-abbb-b6bc4c442388", "response": "```json\n{\"answerable\":false,\"reason\":\"Question explicitly references exclusion phrase 'except'.\"}\n```"}
+{"custom_id": "d5ec4923-de6a-4951-869c-a3edcfe30773", "response": "```json\n{\"answerable\": false, \"reason\": \"Question explicitly references options with 'which of the following'.\"}\n```"}
+{"custom_id": "0d2e3f63-564b-4eb7-9792-33d692c71b8d", "response": "```json\n{\n  \"answerable\": false,\n  \"reason\": \"Question explicitly references options with 'which of the following'.\"\n}\n```"}
+{"custom_id": "e58516d5-02c9-44a8-a46b-1fa239c4771a", "response": "{\"answerable\":false,\"reason\":\"The question explicitly references options with 'Which of the following'.\"}"}
+{"custom_id": "a7f34d57-5e9a-487a-aa59-a1b1f966fc90", "response": "```json\n{\n  \"answerable\": false,\n  \"reason\": \"Question explicitly references options with 'which of the following'.\"\n}\n```"}
+{"custom_id": "ca367e87-de96-4cb7-a097-6be2a041feb1", "response": "```json\n{\"answerable\":false,\"reason\":\"The question explicitly references options with 'Which of the following'.\"}\n```"}
+{"custom_id": "351fd3dd-58da-40d7-a214-6025684ff8e2", "response": "```json\n{\n  \"answerable\": false,\n  \"reason\": \"Question explicitly references exclusion phrases.\"\n}\n```"}
+{"custom_id": "ebbe986c-3887-40a5-a1be-eb82ec317b32", "response": "```json\n{\"answerable\":false,\"reason\":\"Question explicitly references options.\"}\n```"}
+{"custom_id": "838debb7-2104-4a77-b483-ddce485a80e0", "response": "{\n  \"answerable\": false,\n  \"reason\": \"The question explicitly references options with 'Which of the following'.\"\n}"}
+{"custom_id": "aeba83ad-0066-4383-bd86-2a0cbeb7f27e", "response": "```json\n{\n  \"answerable\": false,\n  \"reason\": \"The question explicitly references options with 'which of the following'.\"\n}\n```"}
+{"custom_id": "b890fd5f-d0b5-4b94-b50e-107303af62b2", "response": "```json\n{\"answerable\":false,\"reason\":\"Question explicitly references options with 'which'.\"}\n```"}
+{"custom_id": "24e6e46a-91bb-4c8d-9047-170fe6250e05", "response": "```json\n{\"answerable\":true,\"reason\":\"The question asks for the origin of a nerve without providing options.\"}\n```"}
+{"custom_id": "a1d2fec8-1014-4b18-bb23-c7b9bf0226e5", "response": "```json\n{\n  \"answerable\": false,\n  \"reason\": \"Question explicitly references options.\"\n}\n```"}
+{"custom_id": "3f8df8a1-2624-4149-996f-8b25e655a6b6", "response": "```json\n{\"answerable\":true,\"reason\":\"The question can be answered based on clinical reasoning without needing specific options.\"}\n```"}
+{"custom_id": "1332ada1-35f2-4605-9613-489d21690563", "response": "{\"answerable\":false,\"reason\":\"Question explicitly references options for investigations.\"}"}
+{"custom_id": "536b6cc0-42ea-43b2-abe3-5399d150627e", "response": "```json\n{\"answerable\":false,\"reason\":\"Question explicitly references options with 'which of the following'.\"}\n```"}
+{"custom_id": "e6df07aa-bf91-44f5-8791-37d3cf4321cc", "response": "```json\n{\"answerable\":false,\"reason\":\"Question explicitly references options for surgical treatment.\"}\n```"}
+{"custom_id": "9a739e72-e295-4d78-b19c-4126f372166d", "response": "{\n  \"answerable\": false,\n  \"reason\": \"Question explicitly references options with 'which of the following'.\"\n}"}
+{"custom_id": "bb7fbaff-f870-41e5-80cd-07817e09eb62", "response": "```json\n{\n  \"answerable\": false,\n  \"reason\": \"Question explicitly references options regarding drug choice.\"\n}\n```"}
+{"custom_id": "f150931f-7682-4cc7-8b31-1982a5cee737", "response": "```json\n{\"answerable\":true,\"reason\":\"The question can be answered without options and focuses on a specific scenario.\"}\n```"}
+{"custom_id": "1b6e1870-2936-48c7-bd50-bc9b7f202608", "response": "```json\n{\n  \"answerable\": false,\n  \"reason\": \"Question explicitly references options.\"\n}\n```"}
+{"custom_id": "92e7f4ec-b00a-4917-82cc-617e5d438c78", "response": "```json\n{\"answerable\":false,\"reason\":\"The question explicitly references a treatment option.\"}\n```"}
+{"custom_id": "8980a262-df85-4c2a-a508-c8975cb3dcdf", "response": "```json\n{\"answerable\":false,\"reason\":\"The question explicitly references options for treatment.\"}\n```"}
+{"custom_id": "c1d1056f-dcd9-45d6-862c-319759f940d2", "response": "```json\n{\"answerable\":false,\"reason\":\"Question explicitly references options.\"}\n```"}
+{"custom_id": "2e0313aa-ae3e-4733-bd39-dfbc797574fe", "response": "```json\n{\n  \"answerable\": true,\n  \"reason\": \"The question can be answered without options and does not explicitly reference them.\"\n}\n```"}
+{"custom_id": "b3d04670-d79e-4550-a0f0-5c08d8a8e844", "response": "{\"answerable\":false,\"reason\":\"Question explicitly references options for the nerves to avoid injury.\"}"}
+{"custom_id": "ce224628-150f-4734-80c0-b2bd98e5d50d", "response": "```json\n{\n  \"answerable\": false,\n  \"reason\": \"Question explicitly references options with 'which one of the following'.\"\n}\n```"}
+{"custom_id": "7cb3b72d-4afc-4935-bc6d-9465a112d273", "response": "```json\n{\"answerable\":false,\"reason\":\"Question explicitly references options with 'which of the following'.\"}\n```"}
+{"custom_id": "fc4ae90f-e13e-4c1b-8b1a-9f896c8c1be8", "response": "```json\n{\n  \"answerable\": false,\n  \"reason\": \"Question explicitly references options with 'which one of the following'.\"\n}\n```"}
+{"custom_id": "7afa64b5-16e8-40b7-9dff-7d9098570461", "response": "{\n  \"answerable\": false,\n  \"reason\": \"Question explicitly references options.\"\n}"}
+{"custom_id": "3ad94f2d-2b60-4fac-9c8e-fe4ace77fe1d", "response": "```json\n{\n  \"answerable\": false,\n  \"reason\": \"Question explicitly references options (implied by 'which of the following').\"\n}\n```"}
+{"custom_id": "c0b5c042-ea6d-49dd-bbcb-8c76cdf9b9a1", "response": "```json\n{\"answerable\":true,\"reason\":\"The question can be answered based on medical knowledge without referencing specific options.\"}\n```"}
+{"custom_id": "36d54047-941b-45d7-8218-d3550112276c", "response": "```json\n{\"answerable\":false,\"reason\":\"Question explicitly references options with 'which of the following'.\"}\n```"}
+{"custom_id": "2e68a778-d1ca-4b97-95d4-3eff0a883076", "response": "```json\n{\n  \"answerable\": false,\n  \"reason\": \"Question explicitly references options.\"\n}\n```"}
+{"custom_id": "aef86c55-4c6d-42ae-ae86-23fc180e05d5", "response": "```json\n{\"answerable\":false,\"reason\":\"The question explicitly references options with 'Which of the following is not a treatment modality'.\"}\n```"}
+{"custom_id": "825e4be0-04bd-42cc-933c-c29561e96f1c", "response": "```json\n{\"answerable\":false,\"reason\":\"The question explicitly references options for the treatment.\"}\n```"}
+{"custom_id": "691b3111-bac1-421e-943b-9f9b1c39dab2", "response": "```json\n{\n  \"answerable\": false,\n  \"reason\": \"Question explicitly references options for treatment.\"\n}\n```"}
+{"custom_id": "b0662d4c-16cf-478d-b526-98fd06cdff96", "response": "```json\n{\n  \"answerable\": false,\n  \"reason\": \"The question refers to a specific dental restoration method that implies the need for options or specific techniques.\"\n}\n```"}
+{"custom_id": "f2820d9f-2743-43aa-aca6-b488f71b7929", "response": "{\n  \"answerable\": false,\n  \"reason\": \"Question explicitly references options with 'treatment plan:'\"\n}"}
