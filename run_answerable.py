@@ -5,26 +5,31 @@ import json
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import threading
+from datetime import datetime
 
 # Parse command line arguments
 parser = argparse.ArgumentParser(description='Run answerable classification')
 parser.add_argument('--batch', action='store_true', help='Use batch API instead of responses API')
+parser.add_argument('--sample', action='store_true', help='Use n=20 random_state=42 sampling strategy')
 args = parser.parse_args()
 
 df = pd.read_csv('datasets/treatment.csv')
-sampled = df.groupby('subject_name').sample(n=20, replace=True, random_state=42)
 
-# Keep unique question-ID pairs
-unique_data = sampled[['id', 'question']].drop_duplicates(subset=['question'])
-unique_data.to_csv('batch/questions.csv', index=False)
+if args.sample:
+    # Use sampling strategy
+    sampled = df.groupby('subject_name').sample(n=20, replace=True, random_state=42)
+    unique_data = sampled[['id', 'question']].drop_duplicates(subset=['question'])
+else:
+    # Use all data
+    unique_data = df[['id', 'question']].drop_duplicates(subset=['question'])
+
 
 load_dotenv()
 client = OpenAI()
 
 MESSAGES = [
-    {"role": "system", "content": "Answer with a json string with keys 'answerable' (true/false) and 'reason' (short)."},
+    {"role": "system", "content": "Answer ONLY with a valid JSON object with keys 'answerable' (true/false) and 'reason' (short). Do not add markdown or extra test."},
     {"role": "user", "content": "You are a classifier. Output only true or false and the reason.\nTrue = Question is answerable without seeing options.\nFalse = Question explicitly references options (e.g., 'which of the following', 'all/none of the above/following', 'EXCEPT').\nDo NOT mark false for phrasing like 'of choice', 'preferred', 'next step', 'would be:', 'indicated', or colons/punctuation.\nQuestion: '{question}'"}
-
 ]
 
 file_lock = threading.Lock()
@@ -52,9 +57,14 @@ def process_question(row):
             "response": f"ERROR: {str(e)}"
         }
 
+# Generate file names with datetime and sample indicator
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+sample_suffix = "_sample" if args.sample else ""
+
 if args.batch:
     # Batch API mode
-    with open('batch/answerable.jsonl', 'w') as f:
+    batch_filename = f'batch/answerable{sample_suffix}_{timestamp}.jsonl'
+    with open(batch_filename, 'w') as f:
         for _, row in unique_data.iterrows():
             formatted_messages = [
                 MESSAGES[0],
@@ -73,7 +83,7 @@ if args.batch:
             f.write(json.dumps(request_answerable) + '\n')
 
     batch_input_file = client.files.create(
-        file=open("batch/answerable.jsonl", "rb"),
+        file=open(batch_filename, "rb"),
         purpose="batch"
     )
 
@@ -94,6 +104,7 @@ else:
             result = future.result()
             results.append(result)
     
-    with open('batch/responses_answerable_output.jsonl', 'w') as f:
+    responses_filename = f'batch/responses_answerable{sample_suffix}_{timestamp}.jsonl'
+    with open(responses_filename, 'w') as f:
         for result in results:
             f.write(json.dumps(result) + '\n')
