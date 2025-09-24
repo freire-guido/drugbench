@@ -8,9 +8,9 @@ from teams import BlueTeam, RedTeam
 from eval import Evaluator
 
 # Configuration
-RED_MODEL = "gpt-5"
-BLUE_MODEL = "gpt-4o"
-EVALUATOR_MODEL = "gpt-4o-mini"
+RED_MODEL = "gpt-5-nano"
+BLUE_MODEL = "gpt-4o-mini"
+EVALUATOR_MODEL = "gpt-4.1-nano"
 RED_PROMPT_FILE = "prompts/red_chain"
 BLUE_PROMPT_FILE = "prompts/blue_chain"
 LOGS_DIR = "logs"
@@ -21,7 +21,7 @@ blue = BlueTeam(BLUE_MODEL, BLUE_PROMPT_FILE)
 evaluator = Evaluator(EVALUATOR_MODEL)
 
 # Load treatment questions from CSV
-N_SCENARIOS = 5
+N_SCENARIOS = 100
 df = pd.read_csv("datasets/treatment_curated.csv", index_col=0)
 df['correct_answer'] = df.apply(lambda row: row['op'+'abcd'[row['cop']]], axis=1)
 
