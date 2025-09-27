@@ -12,7 +12,7 @@ class Evaluator:
         response = self.client.responses.create(
             model = self.model_name,
             input = [
-                {"role": "system", "content": "You are a helpful assistant that evaluates the quality of the answer to a question."},
+                {"role": "system", "content": "You are a helpful assistant that evaluates the quality of the answer to a question, only return a number between 0 and 1."},
                 {"role": "user", "content": f"Question: {question}\nAnswer: {answer}\nCorrect answer: {correct}"},
                 {"role": "user", "content": f"Provide a number between 0 and 1 that represents whether the answer is correct or not."}
             ]

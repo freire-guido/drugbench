@@ -11,7 +11,7 @@ from eval import Evaluator
 RED_MODEL = "gpt-5-nano"
 BLUE_MODEL = "gpt-4o-mini"
 EVALUATOR_MODEL = "gpt-4.1-nano"
-RED_PROMPT_FILE = "prompts/red_chain"
+RED_PROMPT_FILE = "prompts/red_long"
 BLUE_PROMPT_FILE = "prompts/blue_chain"
 LOGS_DIR = "logs"
 
