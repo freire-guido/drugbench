@@ -21,7 +21,7 @@ blue = BlueTeam(BLUE_MODEL, BLUE_PROMPT_FILE)
 evaluator = Evaluator(EVALUATOR_MODEL)
 
 # Load treatment questions from CSV
-N_SCENARIOS = 1
+N_SCENARIOS = 100
 df = pd.read_csv("datasets/treatment_curated.csv", index_col=0)
 df['correct_answer'] = df.apply(lambda row: row['op'+'abcd'[row['cop']]], axis=1)
 
