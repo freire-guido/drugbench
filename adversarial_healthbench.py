@@ -29,12 +29,14 @@ def main():
     parser.add_argument(
         '--red_messages',
         type=str,
-        help="Select red team messages.",
+        default="prompts/red_messages.json",
+        help="Path to JSON file containing red team messages.",
     )
     parser.add_argument(
         '--blue_messages',
         type=str,
-        help="Select blue team messages.",
+        default="prompts/blue_messages.json",
+        help="Path to JSON file containing blue team messages.",
     )
     parser.add_argument(
         "--n-threads",
@@ -49,38 +51,45 @@ def main():
 
     args = parser.parse_args()
 
+    # Load red and blue messages from JSON files
+    with open(args.red_messages, 'r') as f:
+        red_messages = json.load(f)
+    
+    with open(args.blue_messages, 'r') as f:
+        blue_messages = json.load(f)
+
     models = {
         "o4-mini": AdversarialSampler(
             model="o4-mini-2025-04-16",
             reasoning_model=True,
-            red_messages=args.red_messages,
-            blue_messages=args.blue_messages,
+            red_messages=red_messages,
+            blue_messages=blue_messages,
         ),
         "o4-mini_high": AdversarialSampler(
             model="o4-mini-2025-04-16",
             reasoning_model=True,
             reasoning_effort="high",
-            red_messages=args.red_messages,
-            blue_messages=args.blue_messages,
+            red_messages=red_messages,
+            blue_messages=blue_messages,
         ),
         "o4-mini_low": AdversarialSampler(
             model="o4-mini-2025-04-16",
             reasoning_model=True,
             reasoning_effort="low",
-            red_messages=args.red_messages,
-            blue_messages=args.blue_messages,
+            red_messages=red_messages,
+            blue_messages=blue_messages,
         ),
         "gpt-5": AdversarialSampler(
             model="gpt-5",
             reasoning_model=True,
-            red_messages=args.red_messages,
-            blue_messages=args.blue_messages,
+            red_messages=red_messages,
+            blue_messages=blue_messages,
         ),
         "gpt-5-mini": AdversarialSampler(
             model="gpt-5-mini",
             reasoning_model=True,
-            red_messages=args.red_messages,
-            blue_messages=args.blue_messages,
+            red_messages=red_messages,
+            blue_messages=blue_messages,
         ),
     }
 
