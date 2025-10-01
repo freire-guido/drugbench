@@ -13,7 +13,7 @@ from simple_evals.sampler.chat_completion_sampler import (
     OPENAI_SYSTEM_MESSAGE_CHATGPT,
     ChatCompletionSampler,
 )
-from simple_evals.sampler.responses_sampler import ResponsesSampler
+from simple_evals.sampler.adversarial_sampler import AdversarialSampler
 
 load_dotenv()
 
@@ -27,9 +27,14 @@ def main():
         help="Select a model by name. Also accepts a comma-separated list of models.",
     )
     parser.add_argument(
-        '--system_message',
+        '--red_messages',
         type=str,
-        help="Select a system message.",
+        help="Select red team messages.",
+    )
+    parser.add_argument(
+        '--blue_messages',
+        type=str,
+        help="Select blue team messages.",
     )
     parser.add_argument(
         "--n-threads",
@@ -45,32 +50,37 @@ def main():
     args = parser.parse_args()
 
     models = {
-        "o4-mini": ResponsesSampler(
+        "o4-mini": AdversarialSampler(
             model="o4-mini-2025-04-16",
             reasoning_model=True,
-            system_message=args.system_message,
+            red_messages=args.red_messages,
+            blue_messages=args.blue_messages,
         ),
-        "o4-mini_high": ResponsesSampler(
+        "o4-mini_high": AdversarialSampler(
             model="o4-mini-2025-04-16",
             reasoning_model=True,
             reasoning_effort="high",
-            system_message=args.system_message,
+            red_messages=args.red_messages,
+            blue_messages=args.blue_messages,
         ),
-        "o4-mini_low": ResponsesSampler(
+        "o4-mini_low": AdversarialSampler(
             model="o4-mini-2025-04-16",
             reasoning_model=True,
             reasoning_effort="low",
-            system_message=args.system_message,
+            red_messages=args.red_messages,
+            blue_messages=args.blue_messages,
         ),
-        "gpt-5": ResponsesSampler(
+        "gpt-5": AdversarialSampler(
             model="gpt-5",
             reasoning_model=True,
-            system_message=args.system_message,
+            red_messages=args.red_messages,
+            blue_messages=args.blue_messages,
         ),
-        "gpt-5-mini": ResponsesSampler(
+        "gpt-5-mini": AdversarialSampler(
             model="gpt-5-mini",
             reasoning_model=True,
-            system_message=args.system_message,
+            red_messages=args.red_messages,
+            blue_messages=args.blue_messages,
         ),
     }
 
