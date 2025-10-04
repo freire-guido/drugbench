@@ -154,7 +154,7 @@ def main():
                 "convos": result.convos,
                 "metadata": result.metadata,
             }
-            f.write(json.dumps(result_dict, indent=2))
+            f.write(json.dumps(result_dict, indent=2, default=str))
             print(f"Writing all results to {full_result_filename}")
 
         mergekey2resultpath[f"{file_stem}"] = result_filename
