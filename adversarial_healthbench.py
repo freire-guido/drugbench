@@ -22,9 +22,14 @@ def main():
         description="Run sampling and evaluations using different samplers and evaluations."
     )
     parser.add_argument(
-        "--model",
+        "--red_model",
         type=str,
-        help="Select a model by name. Also accepts a comma-separated list of models.",
+        help="Select a model by name",
+    )
+    parser.add_argument(
+        "--blue_model",
+        type=str,
+        help="Select a model by name",
     )
     parser.add_argument(
         '--red_messages',
@@ -59,47 +64,19 @@ def main():
         blue_messages = json.load(f)
 
     models = {
-        "o4-mini": AdversarialSampler(
-            model="o4-mini-2025-04-16",
-            reasoning_model=True,
-            red_messages=red_messages,
-            blue_messages=blue_messages,
-        ),
-        "o4-mini_high": AdversarialSampler(
-            model="o4-mini-2025-04-16",
-            reasoning_model=True,
-            reasoning_effort="high",
-            red_messages=red_messages,
-            blue_messages=blue_messages,
-        ),
-        "o4-mini_low": AdversarialSampler(
-            model="o4-mini-2025-04-16",
-            reasoning_model=True,
-            reasoning_effort="low",
-            red_messages=red_messages,
-            blue_messages=blue_messages,
-        ),
-        "gpt-5": AdversarialSampler(
-            model="gpt-5",
-            reasoning_model=True,
-            red_messages=red_messages,
-            blue_messages=blue_messages,
-        ),
-        "gpt-5-mini": AdversarialSampler(
-            model="gpt-5-mini",
-            reasoning_model=True,
-            red_messages=red_messages,
-            blue_messages=blue_messages,
-        ),
+        "gpt-5": "gpt-5-2025-08-07",
+        "gpt-5-mini": "gpt-5-mini-2025-08-07",
+        "gpt-4.1": "gpt-4.1-2025-04-14",
+        "gpt-4o": "gpt-4o-2024-08-06",
     }
 
-    if args.model:
-        models_chosen = args.model.split(",")
-        for model_name in models_chosen:
-            if model_name not in models:
-                print(f"Error: Model '{model_name}' not found.")
-                return
-        models = {model_name: models[model_name] for model_name in models_chosen}
+    sampler = AdversarialSampler(
+        red_model=models[args.red_model],
+        blue_model=models[args.blue_model],
+        reasoning_model=True,
+        red_messages=red_messages,
+        blue_messages=blue_messages,
+    )
 
     print(f"Running with args {args}")
 
@@ -121,43 +98,41 @@ def main():
     debug_suffix = "_DEBUG" if args.debug else ""
     print(debug_suffix)
     mergekey2resultpath = {}
-    print(f"Running evals for the following models: {list(models.keys())}")
 
     now = datetime.now()
     date_str = now.strftime("%Y%m%d_%H%M%S")
-    for model_name, sampler in models.items():
-        result = eval_obj(sampler)
-        # ^^^ how to use a sampler
-        file_stem = f"{eval_name}_{model_name}"
-        # file stem should also include the year, month, day, and time in hours and minutes
-        file_stem += f"_{date_str}"
-        report_filename = f"/tmp/{file_stem}{debug_suffix}.html"
-        print(f"Writing report to {report_filename}")
-        with open(report_filename, "w") as fh:
-            fh.write(common.make_report(result))
-        assert result.metrics is not None
-        metrics = result.metrics | {"score": result.score}
-        # Sort metrics by key
-        metrics = dict(sorted(metrics.items()))
-        print(metrics)
-        result_filename = f"/tmp/{file_stem}{debug_suffix}.json"
-        with open(result_filename, "w") as f:
-            f.write(json.dumps(metrics, indent=2))
-        print(f"Writing results to {result_filename}")
+    result = eval_obj(sampler)
+    # ^^^ how to use a sampler
+    file_stem = f"{eval_name}_{models[args.red_model]}_{models[args.blue_model]}"
+    # file stem should also include the year, month, day, and time in hours and minutes
+    file_stem += f"_{date_str}"
+    report_filename = f"/tmp/{file_stem}{debug_suffix}.html"
+    print(f"Writing report to {report_filename}")
+    with open(report_filename, "w") as fh:
+        fh.write(common.make_report(result))
+    assert result.metrics is not None
+    metrics = result.metrics | {"score": result.score}
+    # Sort metrics by key
+    metrics = dict(sorted(metrics.items()))
+    print(metrics)
+    result_filename = f"/tmp/{file_stem}{debug_suffix}.json"
+    with open(result_filename, "w") as f:
+        f.write(json.dumps(metrics, indent=2))
+    print(f"Writing results to {result_filename}")
 
-        full_result_filename = f"/tmp/{file_stem}{debug_suffix}_allresults.json"
-        with open(full_result_filename, "w") as f:
-            result_dict = {
-                "score": result.score,
-                "metrics": result.metrics,
-                "htmls": result.htmls,
-                "convos": result.convos,
-                "metadata": result.metadata,
-            }
-            f.write(json.dumps(result_dict, indent=2, default=str))
-            print(f"Writing all results to {full_result_filename}")
+    full_result_filename = f"/tmp/{file_stem}{debug_suffix}_allresults.json"
+    with open(full_result_filename, "w") as f:
+        result_dict = {
+            "score": result.score,
+            "metrics": result.metrics,
+            "htmls": result.htmls,
+            "convos": result.convos,
+            "metadata": result.metadata,
+        }
+        f.write(json.dumps(result_dict, indent=2, default=str))
+        print(f"Writing all results to {full_result_filename}")
 
-        mergekey2resultpath[f"{file_stem}"] = result_filename
+    mergekey2resultpath[f"{file_stem}"] = result_filename
     merge_metrics = []
     for eval_model_name, result_filename in mergekey2resultpath.items():
         try:
