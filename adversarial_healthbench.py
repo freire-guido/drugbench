@@ -6,11 +6,9 @@ import pandas as pd
 from dotenv import load_dotenv
 
 from simple_evals import common
-from simple_evals.healthbench_eval import HealthBenchEval
-from simple_evals.healthbench_meta_eval import HealthBenchMetaEval
+from simple_evals.healthbench_eval_adversarial import HealthBenchEval
 from simple_evals.sampler.chat_completion_sampler import (
     OPENAI_SYSTEM_MESSAGE_API,
-    OPENAI_SYSTEM_MESSAGE_CHATGPT,
     ChatCompletionSampler,
 )
 from simple_evals.sampler.adversarial_sampler import AdversarialSampler
