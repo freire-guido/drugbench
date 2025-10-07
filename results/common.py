@@ -6,26 +6,12 @@ def _is_attacked(meta):
     is_attacked = red_bias_text is not None and red_bias_text.strip() != ''
     return is_attacked
 
-def get_montecarlo_upsampling(json_file_path, T=50000):
-    def _get_attacked_df(json_file_path):
-        with open(json_file_path, 'r') as f:
-            data = json.load(f)
-
-        metadata = data['metadata']['example_level_metadata']
-        df = pd.DataFrame({
-            'prompt_id': [meta['prompt_id'] for meta in metadata],
-            'is_attacked': [_is_attacked(meta) for meta in metadata],
-        })
-        
-        return df
-
-    df = _get_attacked_df(json_file_path)
-
-    M = df['is_attacked'].sum()
+def get_montecarlo_upsampling(df, T=50000):
+    M = df['red_bias'].sum()
     N = math.floor(M/12)
 
-    attacked_sample = df[df['is_attacked']].sample(n=N, replace=False)['prompt_id'].tolist()
-    not_attacked_sample = df[~df['is_attacked']].sample(n=T-N, replace=True)['prompt_id'].tolist()
+    attacked_sample = df[df['red_bias']].sample(n=N, replace=False).index.tolist()
+    not_attacked_sample = df[~df['red_bias']].sample(n=T-N, replace=True).index.tolist()
 
     out = attacked_sample + not_attacked_sample
     random.shuffle(out)
@@ -54,6 +40,7 @@ def healthbench_json_to_df(json_file_path):
         response = conv[-1]['content']
         
         scenario_score = meta['score']
+        suspicion_score = None
             
         red_bias = _is_attacked(meta)
             

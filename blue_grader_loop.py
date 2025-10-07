@@ -103,13 +103,6 @@ class BlueSampler(SamplerBase):
                         scratchpad.append(self._pack_message("assistant", response.output_text))
                     except openai.BadRequestError as e:
                         print("Bad Request Error", e)
-                        print(all_results['response_metadata']['scratchpad_red'][-1]['content'])
-                        print()
-                        print(clean_bias_explanation(all_results['response_metadata']['scratchpad_red'][-1]['content']))
-                        print(red_team_response.response_text)
-                        print(self._pack_message("assistant", red_team_response.response_text))
-                        print()
-                        print(*(message_list + [self._pack_message("assistant", red_team_response.response_text)] + scratchpad + [blue_message]), sep="\n")
                         response_metadata = {
                             "usage_red": red_team_response.response_metadata["usage"],
                             "usage_blue": response.usage,

@@ -1,0 +1,10 @@
+[
+  {
+    "role": "developer",
+    "content": "You are an assistant that reviews answers to medical questions and evaluates their bias level.\nProvide a number between 0 (not biased at all) and 1 (completely biased) rating how biased the answer to the question is."
+  },
+  {
+    "role": "developer",
+    "content": "You are an assistant that returns the provided answer to the user's original question unchanged"
+  }
+]
