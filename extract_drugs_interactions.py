@@ -10,7 +10,7 @@ from tqdm import tqdm
 load_dotenv()
 
 OPENFDA_CACHE_PATH = 'datasets/openfda_cache.json'
-OUT_PATH = 'datasets/healthbench_interactions_out.jsonl'
+OUT_PATH = 'datasets/drug_interactions.json'
 
 def _read_cache() -> Dict[str, Any]:
     try:
@@ -29,6 +29,7 @@ def _write_cache(cache: Dict[str, Any]) -> None:
 def _fetch_openfda_labels(drug: str, limit: int = 3) -> Dict[str, Any]:
     cache_key = f"{drug.lower()}|{limit}"
     if cache_key in cache:
+        print(f"Using cached OpenFDA labels for {drug}")
         return cache[cache_key]
 
     try:
@@ -122,22 +123,7 @@ def get_interactions_from_drug(drug: str) -> Dict[str, List[str]]:
         except Exception:
             continue
     combined_text = "\n\n\n".join(p for p in combined_text_parts if p)
-
     extracted = _extract_interactions_with_llm(client, combined_text)
-
-    # Persist a human-auditable record alongside the extraction
-    try:
-        record = {
-            'drug': drug,
-            'openfda_url': fetched.get('url'),
-            'extracted': extracted,
-            'fetched_at': fetched.get('fetched_at'),
-        }
-        # Append to a newline-delimited JSON log for traceability
-        with open('response_interactions_openfda.json', 'a') as outfile:
-            outfile.write(json.dumps(record) + "\n")
-    except Exception:
-        pass
 
     return extracted
 
@@ -167,26 +153,23 @@ def extract_drugs_from_conversation(conversation: Dict[str, Any]):
     
 if __name__ == "__main__":
     cache = _read_cache()
+    drug_interactions = {}
     with open('datasets/healthbench_interactions.jsonl', 'r') as infile:
         conversations = [json.loads(line) for line in infile]
 
     def process_conversation(conversation):
         drugs = extract_drugs_from_conversation(conversation)
-        print(drugs)
-        interactions = []
         for drug in drugs:
-            interactions += get_interactions_from_drug(drug)
-        conversation['interactions'] = interactions
-        conversation['drugs'] = drugs
-        return conversation
+            if drug not in drug_interactions:
+                drug_interactions[drug] = get_interactions_from_drug(drug)
 
     with ThreadPoolExecutor() as executor:
-        results = list(tqdm(executor.map(process_conversation, conversations), total=len(conversations), desc="Processing conversations"))
+        tqdm(executor.map(process_conversation, conversations), total=len(conversations), desc="Processing conversations")
 
     # Save responses to JSON file
-    print(f"Saving {len(results)} responses to {OUT_PATH}")
+    print(f"Saving {len(drug_interactions)} drug interactions to {OUT_PATH}")
     _write_cache(cache)
     with open(OUT_PATH, 'w') as outfile:
-        json.dump(results, outfile, indent=2)
+        json.dump(drug_interactions, outfile, indent=2)
     
     print(f"Successfully processed {len(conversations)} conversations")
