@@ -10,27 +10,31 @@ from tqdm import tqdm
 load_dotenv()
 
 OPENFDA_CACHE_PATH = 'datasets/openfda_cache.json'
-OUT_PATH = 'datasets/drug_interactions.json'
+OUT_HEALTHBENCH_PATH = 'datasets/healthbench_interactions.jsonl'
+OUT_DRUGS_PATH = 'datasets/drug_interactions.json'
 
-def _read_cache() -> Dict[str, Any]:
+def _read_cache(cache_path: str) -> Dict[str, Any]:
     try:
-        with open(OPENFDA_CACHE_PATH, 'r') as infile:
+        with open(cache_path, 'r') as infile:
             return json.load(infile)
-    except Exception:
+    except Exception as e:
+        print(f"Error reading cache {cache_path}: {e}")
         return {}
 
-def _write_cache(cache: Dict[str, Any]) -> None:
+def _write_cache(cache: Dict[str, Any] | List[Any], cache_path: str) -> None:
     try:
-        with open(OPENFDA_CACHE_PATH, 'w') as outfile:
+        with open(cache_path, 'w') as outfile:
             json.dump(cache, outfile)
-    except Exception:
+        return True
+    except Exception as e:
+        print(f"Error writing cache {cache_path}: {e}")
         pass
 
 def _fetch_openfda_labels(drug: str, limit: int = 3) -> Dict[str, Any]:
     cache_key = f"{drug.lower()}|{limit}"
-    if cache_key in cache:
+    if cache_key in fda_cache:
         print(f"Using cached OpenFDA labels for {drug}")
-        return cache[cache_key]
+        return fda_cache[cache_key]
 
     try:
         # Build OpenFDA query for generic or brand name, newest labels first
@@ -49,8 +53,8 @@ def _fetch_openfda_labels(drug: str, limit: int = 3) -> Dict[str, Any]:
         print(f"Error fetching OpenFDA labels for {drug}: {e}")
         return { 'url': url, 'data': [], 'fetched_at': time.time() }
 
-    cache[cache_key] = { 'url': url, 'data': data, 'fetched_at': time.time() }
-    return cache[cache_key]
+    fda_cache[cache_key] = { 'url': url, 'data': data, 'fetched_at': time.time() }
+    return fda_cache[cache_key]
 
 def _combine_label_texts(label: Dict[str, Any]) -> str:
     # Collect relevant textual sections that mention interactions, contraindications, and warnings
@@ -152,8 +156,8 @@ def extract_drugs_from_conversation(conversation: Dict[str, Any]):
     return drugs
     
 if __name__ == "__main__":
-    cache = _read_cache()
-    drug_interactions = {}
+    fda_cache = _read_cache(OPENFDA_CACHE_PATH)
+    drug_interactions = _read_cache(OUT_DRUGS_PATH)
     with open('datasets/healthbench_interactions.jsonl', 'r') as infile:
         conversations = [json.loads(line) for line in infile]
 
@@ -161,15 +165,25 @@ if __name__ == "__main__":
         drugs = extract_drugs_from_conversation(conversation)
         for drug in drugs:
             if drug not in drug_interactions:
+                print(f"{drug} not in drug_interactions")
                 drug_interactions[drug] = get_interactions_from_drug(drug)
 
-    with ThreadPoolExecutor() as executor:
-        tqdm(executor.map(process_conversation, conversations), total=len(conversations), desc="Processing conversations")
+        conversation['drugs'] = drugs
+        conversation['interactions'] = {drug: drug_interactions[drug] for drug in drugs}
+        return conversation
 
-    # Save responses to JSON file
-    print(f"Saving {len(drug_interactions)} drug interactions to {OUT_PATH}")
-    _write_cache(cache)
-    with open(OUT_PATH, 'w') as outfile:
+    with ThreadPoolExecutor() as executor:
+        results = list(tqdm(executor.map(process_conversation, conversations), total=len(conversations), desc="Processing conversations"))
+
+    # Save responses to JSON and JSONL file
+    _write_cache(fda_cache, OPENFDA_CACHE_PATH)
+    _write_cache(drug_interactions, OUT_DRUGS_PATH)
+    print(f"Saving {len(drug_interactions)} drug interactions to {OUT_DRUGS_PATH}")
+    with open(OUT_DRUGS_PATH, 'w') as outfile:
         json.dump(drug_interactions, outfile, indent=2)
+    print(f"Saving {len(results)} healthbench interaction examples to {OUT_HEALTHBENCH_PATH}")
+    with open(OUT_HEALTHBENCH_PATH, 'w') as outfile:
+        for result in results:
+            outfile.write(json.dumps(result) + '\n')
     
     print(f"Successfully processed {len(conversations)} conversations")

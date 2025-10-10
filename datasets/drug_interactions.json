@@ -3929,5 +3929,15 @@
       "resume therapy",
       "exceed 3 g per day"
     ]
+  },
+  "fluoride": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "sodium stibogluconate": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
   }
 }
