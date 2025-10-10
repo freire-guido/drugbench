@@ -2,14 +2,15 @@ import json, time
 import urllib.parse, urllib.request
 from typing import Dict, Any, List
 
-from typing import List
-from tqdm import tqdm
+from concurrent.futures import ThreadPoolExecutor
 from dotenv import load_dotenv
 from openai import OpenAI
+from tqdm import tqdm
 
 load_dotenv()
 
-OPENFDA_CACHE_PATH = 'openfda_cache.json'
+OPENFDA_CACHE_PATH = 'datasets/openfda_cache.json'
+OUT_PATH = 'datasets/healthbench_interactions.jsonl'
 
 def _read_cache() -> Dict[str, Any]:
     try:
@@ -26,7 +27,6 @@ def _write_cache(cache: Dict[str, Any]) -> None:
         pass
 
 def _fetch_openfda_labels(drug: str, limit: int = 3) -> Dict[str, Any]:
-    cache = _read_cache()
     cache_key = f"{drug.lower()}|{limit}"
     if cache_key in cache:
         return cache[cache_key]
@@ -45,7 +45,6 @@ def _fetch_openfda_labels(drug: str, limit: int = 3) -> Dict[str, Any]:
         data = json.loads(resp.read().decode('utf-8'))
 
     cache[cache_key] = { 'url': url, 'data': data, 'fetched_at': time.time() }
-    _write_cache(cache)
     return cache[cache_key]
 
 def _combine_label_texts(label: Dict[str, Any]) -> str:
@@ -66,7 +65,7 @@ def _combine_label_texts(label: Dict[str, Any]) -> str:
         'patient_medication_information',
         'medication_guide',
     ]
-    parts: List[str] = []
+    parts = []
     for field in fields:
         value = label.get(field)
         if isinstance(value, list):
@@ -82,16 +81,15 @@ def _extract_interactions_with_llm(client: OpenAI, combined_text: str) -> Dict[s
         "medications, diseases, do_not.\n\n"
         "- medications: other drugs, classes, or substances that should be avoided or require caution due to interactions (e.g., MAO inhibitors, warfarin, benzodiazepines, alcohol).\n"
         "- diseases: patient conditions where use is contraindicated or requires caution (e.g., liver disease, glaucoma, asthma, pregnancy).\n"
-        "- do_not: concrete actions a patient should NOT do while using the drug (e.g., do not drink alcohol, do not drive, do not exceed 4000 mg/day).\n\n"
+        "- do_not: concrete actions a patient should NOT do while using the drug (e.g., do not drink alcohol, do not drive, do not exceed 4000 mg/day). Only name the action e.g. if the label says 'do not drink alcohol', return 'drink alcohol'.\n\n"
         "Return only a compact JSON object. No prose, no code fences."
     )
 
     response = client.responses.create(
-        model="gpt-4.1",
-        input=instruction + "\n\n=== FDA LABEL TEXT BEGIN ===\n" + combined_text + "\n=== FDA LABEL TEXT END ===",
-        temperature=0,
-        max_output_tokens=300,
+        model="gpt-5-nano",
+        input=instruction + "\n\n=== FDA LABEL TEXT BEGIN ===\n" + combined_text + "\n=== FDA LABEL TEXT END ==="
     )
+    print('responded')
     text = response.output_text.strip()
     try:
         parsed = json.loads(text)
@@ -99,12 +97,13 @@ def _extract_interactions_with_llm(client: OpenAI, combined_text: str) -> Dict[s
         diseases = [d.strip() for d in parsed.get('diseases', []) if isinstance(d, str) and d.strip()]
         do_not = [n.strip() for n in parsed.get('do_not', []) if isinstance(n, str) and n.strip()]
         return { 'medications': medications, 'diseases': diseases, 'do_not': do_not }
-    except Exception:
-        # Fallback: return empty structured result
+    except Exception as e:
+        print(f"Error extracting interactions with LLM: {e}")
         return { 'medications': [], 'diseases': [], 'do_not': [] }
 
 def get_interactions_from_drug(drug: str) -> Dict[str, List[str]]:
     client = OpenAI()
+    print('fetching')
     fetched = _fetch_openfda_labels(drug, limit=3)
     data = fetched.get('data', {})
     results = data.get('results', []) if isinstance(data, dict) else []
@@ -120,6 +119,7 @@ def get_interactions_from_drug(drug: str) -> Dict[str, List[str]]:
             continue
     combined_text = "\n\n\n".join(p for p in combined_text_parts if p)
 
+    print('interacting')
     extracted = _extract_interactions_with_llm(client, combined_text)
 
     # Persist a human-auditable record alongside the extraction
@@ -142,18 +142,15 @@ def extract_drugs_from_conversation(conversation: Dict[str, Any]):
     client = OpenAI()
     try:
         messages = [
-            {"role": "system", "content": "Answer with a comma separated list. e.g. acetaminophen,cetuximab or "},
+            {"role": "system", "content": "Answer with a comma separated list. e.g. acetaminophen,cetuximab"},
             {"role": "user", "content": str(conversation['prompt'])},
             {"role": "developer", "content": f"Extract all of the medications relevant to this conversation. The medication might be mentioned explicitly in the conversation or relevant to the treatment or question. Return the generic names in a comma separated list."}
         ]
         response = client.chat.completions.create(
-            model="gpt-4o",
-            messages=messages,
-            max_tokens=1000,
+            model="gpt-5-nano",
+            messages=messages
         )
         drugs = response.choices[0].message.content.strip()
-        # Rate limit
-        time.sleep(0.001)
         
     except Exception as e:
         print(f"Error processing conversation {conversation['prompt_id']}: {e}")
@@ -162,16 +159,17 @@ def extract_drugs_from_conversation(conversation: Dict[str, Any]):
     return drugs
     
 if __name__ == "__main__":
+    cache = _read_cache()
     with open('datasets/healthbench_interactions.jsonl', 'r') as infile:
         conversations = [json.loads(line) for line in infile]
-    from concurrent.futures import ThreadPoolExecutor
-    from functools import partial
 
     def process_conversation(conversation):
         drugs = extract_drugs_from_conversation(conversation)
+        print('extracted')
         interactions = []
         for drug in drugs:
             interactions += get_interactions_from_drug(drug)
+        print('interactions')
         conversation['interactions'] = interactions
         conversation['drugs'] = drugs
         return conversation
@@ -179,12 +177,10 @@ if __name__ == "__main__":
     with ThreadPoolExecutor() as executor:
         results = list(tqdm(executor.map(process_conversation, conversations), total=len(conversations), desc="Processing conversations"))
 
-    # Update conversations in place (if needed later in the script)
-    conversations = results
-
     # Save responses to JSON file
-    print(f"Saving {len(conversations)} responses to response_interactions.json...")
-    with open('response_interactions.json', 'w') as outfile:
-        json.dump(conversations, outfile, indent=2)
+    print(f"Saving {len(results)} responses to {OUT_PATH}")
+    _write_cache(cache)
+    with open(OUT_PATH, 'w') as outfile:
+        json.dump(results, outfile, indent=2)
     
     print(f"Successfully processed {len(conversations)} conversations")
