@@ -1,0 +1,3933 @@
+{
+  "Lactobacillus rhamnosus": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "aucun": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "Lactobacillus reuteri": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "Bifidobacterium infantis": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "Bifidobacterium breve": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "miltefosine": {
+    "medications": [],
+    "diseases": [
+      "Pregnancy",
+      "Sj\u00f6gren-Larsson-Syndrome",
+      "Hypersensitivity to miltefosine or any IMPAVIDO excipients"
+    ],
+    "do_not": []
+  },
+  "amphotericin B": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "meglumine antimoniate": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "levothyroxine": {
+    "medications": [
+      "oral anticoagulants",
+      "insulin",
+      "oral antidiabetic drugs",
+      "digitalis glycosides",
+      "tricyclic antidepressants",
+      "tetracyclic antidepressants",
+      "sertraline",
+      "ketamine",
+      "sympathomimetics",
+      "estrogens",
+      "estrogen-containing oral contraceptives",
+      "androgens",
+      "corticosteroids"
+    ],
+    "diseases": [
+      "cardiovascular disease",
+      "severe liver disease",
+      "nephrosis",
+      "severe hypoproteinemia",
+      "acromegaly",
+      "infectious hepatitis",
+      "acute intermittent porphyria",
+      "pregnancy"
+    ],
+    "do_not": [
+      "add levothyroxine to other IV fluids"
+    ]
+  },
+  "methotrexate": {
+    "medications": [
+      "oral antibiotics (including neomycin)",
+      "oral or intravenous penicillin or sulphonamide antibiotics",
+      "antifolate drugs (e.g., dapsone, pemetrexed, pyrimethamine and sulphonamides)",
+      "Aspirin and other nonsteroidal anti-inflammatory drugs",
+      "hepatotoxic products",
+      "highly protein-bound drugs (e.g., oral anticoagulants, phenytoin, salicylates, sulfonamides, sulfonylureas, and tetracyclines)",
+      "proton pump inhibitors",
+      "weak acids (e.g., salicylates)",
+      "probenecid",
+      "nephrotoxic products",
+      "nitrous oxide anesthesia",
+      "folic acid or folinic acid"
+    ],
+    "diseases": [
+      "pregnancy",
+      "history of severe hypersensitivity to methotrexate (including anaphylaxis)"
+    ],
+    "do_not": [
+      "exceed 30 mg per week",
+      "nitrous oxide anesthesia",
+      "administer to pregnant women"
+    ]
+  },
+  "ferrous sulfate": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "cetirizine": {
+    "medications": [
+      "sedatives",
+      "tranquilizers",
+      "alcohol",
+      "antihistamines containing hydroxyzine"
+    ],
+    "diseases": [
+      "liver disease",
+      "kidney disease",
+      "pregnancy",
+      "breastfeeding"
+    ],
+    "do_not": [
+      "drink alcohol"
+    ]
+  },
+  "prednisone": {
+    "medications": [
+      "cyclosporine",
+      "methylprednisolone",
+      "aspirin"
+    ],
+    "diseases": [
+      "systemic fungal infections",
+      "latent tuberculosis or tuberculin reactivity",
+      "hepatitis B infection",
+      "amebiasis",
+      "Strongyloides infestation",
+      "cerebral malaria",
+      "Kaposi's sarcoma",
+      "pregnancy and nursing mothers",
+      "glaucoma"
+    ],
+    "do_not": [
+      "vaccinate against smallpox",
+      "expose yourself to varicella",
+      "expose yourself to measles"
+    ]
+  },
+  "orlistat": {
+    "medications": [
+      "cyclosporine",
+      "fat-soluble vitamin supplements and analogues",
+      "levothyroxine",
+      "warfarin",
+      "amiodarone",
+      "antiepileptic drugs",
+      "antiretroviral drugs",
+      "beta-carotene supplement",
+      "vitamin E acetate supplement",
+      "vitamin A",
+      "vitamin D",
+      "vitamin K",
+      "atazanavir",
+      "ritonavir",
+      "tenofovir disoproxil fumarate",
+      "emtricitabine",
+      "lopinavir/ritonavir",
+      "emtricitabine/efavirenz/tenofovir disoproxil fumarate"
+    ],
+    "diseases": [
+      "pregnancy",
+      "chronic malabsorption syndrome",
+      "cholestasis",
+      "hypersensitivity to XENICAL or to any component"
+    ],
+    "do_not": [
+      "coadminister XENICAL and cyclosporine simultaneously"
+    ]
+  },
+  "dupilumab": {
+    "medications": [],
+    "diseases": [
+      "hypersensitivity to dupilumab or any excipients"
+    ],
+    "do_not": [
+      "inject",
+      "relieve acute bronchospasm",
+      "use DUPIXENT if liquid contains visible particulate matter or is discolored or cloudy"
+    ]
+  },
+  "sertraline": {
+    "medications": [
+      "MAOIs (monoamine oxidase inhibitors) including linezolid and intravenous methylene blue",
+      "pimozide",
+      "anticoagulants and antiplatelet agents (e.g., warfarin, aspirin, clopidogrel, heparin)",
+      "drugs that prolong the QTc interval (QTc-prolonging drugs, e.g., ziprasidone, iloperidone, chlorpromazine, mesoridazine, droperidol, erythromycin, gatifloxacin, moxifloxacin, sparfloxacin, quinidine, procainamide, amiodarone, sotalol, pentamidine, levomethadyl acetate, methadone, halofantrine, mefloquine, dolasetron, probucol, tacrolimus)",
+      "CYP2D6 substrates (examples: propafenone, flecainide, atomoxetine, desipramine, dextromethorphan, metoprolol, nebivolol, perphenazine, thioridazine, tolterodine, venlafaxine)",
+      "phenytoin (phenytoin/fosphenytoin)"
+    ],
+    "diseases": [
+      "hepatic impairment (mild: half dosing; moderate/severe: not recommended)",
+      "hypersensitivity to sertraline or excipients",
+      "current or recent monoamine oxidase inhibitor (MAOI) therapy"
+    ],
+    "do_not": [
+      "take MAOIs",
+      "take linezolid",
+      "take methylene blue",
+      "take pimozide",
+      "start an MAOI antidepressant",
+      "use drugs known to prolong the QTc interval",
+      "stop sertraline abruptly"
+    ]
+  },
+  "paromomycin": {
+    "medications": [],
+    "diseases": [
+      "hypersensitivity to paromomycin",
+      "intestinal obstruction",
+      "ulcerative lesions of the bowel"
+    ],
+    "do_not": [
+      "skip doses",
+      "stop taking early"
+    ]
+  },
+  "tamoxifen": {
+    "medications": [
+      "coumarin-type anticoagulants",
+      "warfarin",
+      "letrozole",
+      "cyclophosphamide",
+      "drugs that require mixed function oxidases for activation",
+      "rifampin",
+      "aminoglutethimide",
+      "medroxyprogesterone",
+      "bromocriptine",
+      "phenobarbital",
+      "anastrozole",
+      "cytotoxic chemotherapy agents",
+      "CYP3A4-inducing agents"
+    ],
+    "diseases": [
+      "pregnancy",
+      "history of deep-vein thrombosis",
+      "history of pulmonary embolus",
+      "hypersensitivity to tamoxifen or any of its ingredients"
+    ],
+    "do_not": [
+      "become pregnant",
+      "breast feed",
+      "take tamoxifen with anastrozole",
+      "take tamoxifen with coumarin-type anticoagulants"
+    ]
+  },
+  "loperamide": {
+    "medications": [
+      "itraconazole",
+      "gemfibrozil",
+      "quinidine",
+      "ritonavir",
+      "saquinavir",
+      "procainamide",
+      "amiodarone",
+      "sotalol",
+      "chlorpromazine",
+      "haloperidol",
+      "thioridazine",
+      "ziprasidone",
+      "moxifloxacin",
+      "pentamidine",
+      "levomethadyl_acetate",
+      "methadone",
+      "Class IA antiarrhythmics",
+      "Class III antiarrhythmics"
+    ],
+    "diseases": [
+      "pediatric patients less than 2 years of age",
+      "hypersensitivity to loperamide hydrochloride or to any of the excipients",
+      "abdominal pain in the absence of diarrhea",
+      "acute dysentery with blood in stools and high fever",
+      "acute ulcerative colitis",
+      "bacterial enterocolitis caused by invasive organisms (e.g., Salmonella, Shigella, Campylobacter)",
+      "pseudomembranous colitis",
+      "pregnancy",
+      "breastfeeding",
+      "hepatic impairment",
+      "elderly patients",
+      "AIDS treated with loperamide hydrochloride for diarrhea"
+    ],
+    "do_not": [
+      "exceed maximum daily dose",
+      "give loperamide to pediatric patients under 2 years of age",
+      "combine with QT prolonging drugs",
+      "breastfeed"
+    ]
+  },
+  "polyethylene glycol": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "loratadine": {
+    "medications": [],
+    "diseases": [
+      "liver disease",
+      "kidney disease",
+      "pregnancy",
+      "breastfeeding"
+    ],
+    "do_not": [
+      "take more than directed"
+    ]
+  },
+  "tralokinumab": {
+    "medications": [],
+    "diseases": [
+      "hypersensitivity to tralokinumab-ldrm or any excipients in ADBRY"
+    ],
+    "do_not": [
+      "inject ADBRY into skin that is tender, damaged, bruised, or scarred",
+      "use the liquid only if it does not contain visible particulate matter and is not discolored or cloudy"
+    ]
+  },
+  "aspirin": {
+    "medications": [
+      "blood thinners (anticoagulants)",
+      "steroids",
+      "NSAIDs (nonprescription or prescription including aspirin, ibuprofen, naproxen)",
+      "diuretics",
+      "gout medications",
+      "diabetes medications",
+      "arthritis medications",
+      "alcohol"
+    ],
+    "diseases": [
+      "stomach ulcers or bleeding problems",
+      "history of stomach problems (heartburn)",
+      "high blood pressure",
+      "heart disease",
+      "liver cirrhosis",
+      "kidney disease",
+      "asthma",
+      "pregnancy (especially not to use after 20 weeks)",
+      "age 60 or older",
+      "Reye's syndrome risk in children/teens with chickenpox or flu-like symptoms",
+      "aspirin allergy"
+    ],
+    "do_not": [
+      "use this product",
+      "use aspirin",
+      "drink alcohol",
+      "take more than directed",
+      "exceed 48 chewable tablets in 24 hours",
+      "swallow tablets whole",
+      "use aspirin during pregnancy after 20 weeks or later"
+    ]
+  },
+  "phentermine": {
+    "medications": [
+      "Monoamine oxidase inhibitors",
+      "Alcohol",
+      "Insulin",
+      "Oral hypoglycemic medications",
+      "Adrenergic neuron blocking drugs"
+    ],
+    "diseases": [
+      "Cardiovascular disease",
+      "Hyperthyroidism",
+      "Glaucoma",
+      "Pregnancy"
+    ],
+    "do_not": [
+      "administer late in the evening",
+      "use monoamine oxidase inhibitors",
+      "use phentermine in pediatric patients \u2264 16 years"
+    ]
+  },
+  "docusate": {
+    "medications": [
+      "mineral oil"
+    ],
+    "diseases": [
+      "pregnancy",
+      "breastfeeding"
+    ],
+    "do_not": []
+  },
+  "methylprednisolone": {
+    "medications": [
+      "cyclosporine",
+      "phenobarbital",
+      "phenytoin",
+      "rifampin",
+      "troleandomycin",
+      "ketoconazole",
+      "aspirin",
+      "oral anticoagulants (e.g., warfarin)"
+    ],
+    "diseases": [
+      "systemic fungal infection",
+      "latent tuberculosis",
+      "hepatitis B infection (carriers or prior infection)",
+      "varicella zoster infection",
+      "measles infection",
+      "strongyloidiasis infestation",
+      "amebiasis",
+      "hepatic cirrhosis",
+      "renal insufficiency",
+      "hypertension",
+      "osteoporosis",
+      "myasthenia gravis",
+      "peptic ulcer",
+      "systemic sclerosis",
+      "cerebral malaria",
+      "hypoprothrombinemia",
+      "pregnancy"
+    ],
+    "do_not": [
+      "receive live vaccines",
+      "expose to varicella",
+      "expose to measles",
+      "withdraw abruptly"
+    ]
+  },
+  "ibuprofen": {
+    "medications": [
+      "ACE inhibitors",
+      "Aspirin",
+      "Furosemide",
+      "Thiazide diuretics",
+      "Lithium",
+      "Methotrexate",
+      "Warfarin-type anticoagulants",
+      "NSAIDs"
+    ],
+    "diseases": [
+      "CABG surgery",
+      "Aspirin-sensitive asthma",
+      "Asthma",
+      "Urticaria or allergic-type reactions after NSAIDs",
+      "Gastrointestinal ulcers or GI bleeding",
+      "Severe heart failure",
+      "Hypertension",
+      "Renal impairment",
+      "Liver dysfunction",
+      "Pregnancy (30 weeks gestation or later)",
+      "Oligohydramnios/Neonatal renal impairment risk during pregnancy"
+    ],
+    "do_not": [
+      "use ibuprofen after CABG",
+      "exceed 3200 mg daily",
+      "use NSAIDs at 30 weeks gestation or later",
+      "administer ibuprofen to patients with aspirin triad",
+      "administer ibuprofen to patients with aspirin-sensitive asthma",
+      "take ibuprofen if you have aspirin-sensitive asthma",
+      "use ibuprofen in a patient with a recent MI"
+    ]
+  },
+  "modafinil": {
+    "medications": [
+      "warfarin",
+      "monoamine oxidase inhibitors (MAO inhibitors)",
+      "cyclosporine",
+      "steroidal contraceptives (ethinyl estradiol)",
+      "midazolam",
+      "triazolam",
+      "phenytoin",
+      "diazepam",
+      "omeprazole",
+      "clomipramine"
+    ],
+    "diseases": [
+      "severe hepatic impairment",
+      "hypersensitivity to modafinil or armodafinil"
+    ],
+    "do_not": []
+  },
+  "raloxifene": {
+    "medications": [
+      "cholestyramine",
+      "warfarin",
+      "diazepam",
+      "diazoxide",
+      "lidocaine",
+      "systemic estrogens",
+      "ampicillin",
+      "amoxicillin",
+      "antacids",
+      "corticosteroids",
+      "digoxin",
+      "lipid-lowering agents"
+    ],
+    "diseases": [
+      "venous thromboembolism (VTE) including deep vein thrombosis, pulmonary embolism, and retinal vein thrombosis",
+      "pregnancy"
+    ],
+    "do_not": [
+      "take EVISTA",
+      "become pregnant",
+      "use systemic estrogens",
+      "use cholestyramine with EVISTA"
+    ]
+  },
+  "acetaminophen": {
+    "medications": [
+      "benzodiazepines",
+      "other CNS depressants",
+      "alcohol",
+      "monoamine oxidase inhibitors (MAOIs)",
+      "macrolide antibiotics (e.g., erythromycin)",
+      "azole antifungal agents (ketoconazole)",
+      "protease inhibitors (ritonavir)",
+      "CYP3A4 inhibitors",
+      "CYP3A4 inducers",
+      "linezolid",
+      "serotonergic drugs (SSRIs, SNRIs, TCAs, triptans, 5-HT3 receptor antagonists, mirtazapine, trazodone, tramadol)",
+      "SSRIs",
+      "SNRIs",
+      "triptans",
+      "5-HT3 receptor antagonists",
+      "tricyclic antidepressants (TCAs)",
+      "mirtazapine",
+      "trazodone",
+      "tramadol",
+      "mixed agonist/antagonist opioids (e.g., pentazocine, nalbuphine, butorphanol)",
+      "partial agonist opioids (e.g., buprenorphine)",
+      "rifampin",
+      "carbamazepine",
+      "phenytoin"
+    ],
+    "diseases": [
+      "Significant respiratory depression",
+      "Acute or severe bronchial asthma (unmonitored or without resuscitative equipment)",
+      "Gastrointestinal obstruction (including paralytic ileus)",
+      "Hypersensitivity to hydrocodone or acetaminophen",
+      "Chronic obstructive pulmonary disease or cor pulmonale with decreased respiratory reserve",
+      "Hypoxia or hypercapnia",
+      "Intracranial hypertension / brain tumors / head injury / impaired consciousness",
+      "Increased intracranial pressure",
+      "Seizure disorders",
+      "Hepatic impairment (liver disease)",
+      "Renal impairment (kidney disease)",
+      "Pregnancy",
+      "Lactation / breastfeeding",
+      "Adrenal insufficiency",
+      "Circulatory shock"
+    ],
+    "do_not": [
+      "drive or operate heavy machinery",
+      "abruptly discontinue hydrocodone bitartrate and acetaminophen tablets",
+      "share hydrocodone bitartrate and acetaminophen tablets with others",
+      "exceed 4000 milligrams of acetaminophen per day",
+      "take more than one acetaminophen-containing product",
+      "use benzodiazepines or other CNS depressants concurrently with hydrocodone bitartrate and acetaminophen tablets",
+      "take MAO inhibitors while using hydrocodone bitartrate and acetaminophen tablets"
+    ]
+  },
+  "adalimumab": {
+    "medications": [
+      "abatacept",
+      "anakinra",
+      "rituximab",
+      "TNF blockers",
+      "biologic DMARDs",
+      "azathioprine",
+      "6-mercaptopurine",
+      "warfarin",
+      "cyclosporine",
+      "theophylline",
+      "live vaccines"
+    ],
+    "diseases": [
+      "active tuberculosis",
+      "latent tuberculosis",
+      "serious infection",
+      "sepsis",
+      "histoplasmosis",
+      "invasive fungal infections",
+      "coccidioidomycosis",
+      "lymphoma or other malignancies"
+    ],
+    "do_not": [
+      "use live vaccines",
+      "remove cap or cover during warming",
+      "use product if particulates or discoloration are present"
+    ]
+  },
+  "senna": {
+    "medications": [
+      "any other drug"
+    ],
+    "diseases": [
+      "pregnancy",
+      "breastfeeding"
+    ],
+    "do_not": [
+      "use laxative products for longer than 1 week"
+    ]
+  },
+  "cyclosporine": {
+    "medications": [
+      "grapefruit juice",
+      "bosentan",
+      "St. John's Wort",
+      "boceprevir",
+      "telaprevir",
+      "ambrisentan",
+      "diltiazem",
+      "fluconazole",
+      "itraconazole",
+      "ketoconazole",
+      "clarithromycin",
+      "erythromycin",
+      "voriconazole",
+      "verapamil",
+      "amiodarone",
+      "dalfopristin",
+      "quinupristin/dalfopristin",
+      "danazol",
+      "imatinib",
+      "metoclopramide",
+      "nefazodone",
+      "oral contraceptives",
+      "HIV protease inhibitors (indinavir, nelfinavir, ritonavir, saquinavir)",
+      "Tacrolimus",
+      "melphalan",
+      "amphotericin B",
+      "cimetidine",
+      "ranitidine",
+      "naproxen",
+      "diclofenac",
+      "colchicine",
+      "methotrexate",
+      "rifampin",
+      "bosentan",
+      "nifedipine",
+      "methylprednisolone",
+      "sirolimus"
+    ],
+    "diseases": [
+      "renal impairment",
+      "uncontrolled hypertension",
+      "malignancies",
+      "severe liver disease"
+    ],
+    "do_not": [
+      "consume grapefruit juice",
+      "receive live vaccines",
+      "receive PUVA therapy",
+      "receive UVB therapy",
+      "receive methotrexate",
+      "receive coal tar",
+      "receive radiation therapy",
+      "use potassium-sparing diuretics",
+      "consume alcohol"
+    ]
+  },
+  "cefazolin": {
+    "medications": [
+      "Penicillins",
+      "Other beta-lactam antibiotics",
+      "Probenecid"
+    ],
+    "diseases": [
+      "Renal impairment / kidney disease",
+      "History of gastrointestinal disease, particularly colitis",
+      "Pregnancy",
+      "Cephalosporin allergy"
+    ],
+    "do_not": [
+      "skip doses",
+      "stop taking before completing the full course of therapy"
+    ]
+  },
+  "lifitegrast": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "armodafinil": {
+    "medications": [
+      "MAO inhibitors",
+      "warfarin",
+      "cyclosporine",
+      "steroidal contraceptives (ethinyl estradiol)",
+      "diazepam",
+      "phenytoin",
+      "omeprazole",
+      "triazolam",
+      "midazolam"
+    ],
+    "diseases": [
+      "severe hepatic impairment"
+    ],
+    "do_not": []
+  },
+  "fluoxetine": {
+    "medications": [
+      "Monoamine oxidase inhibitors (MAOIs)",
+      "Drugs Metabolized by CYP2D6",
+      "Tricyclic antidepressants (TCAs)",
+      "CNS acting drugs",
+      "Benzodiazepines",
+      "Antipsychotics",
+      "Anticonvulsants",
+      "Serotonergic drugs",
+      "Drugs that interfere with hemostasis (NSAIDs, Aspirin, Warfarin)",
+      "Drugs tightly bound to plasma proteins",
+      "Drugs that prolong the QT interval",
+      "Olanzapine"
+    ],
+    "diseases": [
+      "hepatic impairment (liver disease)"
+    ],
+    "do_not": [
+      "use fluoxetine with thioridazine",
+      "use fluoxetine with pimozide",
+      "start fluoxetine in a patient being treated with linezolid",
+      "start fluoxetine in a patient being treated with methylene blue",
+      "use MAOIs with fluoxetine",
+      "start fluoxetine within 14 days of stopping an MAOI",
+      "use thioridazine within 5 weeks after stopping fluoxetine"
+    ]
+  },
+  "lebrikizumab": {
+    "medications": [
+      "topical corticosteroids",
+      "topical calcineurin inhibitors"
+    ],
+    "diseases": [
+      "hypersensitivity to lebrikizumab-lbkz or any excipients"
+    ],
+    "do_not": [
+      "inject EBGLYSS within 2 inches (5 cm) of the navel or into areas where the skin is tender, bruised, red, hard, or in an area of skin that is affected by atopic dermatitis or skin lesions",
+      "warm EBGLYSS by using a heat source such as hot water, microwave, or direct sunlight",
+      "use EBGLYSS if the liquid contains visible particles, is discolored or cloudy"
+    ]
+  },
+  "fexofenadine": {
+    "medications": [
+      "aluminum antacids",
+      "magnesium antacids",
+      "fruit juice"
+    ],
+    "diseases": [
+      "kidney disease",
+      "pregnancy",
+      "breastfeeding"
+    ],
+    "do_not": [
+      "use",
+      "take more than directed",
+      "take at the same time as aluminum or magnesium antacids",
+      "take with fruit juices",
+      "take more than 1 tablet in 24 hours"
+    ]
+  },
+  "liraglutide": {
+    "medications": [
+      "insulin",
+      "insulin secretagogues (e.g., sulfonylureas)",
+      "oral medications (concomitant use with liraglutide can affect absorption)"
+    ],
+    "diseases": [
+      "personal or family history of medullary thyroid carcinoma (MTC)",
+      "Multiple Endocrine Neoplasia syndrome type 2 (MEN 2)",
+      "hypersensitivity to liraglutide or to any of the excipients"
+    ],
+    "do_not": [
+      "mix",
+      "administer an extra dose",
+      "increase the dose to make up for a missed dose",
+      "coadminister other liraglutide-containing products"
+    ]
+  },
+  "dexamethasone": {
+    "medications": [
+      "aminoglycoside antibiotics"
+    ],
+    "diseases": [
+      "epithelial herpes simplex keratitis (dendritic keratitis)",
+      "vaccinia",
+      "varicella",
+      "mycobacterial infection of the eye",
+      "fungal infections of ocular structures",
+      "hypersensitivity to a component of the medication",
+      "glaucoma",
+      "intraocular pressure elevation (ocular hypertension)",
+      "corneal thinning or scleral thinning",
+      "pregnancy",
+      "nursing mothers (lactation)",
+      "infants born to mothers who have received substantial doses of corticosteroids during pregnancy",
+      "pediatric patients under 2 years"
+    ],
+    "do_not": [
+      "inject into the eye",
+      "touch dropper tip to any surface",
+      "wear contact lenses during use",
+      "discontinue therapy prematurely"
+    ]
+  },
+  "colchicine": {
+    "medications": [
+      "clarithromycin",
+      "cyclosporine",
+      "ketoconazole",
+      "grapefruit juice",
+      "erythromycin",
+      "verapamil",
+      "P-glycoprotein inhibitors",
+      "CYP3A4 inhibitors",
+      "HMG-CoA reductase inhibitors",
+      "fibrates"
+    ],
+    "diseases": [
+      "renal impairment",
+      "hepatic impairment",
+      "renal and hepatic impairment"
+    ],
+    "do_not": []
+  },
+  "anastrozole": {
+    "medications": [
+      "Tamoxifen",
+      "Estrogen-containing therapies",
+      "Warfarin"
+    ],
+    "diseases": [
+      "Hypersensitivity to anastrozole or excipients",
+      "Hepatic impairment (mild-to-moderate; severe not studied)"
+    ],
+    "do_not": [
+      "use in combination with anastrozole tablets",
+      "use estrogen-containing therapies with anastrozole",
+      "administer Tamoxifen with anastrozole"
+    ]
+  },
+  "carboxymethylcellulose": {
+    "medications": [],
+    "diseases": [],
+    "do_not": [
+      "touch the tip of container to any surface",
+      "use solution"
+    ]
+  },
+  "tofacitinib": {
+    "medications": [
+      "ketoconazole",
+      "rifampin",
+      "fluconazole",
+      "azathioprine",
+      "tacrolimus",
+      "cyclosporine",
+      "biologic DMARDs",
+      "potent immunosuppressants",
+      "strong CYP3A4 inhibitors",
+      "moderate CYP3A4 inhibitors",
+      "strong CYP2C19 inhibitors"
+    ],
+    "diseases": [
+      "severe hepatic impairment"
+    ],
+    "do_not": [
+      "crush",
+      "split",
+      "chew",
+      "initiate XELJANZ/XELJANZ XR/XELJANZ Oral Solution when lymphocyte count <500 cells/mm3, ANC <1000 cells/mm3, or Hb <9 g/dL"
+    ]
+  },
+  "naproxen": {
+    "medications": [
+      "warfarin",
+      "anticoagulants",
+      "aspirin",
+      "SSRIs",
+      "SNRIs",
+      "ACE inhibitors",
+      "ARBs",
+      "beta-blockers",
+      "loop diuretics (e.g., furosemide)",
+      "thiazide diuretics",
+      "digoxin",
+      "lithium",
+      "methotrexate",
+      "cyclosporine",
+      "pemetrexed",
+      "NSAIDs",
+      "salicylates",
+      "antacids (magnesium oxide, aluminum hydroxide)",
+      "sucralfate",
+      "cholestyramine",
+      "probenecid",
+      "hydantoins (e.g., phenytoin)",
+      "sulphonamides",
+      "sulphonylureas",
+      "diflunisal",
+      "salsalate"
+    ],
+    "diseases": [
+      "CABG surgery",
+      "hypersensitivity to naproxen or any components of the drug product",
+      "history of asthma, urticaria, or other allergic-type reactions after taking aspirin or other NSAIDs",
+      "peptic ulcer disease",
+      "GI bleeding",
+      "renal impairment",
+      "volume depletion"
+    ],
+    "do_not": [
+      "break naproxen delayed-release tablet",
+      "crush naproxen delayed-release tablet",
+      "chew naproxen delayed-release tablet",
+      "use naproxen with other NSAIDs or salicylates",
+      "take analgesic doses of aspirin with naproxen",
+      "take antacids with naproxen",
+      "take sucralfate with naproxen",
+      "take cholestyramine with naproxen",
+      "take naproxen with probenecid"
+    ]
+  },
+  "semaglutide": {
+    "medications": [
+      "insulin",
+      "insulin secretagogues (e.g., sulfonylureas)",
+      "other semaglutide-containing products or GLP-1 receptor agonists"
+    ],
+    "diseases": [
+      "personal or family history of medullary thyroid carcinoma (MTC)",
+      "Multiple Endocrine Neoplasia syndrome type 2 (MEN 2)",
+      "hypersensitivity to semaglutide or excipients"
+    ],
+    "do_not": [
+      "coadminister with other semaglutide-containing products or GLP-1 receptor agonists",
+      "administer the missed dose when next scheduled dose is less than 2 days away (48 hours)"
+    ]
+  },
+  "atorvastatin": {
+    "medications": [
+      "Cyclosporine",
+      "Gemfibrozil",
+      "Ledipasvir",
+      "Sofosbuvir",
+      "Ledipasvir/Sofosbuvir",
+      "Lopinavir",
+      "Ritonavir",
+      "Tipranavir",
+      "Glecaprevir",
+      "Pibrentasvir",
+      "Saquinavir",
+      "Darunavir",
+      "Fosamprenavir",
+      "Fosamprenavir/ritonavir",
+      "Elbasvir",
+      "Grazoprevir",
+      "Letermovir",
+      "Nelfinavir",
+      "Clarithromycin",
+      "Itraconazole",
+      "Erythromycin",
+      "Ketoconazole",
+      "Posaconazole",
+      "Voriconazole",
+      "Rifampin",
+      "Niacin",
+      "Fibrates",
+      "Colchicine",
+      "Azole antifungals",
+      "Macrolide antibiotics",
+      "Grapefruit juice",
+      "Digoxin",
+      "Oral contraceptives"
+    ],
+    "diseases": [
+      "Acute liver failure",
+      "Decompensated cirrhosis",
+      "Hypersensitivity to atorvastatin or any excipients"
+    ],
+    "do_not": [
+      "drink grapefruit juice in large quantities",
+      "take more than 20 mg atorvastatin",
+      "take more than 40 mg atorvastatin",
+      "take more than 20 mg atorvastatin calcium tablets",
+      "take the missed dose"
+    ]
+  },
+  "fluticasone": {
+    "medications": [
+      "ritonavir",
+      "atazanavir",
+      "clarithromycin",
+      "indinavir",
+      "itraconazole",
+      "nefazodone",
+      "nelfinavir",
+      "saquinavir",
+      "ketoconazole",
+      "telithromycin",
+      "conivaptan",
+      "lopinavir",
+      "voriconazole",
+      "strong CYP3A4 inhibitors"
+    ],
+    "diseases": [
+      "hypersensitivity to any ingredients of Fluticasone propionate nasal spray"
+    ],
+    "do_not": [
+      "exceed 2 sprays per nostril per day"
+    ]
+  },
+  "nemolizumab": {
+    "medications": [
+      "nemolizumab-ilto",
+      "excipients in NEMLUVIO"
+    ],
+    "diseases": [
+      "hypersensitivity to nemolizumab-ilto or to any of the excipients in NEMLUVIO"
+    ],
+    "do_not": [
+      "inject NEMLUVIO into skin that is tender, inflamed, swollen, damaged or has bruises or scars or open wounds",
+      "use powder that is not white",
+      "use diluent that is cloudy or contains visible particles",
+      "use the reconstituted solution if it has discoloration or contains particles"
+    ]
+  },
+  "minoxidil": {
+    "medications": [
+      "other medicines on the scalp"
+    ],
+    "diseases": [
+      "heart disease",
+      "pregnancy",
+      "breastfeeding"
+    ],
+    "do_not": [
+      "use more than directed",
+      "apply on other parts of the body",
+      "contact eyes",
+      "use on babies and children",
+      "smoke during and immediately after application",
+      "use under 18 years of age"
+    ]
+  },
+  "allopurinol": {
+    "medications": [
+      "capecitabine",
+      "mercaptopurine",
+      "azathioprine",
+      "pegloticase",
+      "bendamustine",
+      "thiazide diuretics",
+      "ampicillin",
+      "amoxicillin",
+      "chlorpropamide",
+      "cyclosporine",
+      "cyclophosphamide",
+      "doxorubicin",
+      "bleomycin",
+      "procarbazine",
+      "mechloroethamine",
+      "dicumarol",
+      "fluorouracil",
+      "theophylline",
+      "uricosuric drugs",
+      "warfarin"
+    ],
+    "diseases": [
+      "hypersensitivity to allopurinol or to any ingredients",
+      "renal impairment or kidney disease",
+      "asymptomatic hyperuricemia"
+    ],
+    "do_not": [
+      "concomitant use with capecitabine",
+      "concomitant administration with fluorouracil",
+      "initiate allopurinol therapy during pegloticase treatment"
+    ]
+  },
+  "sumatriptan": {
+    "medications": [
+      "ergotamine-containing medications",
+      "ergot-type medications (e.g., dihydroergotamine, methysergide)",
+      "other 5-HT1 agonists (triptans)",
+      "SSRIs",
+      "SNRIs",
+      "TCAs",
+      "MAO-A inhibitors"
+    ],
+    "diseases": [
+      "Ischemic coronary artery disease (CAD) including angina or history of myocardial infarction",
+      "coronary artery vasospasm (Prinzmetal\u2019s angina)",
+      "Wolff-Parkinson-White syndrome or arrhythmias with accessory conduction pathway disorders",
+      "History of stroke or transient ischemic attack (TIA) or history of hemiplegic or basilar migraine",
+      "Peripheral vascular disease",
+      "Ischemic bowel disease",
+      "Uncontrolled hypertension",
+      "Severe hepatic impairment"
+    ],
+    "do_not": []
+  },
+  "alendronate": {
+    "medications": [
+      "calcium supplements",
+      "antacids",
+      "oral medications containing multivalent cations",
+      "aspirin-containing products",
+      "nonsteroidal anti-inflammatory drugs (NSAIDs)"
+    ],
+    "diseases": [
+      "abnormalities of the esophagus delaying esophageal emptying (e.g., stricture or achalasia)",
+      "inability to stand or sit upright for at least 30 minutes",
+      "hypocalcemia",
+      "hypersensitivity to any component of this product"
+    ],
+    "do_not": [
+      "lie down after taking alendronate",
+      "take with food",
+      "take alendronate with beverages other than plain water"
+    ]
+  },
+  "psilocybin": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "omeprazole": {
+    "medications": [
+      "rilpivirine-containing products",
+      "atazanavir",
+      "nelfinavir",
+      "saquinavir",
+      "warfarin",
+      "methotrexate",
+      "clopidogrel",
+      "citalopram",
+      "cilostazol",
+      "phenytoin",
+      "diazepam",
+      "digoxin",
+      "tacrolimus",
+      "ritonavir-containing products",
+      "clarithromycin",
+      "amoxicillin",
+      "mycophenolate mofetil",
+      "ketoconazole",
+      "itraconazole",
+      "iron salts",
+      "erlotinib",
+      "dasatinib",
+      "nilotinib",
+      "cyclosporine",
+      "disulfiram",
+      "voriconazole",
+      "St. John's Wort",
+      "rifampin"
+    ],
+    "diseases": [
+      "hepatic impairment",
+      "hypersensitivity to substituted benzimidazoles or any component of the formulation"
+    ],
+    "do_not": [
+      "chew the capsules",
+      "crush the pellets",
+      "save applesauce and pellets for future use",
+      "take two doses at one time",
+      "take the missed dose"
+    ]
+  },
+  "finasteride": {
+    "medications": [],
+    "diseases": [
+      "pregnancy"
+    ],
+    "do_not": []
+  },
+  "paroxetine": {
+    "medications": [
+      "Monoamine oxidase inhibitors (MAOIs) including linezolid and intravenous methylene blue",
+      "Tamoxifen",
+      "Fosamprenavir/ritonavir",
+      "Pimozide",
+      "Thioridazine",
+      "Warfarin",
+      "Aspirin",
+      "Clopidogrel",
+      "Heparin",
+      "Antiplatelet agents and anticoagulants",
+      "Propafenone",
+      "Flecainide",
+      "Atomoxetine",
+      "Desipramine",
+      "Dextromethorphan",
+      "Metoprolol",
+      "Nebivolol",
+      "Perphenazine",
+      "Tolterodine",
+      "Venlafaxine",
+      "Risperidone",
+      "Other serotonergic drugs (SSRIs, SNRIs, triptans, tricyclic antidepressants, opioids, lithium, tryptophan, buspirone, St. John\u2019s Wort)"
+    ],
+    "diseases": [
+      "Severe hepatic impairment",
+      "Severe renal impairment",
+      "History of bipolar disorder",
+      "Hypersensitivity to paroxetine or to any inactive ingredients"
+    ],
+    "do_not": [
+      "take MAOIs (including linezolid and intravenous methylene blue)",
+      "take pimozide",
+      "take thioridazine"
+    ]
+  },
+  "melatonin": {
+    "medications": [],
+    "diseases": [
+      "pregnancy",
+      "breastfeeding"
+    ],
+    "do_not": [
+      "use if tamper evident seal is broken or missing"
+    ]
+  },
+  "febuxostat": {
+    "medications": [
+      "azathioprine",
+      "mercaptopurine",
+      "theophylline",
+      "cytotoxic chemotherapy drugs"
+    ],
+    "diseases": [
+      "established cardiovascular disease",
+      "severe renal impairment"
+    ],
+    "do_not": []
+  },
+  "letrozole": {
+    "medications": [
+      "strong CYP3A inhibitors",
+      "strong CYP3A inducers",
+      "CYP3A substrates with narrow therapeutic indices",
+      "drugs known to prolong QT interval",
+      "antiarrhythmic drugs"
+    ],
+    "diseases": [
+      "hypersensitivity to letrozole or excipients",
+      "hepatic impairment",
+      "renal impairment (severe)"
+    ],
+    "do_not": [
+      "chew tablets",
+      "crush tablets",
+      "split tablets",
+      "ingest broken tablets",
+      "take an additional dose",
+      "take strong CYP3A inhibitors",
+      "take strong CYP3A inducers",
+      "take QT-prolonging drugs",
+      "take antiarrhythmic drugs"
+    ]
+  },
+  "upadacitinib": {
+    "medications": [
+      "ketoconazole",
+      "clarithromycin",
+      "rifampin",
+      "grapefruit",
+      "azathioprine",
+      "cyclosporine",
+      "methotrexate",
+      "corticosteroids",
+      "other JAK inhibitors",
+      "biologic DMARDs"
+    ],
+    "diseases": [
+      "active tuberculosis",
+      "latent tuberculosis infection",
+      "hepatitis B",
+      "hepatitis C",
+      "severe hepatic impairment (Child-Pugh C)",
+      "severe renal impairment (eGFR 15 to <30 mL/min/1.73 m2)",
+      "end-stage renal disease (eGFR < 15 mL/min/1.73 m2)"
+    ],
+    "do_not": [
+      "split tablets",
+      "crush tablets",
+      "chew tablets",
+      "use other JAK inhibitors in combination with RINVOQ",
+      "use biologic DMARDs in combination with RINVOQ",
+      "use azathioprine in combination with RINVOQ",
+      "use cyclosporine in combination with RINVOQ",
+      "grapefruit"
+    ]
+  },
+  "gabapentin": {
+    "medications": [
+      "morphine",
+      "hydrocodone",
+      "oxycodone",
+      "buprenorphine",
+      "antacids containing aluminum hydroxide and magnesium hydroxide (Maalox)"
+    ],
+    "diseases": [
+      "hypersensitivity to gabapentin or its ingredients",
+      "renal impairment (reduced renal function)"
+    ],
+    "do_not": []
+  },
+  "cholera vaccine": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "polio vaccine": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "epinephrine": {
+    "medications": [
+      "Monoamine oxidase (MAO) inhibitors",
+      "Catechol-O-methyl transferase (COMT) inhibitors (e.g., entacapone)",
+      "\u03b2-blockers (e.g., propranolol)",
+      "Sympathomimetics",
+      "Tricyclic antidepressants",
+      "Clonidine",
+      "Doxapram",
+      "Oxytocin",
+      "Potassium-depleting diuretics",
+      "Corticosteroids",
+      "Theophylline",
+      "Antihistamines",
+      "Thyroid hormones",
+      "Diuretics",
+      "Cardiac glycosides (digitalis glycosides)",
+      "Quinidine",
+      "Ergot alkaloids",
+      "Nitrates (vasodilators)",
+      "Alpha blockers",
+      "Levothyroxine sodium",
+      "Cyclopropane or halogenated hydrocarbon anesthetics (e.g., halothane)"
+    ],
+    "diseases": [
+      "Occlusive vascular diseases (e.g., atherosclerosis, arteriosclerosis, diabetic endarteritis, Buerger\u2019s disease)"
+    ],
+    "do_not": [
+      "administer repeated injections at the same site"
+    ]
+  },
+  "diclofenac": {
+    "medications": [
+      "warfarin",
+      "aspirin",
+      "SSRIs",
+      "SNRIs",
+      "ACE inhibitors",
+      "ARBs",
+      "beta-blockers (including propranolol)",
+      "furosemide (loop diuretic)",
+      "thiazide diuretics",
+      "digoxin",
+      "lithium",
+      "methotrexate",
+      "cyclosporine",
+      "other NSAIDs",
+      "salicylates",
+      "pemetrexed",
+      "voriconazole (CYP2C9 inhibitor)",
+      "rifampin (CYP2C9 inducer)"
+    ],
+    "diseases": [
+      "hypersensitivity to diclofenac or any components of the drug product (including bovine protein)",
+      "history of asthma, urticaria, or other allergic-type reactions after taking aspirin or other NSAIDs",
+      "coronary artery bypass graft (CABG) surgery",
+      "hepatic disease / hepatic impairment",
+      "renal impairment / kidney disease"
+    ],
+    "do_not": [
+      "use NSAIDs around pemetrexed",
+      "take analgesic doses of aspirin with diclofenac potassium",
+      "take other NSAIDs or salicylates with diclofenac potassium"
+    ]
+  },
+  "tiotropium": {
+    "medications": [
+      "anticholinergic-containing drugs"
+    ],
+    "diseases": [
+      "hypersensitivity to tiotropium, ipratropium, or any components of SPIRIVA HANDIHALER",
+      "moderate to severe renal impairment"
+    ],
+    "do_not": [
+      "swallow SPIRIVA capsules",
+      "take more than one dose in 24 hours"
+    ]
+  },
+  "bismuth subsalicylate": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "lisinopril": {
+    "medications": [
+      "diuretics",
+      "potassium-sparing diuretics (spironolactone, amiloride, triamterene)",
+      "NSAIDs (including selective COX-2 inhibitors)",
+      "antidiabetic medicines (insulins, oral hypoglycemic agents)",
+      "lithium",
+      "gold (sodium aurothiomalate)",
+      "mTOR inhibitors (temsirolimus, sirolimus, everolimus)",
+      "neprilysin inhibitors (e.g., sacubitril)",
+      "aliskiren",
+      "RAS inhibitors (ACE inhibitors, ARBs)"
+    ],
+    "diseases": [
+      "pregnancy",
+      "angioedema (history of hereditary or idiopathic)",
+      "hypersensitivity to ACE inhibitors",
+      "renal impairment",
+      "diabetes mellitus"
+    ],
+    "do_not": [
+      "administer lisinopril within 36 hours of switching to or from sacubitril/valsartan",
+      "co-administer aliskiren with lisinopril in patients with diabetes",
+      "administer lisinopril with a neprilysin inhibitor"
+    ]
+  },
+  "diphtheria": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "amitriptyline": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "alteplase": {
+    "medications": [
+      "anticoagulants",
+      "antiplatelet drugs",
+      "angiotensin-converting enzyme inhibitors (ACE inhibitors)",
+      "heparin",
+      "aspirin",
+      "cardioactive drugs",
+      "cerebroactive drugs"
+    ],
+    "diseases": [
+      "active internal bleeding",
+      "recent intracranial or intraspinal surgery or serious head trauma",
+      "intracranial conditions that may increase risk of bleeding (e.g., neoplasms, arteriovenous malformations, or aneurysms)",
+      "bleeding diathesis",
+      "current severe uncontrolled hypertension",
+      "current intracranial hemorrhage",
+      "subarachnoid hemorrhage",
+      "history of recent stroke"
+    ],
+    "do_not": [
+      "add other medications to infusion solutions containing Activase",
+      "use Bacteriostatic Water for Injection, USP",
+      "excessive agitation during dilution"
+    ]
+  },
+  "verapamil": {
+    "medications": [
+      "ivabradine",
+      "simvastatin",
+      "lovastatin",
+      "atorvastatin",
+      "beta-adrenergic blockers",
+      "digoxin",
+      "digitoxin",
+      "disopyramide",
+      "flecainide",
+      "quinidine",
+      "alcohol",
+      "nitrates",
+      "cimetidine",
+      "lithium",
+      "carbamazepine",
+      "rifampin",
+      "phenobarbital",
+      "cyclosporin",
+      "theophylline",
+      "inhalation anesthetics",
+      "neuromuscular blocking agents",
+      "telithromycin",
+      "clonidine",
+      "sirolimus",
+      "temsirolimus",
+      "everolimus",
+      "erythromycin",
+      "ritonavir"
+    ],
+    "diseases": [
+      "severe left ventricular dysfunction",
+      "hypotension",
+      "sick sinus syndrome",
+      "second- or third-degree AV block",
+      "atrial flutter or atrial fibrillation with an accessory bypass tract",
+      "hypersensitivity to verapamil hydrochloride",
+      "hepatic (liver) dysfunction",
+      "renal impairment",
+      "pregnancy",
+      "hypertrophic cardiomyopathy (IHSS)"
+    ],
+    "do_not": [
+      "co-administer ivabradine with verapamil",
+      "administer disopyramide within 48 hours before or 24 hours after verapamil",
+      "combine verapamil with quinidine"
+    ]
+  },
+  "tetanus": {
+    "medications": [],
+    "diseases": [
+      "pregnancy",
+      "breastfeeding"
+    ],
+    "do_not": [
+      "use"
+    ]
+  },
+  "acellular pertussis vaccine": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "feverfew": {
+    "medications": [],
+    "diseases": [
+      "pregnancy",
+      "breastfeeding"
+    ],
+    "do_not": []
+  },
+  "amoxicillin": {
+    "medications": [
+      "probenecid",
+      "oral anticoagulants",
+      "allopurinol",
+      "oral contraceptives"
+    ],
+    "diseases": [
+      "History of a serious hypersensitivity reaction to Amoxicillin and Clavulanate Potassium Tablets or to other beta-lactams",
+      "History of cholestatic jaundice/hepatic dysfunction associated with Amoxicillin and Clavulanate Potassium Tablets"
+    ],
+    "do_not": [
+      "co-administer with probenecid",
+      "co-administer with allopurinol"
+    ]
+  },
+  "edetate calcium disodium": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "oxycodone": {
+    "medications": [
+      "CYP3A4 inhibitors (e.g., erythromycin, ketoconazole, ritonavir)",
+      "CYP3A4 inducers (e.g., rifampin, carbamazepine, phenytoin)",
+      "benzodiazepines",
+      "other CNS depressants (sedative hypnotics, anxiolytics, tranquilizers, muscle relaxants, general anesthetics, antipsychotics, and other opioids)",
+      "alcohol",
+      "monoamine oxidase inhibitors (MAOIs) such as phenelzine, tranylcypromine, linezolid",
+      "serotonergic drugs (SSRIs, SNRIs, TCAs, triptans, 5-HT3 antagonists, tramadol, mirtazapine, trazodone)",
+      "mixed agonist/antagonist opioids (butorphanol, nalbuphine, pentazocine)",
+      "partial agonist opioids (e.g., buprenorphine)",
+      "lamotrigine",
+      "probenecid",
+      "zidovudine"
+    ],
+    "diseases": [
+      "significant respiratory depression",
+      "acute or severe bronchial asthma in an unmonitored setting or in the absence of resuscitative equipment",
+      "known or suspected gastrointestinal obstruction, including paralytic ileus",
+      "circulatory shock",
+      "increased intracranial pressure or brain tumors",
+      "head injury or impaired consciousness",
+      "adrenal insufficiency",
+      "hypotension with risk of severe consequences",
+      "hepatic impairment or renal impairment",
+      "pregnancy and risk of neonatal opioid withdrawal syndrome",
+      "labor or delivery",
+      "seizure disorders"
+    ],
+    "do_not": [
+      "drive",
+      "operate heavy machinery",
+      "abruptly discontinue",
+      "share",
+      "take acetaminophen above 4000 milligrams per day",
+      "use benzodiazepines or other CNS depressants with oxycodone and acetaminophen tablets",
+      "use MAOIs while taking oxycodone and acetaminophen tablets",
+      "use mixed agonist/antagonist opioids",
+      "use partial agonist opioids with a full opioid agonist",
+      "use acetaminophen-containing products",
+      "drink alcohol",
+      "discontinue abruptly"
+    ]
+  },
+  "dimercaprol": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "dimercaptosuccinic acid": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "lidocaine": {
+    "medications": [
+      "other topical analgesics"
+    ],
+    "diseases": [
+      "broken skin",
+      "damaged skin",
+      "irritated skin",
+      "swollen skin",
+      "puncture wounds"
+    ],
+    "do_not": [
+      "apply to broken, damaged, or irritated skin",
+      "use with other topical analgesics",
+      "use more than 1 patch at a time",
+      "bandage tightly",
+      "apply local heat",
+      "contact eyes or mucous membranes",
+      "keep children and pets away from used or disposed patches",
+      "chew or ingest used patches"
+    ]
+  },
+  "dimercaptopropane sulfonate": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "venlafaxine": {
+    "medications": [
+      "alcohol",
+      "Monoamine oxidase inhibitors (MAOIs)",
+      "Linezolid",
+      "Methylene blue",
+      "Cimetidine",
+      "Diazepam",
+      "Haloperidol",
+      "Lithium",
+      "Warfarin",
+      "NSAIDs",
+      "Aspirin",
+      "Triptans",
+      "St. John's Wort",
+      "Tryptophan supplements",
+      "Fentanyl",
+      "Tramadol",
+      "Meperidine",
+      "Methadone",
+      "Indinavir",
+      "Ketoconazole",
+      "CYP3A4 inhibitors",
+      "CYP2D6 inhibitors",
+      "Imipramine",
+      "Desipramine",
+      "Metoprolol",
+      "Risperidone",
+      "Terfenadine"
+    ],
+    "diseases": [
+      "Angle-Closure Glaucoma",
+      "Pregnancy",
+      "Nursing/Breastfeeding",
+      "Renal impairment",
+      "Liver cirrhosis / hepatic impairment",
+      "Recent history of myocardial infarction or unstable heart disease",
+      "Pre-existing hypertension",
+      "Hyponatremia risk (elderly or diuretic use)",
+      "Bleeding risk / bleeding disorders"
+    ],
+    "do_not": [
+      "start MAOI",
+      "start linezolid",
+      "start methylene blue",
+      "start venlafaxine within 14 days of stopping an MAOI",
+      "stop venlafaxine abruptly",
+      "drink alcohol",
+      "continue venlafaxine during treatment with linezolid or intravenous methylene blue"
+    ]
+  },
+  "methylphenidate": {
+    "medications": [
+      "Monoamine oxidase inhibitors (MAOIs) (e.g., selegiline, tranylcypromine, isocarboxazid, phenelzine, linezolid, methylene blue)",
+      "Halogenated anesthetics (e.g., halothane, isoflurane, enflurane, desflurane, sevoflurane)",
+      "Risperidone",
+      "Antihypertensive drugs (including potassium-sparing and thiazide diuretics, calcium channel blockers, ACE inhibitors, ARBs, beta blockers, and centrally acting alpha-2 receptor agonists)"
+    ],
+    "diseases": [
+      "Cardiac disease",
+      "Hypersensitivity to methylphenidate or other components"
+    ],
+    "do_not": [
+      "crush or chew the tablets",
+      "use methylphenidate hydrochloride extended-release tablets on the day of surgery",
+      "use MAOI with methylphenidate or within 14 days of MAOI treatment"
+    ]
+  },
+  "famotidine": {
+    "medications": [
+      "Tizanidine",
+      "Dasatinib",
+      "Delavirdine mesylate",
+      "Cefditoren",
+      "Fosamprenavir",
+      "Atazanavir",
+      "Erlotinib",
+      "Ketoconazole",
+      "Itraconazole",
+      "Ledipasvir/sofosbuvir",
+      "Nilotinib",
+      "Rilpivirine"
+    ],
+    "diseases": [
+      "History of hypersensitivity to famotidine or other H2 receptor antagonists",
+      "Renal impairment (moderate to severe)"
+    ],
+    "do_not": [
+      "use with tizanidine",
+      "use with dasatinib",
+      "use with delavirdine mesylate",
+      "use with cefditoren",
+      "use with fosamprenavir",
+      "use with atazanavir",
+      "use with erlotinib",
+      "use with ketoconazole",
+      "use with itraconazole",
+      "use with ledipasvir/sofosbuvir",
+      "use with nilotinib",
+      "use with rilpivirine"
+    ]
+  },
+  "ursodeoxycholic acid": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "diphenhydramine": {
+    "medications": [
+      "sedatives",
+      "tranquilizers",
+      "alcohol",
+      "diphenhydramine-containing products"
+    ],
+    "diseases": [
+      "glaucoma",
+      "emphysema",
+      "chronic bronchitis",
+      "enlarged prostate (benign prostatic hyperplasia)",
+      "pregnancy",
+      "breastfeeding"
+    ],
+    "do_not": [
+      "make a child sleepy",
+      "drink alcohol",
+      "take more than 6 times in 24 hours"
+    ]
+  },
+  "ketoconazole": {
+    "medications": [
+      "dofetilide",
+      "quinidine",
+      "pimozide",
+      "lurasidone",
+      "cisapride",
+      "methadone",
+      "disopyramide",
+      "dronedarone",
+      "ranolazine",
+      "midazolam",
+      "alprazolam",
+      "triazolam",
+      "irinotecan",
+      "dasatinib",
+      "lapatinib",
+      "nilotinib",
+      "bortezomib",
+      "busulphan",
+      "docetaxel",
+      "erlotinib",
+      "imatinib",
+      "ixabepilone",
+      "paclitaxel",
+      "trimetrexate",
+      "vinca alkaloids",
+      "aripiprazole",
+      "quetiapine",
+      "risperidone",
+      "ramelteon",
+      "indinavir",
+      "maraviroc",
+      "saquinavir",
+      "nadolol",
+      "felodipine",
+      "nisoldipine",
+      "verapamil",
+      "dihydropyridines",
+      "bosentan",
+      "aliskiren",
+      "cilostazol",
+      "coumarins",
+      "dabigatran",
+      "rivaroxaban",
+      "carbamazepine",
+      "phenytoin",
+      "rifabutin",
+      "rifampicin",
+      "telithromycin",
+      "colchicine",
+      "tolvaptan",
+      "ritonavir",
+      "ritonavir-boosted darunavir",
+      "ritonavir-boosted fosamprenavir",
+      "efavirenz",
+      "nevirapine",
+      "sirolimus",
+      "everolimus",
+      "temsirolimus",
+      "cyclosporine",
+      "tacrolimus",
+      "methylprednisolone",
+      "dexamethasone",
+      "fluticasone",
+      "budesonide",
+      "ciclesonide"
+    ],
+    "diseases": [
+      "acute or chronic liver disease",
+      "pregnancy",
+      "hypersensitivity",
+      "nursing mothers",
+      "adrenal insufficiency"
+    ],
+    "do_not": [
+      "coadminister with midazolam",
+      "coadminister with triazolam",
+      "coadminister with alprazolam",
+      "coadminister with lurasidone",
+      "coadminister with cisapride",
+      "coadminister with methadone",
+      "coadminister with disopyramide",
+      "coadminister with dronedarone",
+      "coadminister with ranolazine",
+      "coadminister with dofetilide",
+      "coadminister with quinidine",
+      "coadminister with pimozide",
+      "drink alcohol",
+      "breast feed",
+      "use during pregnancy",
+      "use in liver disease",
+      "coadminister with tolvaptan"
+    ]
+  },
+  "salmeterol": {
+    "medications": [
+      "ritonavir",
+      "atazanavir",
+      "clarithromycin",
+      "indinavir",
+      "itraconazole",
+      "nefazodone",
+      "nelfinavir",
+      "saquinavir",
+      "ketoconazole",
+      "telithromycin",
+      "monoamine oxidase inhibitors",
+      "tricyclic antidepressants",
+      "beta-blockers",
+      "non-potassium-sparing diuretics",
+      "salmeterol",
+      "long-acting beta-2-adrenergic agonists (LABAs)"
+    ],
+    "diseases": [
+      "status asthmaticus",
+      "acute asthma requiring intensive measures",
+      "milk protein allergy",
+      "milk protein hypersensitivity",
+      "heart problems",
+      "high blood pressure",
+      "seizures",
+      "thyroid problems",
+      "diabetes",
+      "liver problems",
+      "osteoporosis",
+      "immune system problems",
+      "glaucoma",
+      "cataracts",
+      "infection (viral, bacterial, fungal, or parasitic)",
+      "chickenpox",
+      "measles",
+      "pregnancy",
+      "breastfeeding"
+    ],
+    "do_not": [
+      "use a spacer",
+      "use a volume holding chamber",
+      "exceed two inhalations per 24 hours",
+      "open the cap before you are ready for your dose",
+      "take two doses at one time",
+      "use other LABAs",
+      "treat sudden, severe asthma symptoms",
+      "give Fluticasone Propionate/Salmeterol inhalation powder to other people"
+    ]
+  },
+  "clarithromycin": {
+    "medications": [
+      "disopyramide",
+      "quinidine",
+      "dofetilide",
+      "amiodarone",
+      "sotalol",
+      "procainamide",
+      "digoxin",
+      "warfarin",
+      "carbamazepine",
+      "itraconazole",
+      "fluconazole",
+      "colchicine",
+      "pimozide",
+      "quetiapine",
+      "lurasidone",
+      "tolterodine",
+      "atazanavir",
+      "saquinavir",
+      "ritonavir",
+      "etravirine",
+      "maraviroc",
+      "boceprevir",
+      "zidovudine",
+      "verapamil",
+      "amlodipine",
+      "diltiazem",
+      "nifedipine",
+      "ergotamine",
+      "dihydroergotamine",
+      "lomitapide",
+      "lovastatin",
+      "simvastatin",
+      "atorvastatin",
+      "pravastatin",
+      "fluvastatin",
+      "nateglinide",
+      "pioglitazone",
+      "repaglinide",
+      "rosiglitazone",
+      "insulin",
+      "cyclosporine",
+      "tacrolimus",
+      "sildenafil",
+      "tadalafil",
+      "vardenafil",
+      "theophylline",
+      "midazolam",
+      "triazolam",
+      "alprazolam",
+      "temazepam",
+      "nitrazepam",
+      "lorazepam",
+      "rifabutin",
+      "rifampin",
+      "rifapentine",
+      "efavirenz",
+      "nevirapine",
+      "omeprazole",
+      "St. John's Wort",
+      "alfentanil",
+      "methylprednisolone",
+      "cilostazol",
+      "bromocriptine",
+      "vinblastine",
+      "phenobarbital",
+      "hexobarbital",
+      "phenytoin",
+      "valproate",
+      "theophylline"
+    ],
+    "diseases": [
+      "hepatic impairment",
+      "cholestatic jaundice",
+      "renal impairment",
+      "hypersensitivity to macrolides"
+    ],
+    "do_not": [
+      "co-administer with cisapride",
+      "co-administer with pimozide",
+      "co-administer with ergotamine",
+      "co-administer with dihydroergotamine",
+      "co-administer with lomitapide",
+      "co-administer with lovastatin",
+      "co-administer with simvastatin",
+      "co-administer with lurasidone",
+      "co-administer with sildenafil",
+      "co-administer with tadalafil",
+      "co-administer with vardenafil",
+      "co-administer with midazolam",
+      "co-administer with triazolam",
+      "co-administer with alprazolam",
+      "co-administer with temazepam",
+      "co-administer with nitrazepam",
+      "co-administer with lorazepam",
+      "co-administer with zidovudine",
+      "co-administer with ritonavir",
+      "co-administer with atazanavir",
+      "co-administer with saquinavir",
+      "co-administer with efavirenz",
+      "co-administer with nevirapine",
+      "co-administer with ritonavir or other protease inhibitors without dose adjustment",
+      "co-administer with rifampicin",
+      "co-administer with rifabutin",
+      "co-administer with rifapentine",
+      "co-administer with itraconazole",
+      "co-administer with omeprazole",
+      "co-administer with St. John's Wort",
+      "co-administer with alfentanil",
+      "co-administer with methylprednisolone",
+      "co-administer with cilostazol",
+      "co-administer with bromocriptine",
+      "co-administer with vinblastine",
+      "co-administer with phenobarbital",
+      "co-administer with hexobarbital",
+      "co-administer with phenytoin",
+      "co-administer with valproate",
+      "co-administer with theophylline",
+      "co-administer zidovudine concurrently with clarithromycin"
+    ]
+  },
+  "lithium": {
+    "medications": [
+      "diuretics",
+      "NSAIDs",
+      "renin-angiotensin system antagonists",
+      "metronidazole",
+      "serotonergic drugs",
+      "antipsychotics",
+      "nitroimidazole antibiotics",
+      "acetazolamide",
+      "urea",
+      "xanthine preparations",
+      "alkalinizing agents",
+      "methyldopa",
+      "phenytoin",
+      "carbamazepine",
+      "iodide preparations",
+      "calcium channel blocking agents",
+      "SGLT2 inhibitors",
+      "neuromuscular blocking agents"
+    ],
+    "diseases": [
+      "Severe renal impairment",
+      "Pregnancy"
+    ],
+    "do_not": [
+      "restrict sodium",
+      "diuretic administration"
+    ]
+  },
+  "lisdexamfetamine": {
+    "medications": [
+      "MAO inhibitors",
+      "serotonergic drugs",
+      "CYP2D6 inhibitors",
+      "urinary alkalinizing agents",
+      "urinary acidifying agents",
+      "tricyclic antidepressants"
+    ],
+    "diseases": [
+      "cardiac disease",
+      "severe renal impairment",
+      "end-stage renal disease"
+    ],
+    "do_not": [
+      "administer VYVANSE during or within 14 days following administration of MAOI",
+      "co-administer VYVANSE with urinary alkalinizing agents"
+    ]
+  },
+  "clopidogrel": {
+    "medications": [
+      "Rifampin (strong CYP2C19 inducer)",
+      "CYP2C19 inducers (class)",
+      "Omeprazole",
+      "Esomeprazole",
+      "Dexlansoprazole",
+      "Lansoprazole",
+      "Pantoprazole",
+      "Opioid agonists (e.g., morphine)",
+      "NSAIDs",
+      "Warfarin (CYP2C9 substrates)",
+      "SSRIs and SNRIs",
+      "Other antiplatelet agents",
+      "Repaglinide"
+    ],
+    "diseases": [
+      "Active bleeding (e.g., peptic ulcer, intracranial hemorrhage)",
+      "Hypersensitivity to clopidogrel or any component"
+    ],
+    "do_not": [
+      "concomitant use of clopidogrel with omeprazole",
+      "concomitant use of clopidogrel with esomeprazole",
+      "concomitant use of strong CYP2C19 inducers with clopidogrel",
+      "concomitant use of repaglinide with clopidogrel",
+      "concomitant use of clopidogrel with NSAIDs",
+      "concomitant use of clopidogrel with warfarin",
+      "concomitant use of clopidogrel with SSRIs or SNRIs",
+      "concomitant use of clopidogrel with opioid agonists (e.g., morphine)",
+      "concomitant use of clopidogrel with other antiplatelet agents"
+    ]
+  },
+  "formoterol": {
+    "medications": [
+      "MAO inhibitors",
+      "tricyclic antidepressants",
+      "drugs that prolong QTc interval",
+      "adrenergic drugs",
+      "xanthine derivatives",
+      "steroids",
+      "diuretics",
+      "non-potassium sparing diuretics",
+      "beta-blockers"
+    ],
+    "diseases": [
+      "asthma"
+    ],
+    "do_not": []
+  },
+  "mometasone": {
+    "medications": [
+      "ritonavir",
+      "steroid medicines for asthma, allergies or skin rash",
+      "ketoconazole pills"
+    ],
+    "diseases": [
+      "eye infection",
+      "glaucoma",
+      "cataracts",
+      "pregnancy",
+      "breastfeeding",
+      "tuberculosis",
+      "chickenpox",
+      "measles"
+    ],
+    "do_not": [
+      "spray into your eyes or mouth",
+      "share this bottle with anyone else",
+      "use more than directed",
+      "use in children under 2 years of age"
+    ]
+  },
+  "albuterol": {
+    "medications": [
+      "other sympathomimetic aerosol bronchodilators",
+      "epinephrine",
+      "monoamine oxidase inhibitors",
+      "tricyclic antidepressants",
+      "beta-receptor blocking agents"
+    ],
+    "diseases": [
+      "history of hypersensitivity to albuterol or any components",
+      "cardiovascular disorders (e.g., coronary insufficiency, cardiac arrhythmias, hypertension)",
+      "convulsive disorders",
+      "hyperthyroidism",
+      "diabetes mellitus",
+      "pregnancy",
+      "nursing mothers (lactation)"
+    ],
+    "do_not": [
+      "increase the dose or frequency of the medication without medical consultation",
+      "use other sympathomimetic aerosol bronchodilators or epinephrine concomitantly",
+      "use more frequently than recommended",
+      "use other anti-asthma medicines unless prescribed"
+    ]
+  },
+  "racemic epinephrine": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "amoxicillin-clavulanate": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "doxorubicin": {
+    "medications": [
+      "bortezomib"
+    ],
+    "diseases": [
+      "history of severe hypersensitivity reactions to doxorubicin hydrochloride or the components",
+      "cardiomyopathy or reduced left ventricular function (pre-existing)"
+    ],
+    "do_not": [
+      "substitute doxorubicin hydrochloride liposome injection for other doxorubicin hydrochloride products",
+      "administer as bolus injection",
+      "administer as an undiluted suspension or as an intravenous bolus",
+      "use with in-line filters",
+      "mix doxorubicin hydrochloride liposome injection with other drugs",
+      "remove the needle until attempts are made to aspirate extravasated fluid",
+      "rapidly flush the infusion line",
+      "use if a precipitate or foreign matter is present"
+    ]
+  },
+  "amiodarone": {
+    "medications": [
+      "QT prolonging drugs",
+      "digoxin",
+      "beta blockers",
+      "verapamil",
+      "diltiazem",
+      "clonidine",
+      "ivabradine",
+      "grapefruit juice",
+      "macrolide antibiotics",
+      "fluoroquinolone antibiotics",
+      "azole antifungals",
+      "cimetidine",
+      "protease inhibitors",
+      "St. John's Wort",
+      "Cyclosporine",
+      "cholestyramine",
+      "quinidine",
+      "procainamide",
+      "flecainide",
+      "lidocaine",
+      "fentanyl",
+      "sofosbuvir",
+      "warfarin",
+      "simvastatin",
+      "lovastatin",
+      "atorvastatin",
+      "phenytoin",
+      "halogenated inhalation anesthetic agents",
+      "lithium",
+      "phenothiazines",
+      "tricyclic antidepressants"
+    ],
+    "diseases": [
+      "Cardiogenic shock",
+      "Sick sinus syndrome",
+      "Second-degree AV block",
+      "Third-degree AV block",
+      "Bradycardia leading to syncope without a functioning pacemaker",
+      "Hypersensitivity to iodine"
+    ],
+    "do_not": [
+      "concomitant use of antiarrhythmics and drugs known to prolong the QT interval",
+      "grapefruit juice"
+    ]
+  },
+  "magnesium sulfate": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "somatropin": {
+    "medications": [
+      "glucocorticoids (including cortisone acetate and prednisone)",
+      "drugs/metabolized by cytochrome P450 (CP450) enzymes",
+      "oral estrogens",
+      "insulin and/or other hypoglycemic agents"
+    ],
+    "diseases": [
+      "acute critical illness",
+      "Prader-Willi syndrome with severe obesity or upper airway obstruction/sleep apnea or severe respiratory impairment",
+      "active malignancy",
+      "diabetic retinopathy (active proliferative or severe non-proliferative)",
+      "pediatric closed epiphyses"
+    ],
+    "do_not": [
+      "shake the vial",
+      "use diluent if hypersensitive to benzyl alcohol",
+      "use diluent if hypersensitive to metacresol"
+    ]
+  },
+  "rosuvastatin": {
+    "medications": [
+      "aluminum and magnesium hydroxide antacids",
+      "warfarin",
+      "cyclosporine",
+      "teriflunomide",
+      "enasidenib",
+      "capmatinib",
+      "fostamatinib",
+      "febuxostat",
+      "gemfibrozil",
+      "tafamidis",
+      "sofosbuvir/velpatasvir/voxilaprevir",
+      "ledipasvir/sofosbuvir",
+      "simeprevir",
+      "dasabuvir/ombitasvir/paritaprevir/ritonavir",
+      "elbasvir/grazoprevir",
+      "glecaprevir/pibrentasvir",
+      "atazanavir/ritonavir",
+      "lopinavir/ritonavir",
+      "darolutamide",
+      "regorafenib",
+      "fenofibrate",
+      "fenofibric acid",
+      "niacin",
+      "colchicine"
+    ],
+    "diseases": [
+      "acute liver failure",
+      "decompensated cirrhosis",
+      "hypersensitivity to rosuvastatin or any excipients",
+      "hypersensitivity reactions including rash, pruritus, urticaria, and angioedema"
+    ],
+    "do_not": [
+      "exceed rosuvastatin dose",
+      "use gemfibrozil with rosuvastatin",
+      "use tafamidis with rosuvastatin",
+      "use antiviral medications with rosuvastatin",
+      "take rosuvastatin within 2 hours of an aluminum and magnesium hydroxide antacid"
+    ]
+  },
+  "metronidazole": {
+    "medications": [
+      "disulfiram",
+      "alcohol",
+      "warfarin and other oral anticoagulants",
+      "lithium",
+      "busulfan",
+      "cimetidine",
+      "phenytoin",
+      "phenobarbital",
+      "QT-prolonging drugs",
+      "propylene glycol"
+    ],
+    "diseases": [
+      "Cockayne syndrome",
+      "Pregnancy (first trimester)",
+      "Hypersensitivity to metronidazole or other nitroimidazole derivatives",
+      "Blood dyscrasia",
+      "Hepatic impairment"
+    ],
+    "do_not": [
+      "drink alcohol",
+      "consume propylene glycol-containing products",
+      "take disulfiram",
+      "exceed 4 g per day",
+      "skip doses",
+      "administer metronidazole with busulfan",
+      "administer metronidazole to patients who have taken disulfiram within the last two weeks"
+    ]
+  },
+  "budesonide": {
+    "medications": [
+      "strong CYP3A4 inhibitors (e.g., ritonavir, ketoconazole, atazanavir, clarithromycin, indinavir, itraconazole, nefazodone, nelfinavir, saquinavir, telithromycin)"
+    ],
+    "diseases": [
+      "status asthmaticus or other acute episodes of asthma requiring intensive measures",
+      "hypersensitivity to budesonide or any of the ingredients in budesonide inhalation suspension"
+    ],
+    "do_not": [
+      "relief of acute bronchospasm",
+      "use ultrasonic nebulizers"
+    ]
+  },
+  "ifosfamide": {
+    "medications": [
+      "CYP3A4 inducers",
+      "CYP3A4 inhibitors"
+    ],
+    "diseases": [
+      "Hypersensitivity to ifosfamide",
+      "Urinary outflow obstruction"
+    ],
+    "do_not": []
+  },
+  "spironolactone": {
+    "medications": [
+      "potassium supplementation",
+      "ACE inhibitors",
+      "angiotensin receptor blockers",
+      "aldosterone blockers",
+      "non-steroidal anti-inflammatory drugs (NSAIDs)",
+      "heparin and low molecular weight heparin",
+      "trimethoprim",
+      "digoxin",
+      "cholestyramine",
+      "acetylsalicylic acid (ASA)",
+      "repaglinide",
+      "midazolam",
+      "sirolimus",
+      "tacrolimus",
+      "eplerenone"
+    ],
+    "diseases": [
+      "Hyperkalemia",
+      "Addison\u2019s disease"
+    ],
+    "do_not": [
+      "use eplerenone"
+    ]
+  },
+  "warfarin": {
+    "medications": [
+      "antibiotics",
+      "antifungals",
+      "botanical (herbal) products",
+      "CYP2C9 inhibitors",
+      "CYP1A2 inhibitors",
+      "CYP3A4 inhibitors",
+      "CYP2C9 inducers",
+      "CYP1A2 inducers",
+      "CYP3A4 inducers",
+      "anticoagulants",
+      "antiplatelet agents",
+      "NSAIDs",
+      "serotonin reuptake inhibitors (SSRIs)"
+    ],
+    "diseases": [
+      "pregnancy",
+      "hemorrhagic tendencies or blood dyscrasias",
+      "recent or contemplated CNS or eye surgery or traumatic surgery with large open surfaces",
+      "bleeding tendencies or risk factors (e.g., GI, GU, respiratory; CNS hemorrhage; cerebral aneurysms; dissecting aorta; pericarditis with effusion)",
+      "threatened abortion, eclampsia, and preeclampsia",
+      "unsupervised patients with potential high levels of non-compliance",
+      "spinal puncture or other diagnostic or therapeutic procedures with potential for uncontrollable bleeding",
+      "malignant hypertension"
+    ],
+    "do_not": [
+      "double the dose",
+      "eat large amounts of green leafy vegetables"
+    ]
+  },
+  "atomoxetine": {
+    "medications": [
+      "Monoamine oxidase inhibitors (MAOIs)",
+      "strong CYP2D6 inhibitors (e.g., paroxetine, fluoxetine, quinidine)",
+      "beta-2 agonists (e.g., albuterol) and other antihypertensive drugs/pressor agents (e.g., dopamine, dobutamine)",
+      "midazolam (CYP3A4 substrate)"
+    ],
+    "diseases": [
+      "Narrow-angle glaucoma",
+      "Pheochromocytoma or history of pheochromocytoma",
+      "Severe cardiovascular disorders",
+      "Hepatic impairment (moderate to severe)",
+      "Bipolar disorder or history of bipolar disorder",
+      "Hypersensitivity to atomoxetine or other constituents"
+    ],
+    "do_not": [
+      "take MAOIs",
+      "start MAOI within 2 weeks after discontinuing atomoxetine",
+      "open capsules",
+      "exceed maximum daily dose"
+    ]
+  },
+  "heparin": {
+    "medications": [
+      "warfarin sodium",
+      "dicumarol",
+      "NSAIDs (including salicylic acid, ibuprofen, indomethacin, celecoxib)",
+      "dextran",
+      "phenylbutazone",
+      "thienopyridines",
+      "dipyridamole",
+      "hydroxychloroquine",
+      "glycoprotein IIb/IIIa antagonists (abciximab, eptifibatide, tirofiban)",
+      "andexanet alfa",
+      "digitalis",
+      "tetracyclines",
+      "nicotine",
+      "antihistamines",
+      "intravenous nitroglycerin",
+      "antithrombin III (human)"
+    ],
+    "diseases": [
+      "History of heparin-induced thrombocytopenia (HIT) or HIT with thrombosis (HIT/HITTS)",
+      "History of thrombocytopenia with pentosan polysulfate",
+      "Known hypersensitivity to heparin or pork products",
+      "In whom suitable blood coagulation tests cannot be performed at appropriate intervals",
+      "Uncontrollable bleeding state (except when due to disseminated intravascular coagulation)"
+    ],
+    "do_not": [
+      "intramuscular use",
+      "use heparin after use of andexanet alfa"
+    ]
+  },
+  "tretinoin": {
+    "medications": [
+      "topical medications",
+      "medicated or abrasive soaps and cleansers",
+      "cosmetics with strong drying effect",
+      "alcohol-containing products",
+      "astringents",
+      "spices",
+      "lime",
+      "sulfur",
+      "resorcinol",
+      "salicylic acid"
+    ],
+    "diseases": [
+      "pregnancy",
+      "eczema"
+    ],
+    "do_not": [
+      "apply to eyes",
+      "apply to mouth",
+      "apply to mucous membranes",
+      "apply to angles of the nose"
+    ]
+  },
+  "leuprolide": {
+    "medications": [
+      "GnRH agonists"
+    ],
+    "diseases": [
+      "pregnancy",
+      "hypersensitivity to GnRH or GnRH agonist analogs",
+      "metastatic vertebral lesions",
+      "urinary tract obstruction",
+      "diabetes mellitus or hyperglycemia",
+      "congenital long QT syndrome",
+      "congestive heart failure",
+      "electrolyte abnormalities"
+    ],
+    "do_not": []
+  },
+  "calcium gluconate": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "mecasermin": {
+    "medications": [],
+    "diseases": [
+      "Closed Epiphyses",
+      "Malignant Neoplasia",
+      "Growth hormone deficiency (GH deficiency)",
+      "Malnutrition",
+      "Hypothyroidism",
+      "Chronic anti-inflammatory corticosteroid therapy"
+    ],
+    "do_not": [
+      "administer intravenously",
+      "increase subsequent doses to make up for omitted doses",
+      "use cloudy solution",
+      "use solution that contains particulates"
+    ]
+  },
+  "sodium bicarbonate": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "dacarbazine": {
+    "medications": [
+      "other anti-neoplastic drugs"
+    ],
+    "diseases": [
+      "hypersensitivity to dacarbazine",
+      "pregnancy"
+    ],
+    "do_not": []
+  },
+  "doxycycline": {
+    "medications": [
+      "anticoagulants",
+      "penicillin",
+      "antacids containing aluminum, calcium, or magnesium",
+      "iron-containing preparations",
+      "bismuth subsalicylate",
+      "barbiturates",
+      "carbamazepine",
+      "phenytoin",
+      "oral contraceptives",
+      "isotretinoin"
+    ],
+    "diseases": [
+      "pregnancy",
+      "lactation (nursing mothers)",
+      "hypersensitivity to tetracyclines",
+      "intracranial hypertension",
+      "pediatric patients \u2264 8 years"
+    ],
+    "do_not": [
+      "sun exposure",
+      "exceed 4 months"
+    ]
+  },
+  "rabies vaccine": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "tetanus toxoid vaccine": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "guanfacine": {
+    "medications": [
+      "phenobarbital",
+      "phenytoin",
+      "phenothiazines",
+      "barbiturates",
+      "benzodiazepines",
+      "alcohol"
+    ],
+    "diseases": [
+      "hypersensitivity to guanfacine hydrochloride",
+      "severe coronary insufficiency",
+      "recent myocardial infarction",
+      "cerebrovascular disease",
+      "chronic renal failure",
+      "hepatic failure",
+      "pregnancy"
+    ],
+    "do_not": [
+      "discontinue therapy abruptly"
+    ]
+  },
+  "triptorelin": {
+    "medications": [
+      "GnRH agonists",
+      "hyperprolactinemic drugs"
+    ],
+    "diseases": [
+      "hypersensitivity to triptorelin or any other component of the product, or other GnRH agonists"
+    ],
+    "do_not": [
+      "prime the needle"
+    ]
+  },
+  "cyclobenzaprine": {
+    "medications": [
+      "monoamine oxidase inhibitors",
+      "SSRIs",
+      "SNRIs",
+      "TCAs",
+      "tramadol",
+      "bupropion",
+      "meperidine",
+      "verapamil",
+      "alcohol",
+      "barbiturates",
+      "other CNS depressants",
+      "guanethidine",
+      "serotonergic drugs"
+    ],
+    "diseases": [
+      "acute recovery phase of myocardial infarction",
+      "arrhythmias",
+      "heart block or conduction disturbances",
+      "congestive heart failure",
+      "hyperthyroidism"
+    ],
+    "do_not": [
+      "use MAO inhibitors with cyclobenzaprine"
+    ]
+  },
+  "mexiletine": {
+    "medications": [
+      "fluvoxamine",
+      "phenytoin",
+      "rifampin",
+      "phenobarbital",
+      "propafenone",
+      "cimetidine",
+      "theophylline",
+      "caffeine",
+      "magnesium-aluminum hydroxide",
+      "digoxin"
+    ],
+    "diseases": [
+      "cardiogenic shock",
+      "second-degree AV block (without pacemaker)",
+      "third-degree AV block (without pacemaker)",
+      "liver disease",
+      "hepatic impairment",
+      "hepatic dysfunction",
+      "severe congestive heart failure",
+      "hypotension",
+      "pregnancy",
+      "seizure disorder"
+    ],
+    "do_not": [
+      "use mexiletine in cardiogenic shock",
+      "use mexiletine in second-degree AV block without pacemaker",
+      "use mexiletine in third-degree AV block without pacemaker",
+      "exceed 1200 mg/day",
+      "treat asymptomatic ventricular premature contractions"
+    ]
+  },
+  "simvastatin": {
+    "medications": [
+      "itraconazole",
+      "ketoconazole",
+      "posaconazole",
+      "voriconazole",
+      "erythromycin",
+      "clarithromycin",
+      "telithromycin",
+      "HIV protease inhibitors",
+      "boceprevir",
+      "telaprevir",
+      "nefazodone",
+      "cobicistat-containing products",
+      "gemfibrozil",
+      "cyclosporine",
+      "danazol",
+      "verapamil",
+      "diltiazem",
+      "dronedarone",
+      "amiodarone",
+      "amlodipine",
+      "ranolazine",
+      "niacin",
+      "fibrate products",
+      "digoxin",
+      "colchicine",
+      "daptomycin",
+      "coumarin anticoagulants",
+      "lomitapide"
+    ],
+    "diseases": [
+      "Active liver disease",
+      "Pregnancy",
+      "Nursing mothers",
+      "Hypersensitivity to any component",
+      "Severe renal impairment"
+    ],
+    "do_not": [
+      "exceed 10 mg simvastatin daily",
+      "exceed 20 mg simvastatin daily",
+      "exceed 40 mg simvastatin daily when taking lomitapide",
+      "grapefruit juice",
+      "increase simvastatin dose to 80 mg daily",
+      "suspend simvastatin during treatment with strong CYP3A4 inhibitors",
+      "take strong CYP3A4 inhibitors with simvastatin"
+    ]
+  },
+  "morphine": {
+    "medications": [
+      "benzodiazepines",
+      "other CNS depressants",
+      "alcohol",
+      "serotonergic drugs",
+      "monoamine oxidase inhibitors (MAOIs)",
+      "mixed agonist/antagonist and partial agonist opioid analgesics (butorphanol, nalbuphine, pentazocine, buprenorphine)",
+      "muscle relaxants (cyclobenzaprine, metaxalone)",
+      "cimetidine",
+      "diuretics",
+      "anticholinergic drugs",
+      "P-glycoprotein (P-gp) inhibitors (e.g., quinidine)"
+    ],
+    "diseases": [
+      "significant respiratory depression",
+      "acute or severe bronchial asthma in an unmonitored setting or in the absence of resuscitative equipment",
+      "gastrointestinal obstruction including paralytic ileus",
+      "hypersensitivity to morphine",
+      "pregnancy (risk of Neonatal Opioid Withdrawal Syndrome, NOWS)"
+    ],
+    "do_not": [
+      "cut morphine sulfate extended-release tablets",
+      "break morphine sulfate extended-release tablets",
+      "chew morphine sulfate extended-release tablets",
+      "crush morphine sulfate extended-release tablets",
+      "dissolve morphine sulfate extended-release tablets",
+      "abruptly discontinue morphine sulfate extended-release tablets in physically dependent patients"
+    ]
+  },
+  "zolpidem": {
+    "medications": [
+      "CNS depressants",
+      "alcohol",
+      "opioids",
+      "imipramine",
+      "chlorpromazine",
+      "sertraline",
+      "fluoxetine",
+      "haloperidol",
+      "rifampin",
+      "St. John's wort",
+      "ketoconazole"
+    ],
+    "diseases": [
+      "severe hepatic impairment",
+      "elderly or debilitated",
+      "hypersensitivity to zolpidem",
+      "history of complex sleep behaviors after zolpidem tartrate extended-release tablets"
+    ],
+    "do_not": [
+      "exceed 12.5 mg daily",
+      "crush tablets",
+      "divide tablets",
+      "chew tablets",
+      "readminister zolpidem tartrate extended-release tablets during the same night",
+      "take more than one dose per night",
+      "use zolpidem tartrate extended-release tablets in severe hepatic impairment",
+      "take with a meal"
+    ]
+  },
+  "tranexamic acid": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "tetanus toxoid": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "adapalene": {
+    "medications": [
+      "other topical acne medications"
+    ],
+    "diseases": [
+      "pregnancy",
+      "breastfeeding"
+    ],
+    "do_not": [
+      "use on damaged skin",
+      "wax hair in areas where the product has been applied during the early weeks of use",
+      "contact eyes",
+      "contact lips",
+      "contact mouth",
+      "use more than one topical acne medication at a time"
+    ]
+  },
+  "benzoyl peroxide": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "oxybutynin": {
+    "medications": [
+      "anticholinergic drugs",
+      "ketoconazole",
+      "itraconazole",
+      "miconazole",
+      "erythromycin",
+      "clarithromycin",
+      "macrolide antibiotics",
+      "metoclopramide"
+    ],
+    "diseases": [
+      "urinary retention",
+      "gastric retention",
+      "uncontrolled narrow-angle glaucoma",
+      "severe decreased gastrointestinal motility",
+      "hypersensitivity to oxybutynin or any component of oxybutynin chloride extended-release tablets"
+    ],
+    "do_not": [
+      "chew",
+      "divide",
+      "crush"
+    ]
+  },
+  "salicylic acid": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "paracetamol": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "gemcitabine": {
+    "medications": [],
+    "diseases": [
+      "Perforation of the bladder",
+      "Hypersensitivity to gemcitabine or any component"
+    ],
+    "do_not": [
+      "empty bladder immediately prior to insertion",
+      "urine contact with skin during indwelling period"
+    ]
+  },
+  "triamcinolone": {
+    "medications": [
+      "antifungal agents",
+      "antibacterial agents"
+    ],
+    "diseases": [
+      "hypersensitivity to components of the preparation",
+      "pregnancy",
+      "nursing mothers",
+      "pediatric patients",
+      "dermatological infections"
+    ],
+    "do_not": [
+      "occlude_treated_area",
+      "contact_eyes",
+      "apply_to_eyes"
+    ]
+  },
+  "rabies immunoglobulin": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "goserelin": {
+    "medications": [
+      "anticoagulants",
+      "full-dose anticoagulation"
+    ],
+    "diseases": [
+      "hypersensitivity to GnRH, GnRH agonist analogues or any components in ZOLADEX",
+      "pregnancy"
+    ],
+    "do_not": []
+  },
+  "tinidazole": {
+    "medications": [
+      "Warfarin and other oral coumarin anticoagulants",
+      "Alcohol-containing beverages/preparations",
+      "Lithium",
+      "Cyclosporine",
+      "Tacrolimus",
+      "Fluorouracil",
+      "Phenytoin",
+      "Fosphenytoin",
+      "Phenobarbital",
+      "Rifampin",
+      "CYP3A4 inducers (e.g., phenobarbital, rifampin, phenytoin, fosphenytoin)",
+      "CYP3A4 inhibitors (e.g., cimetidine, ketoconazole)",
+      "Cholestyramine",
+      "Oxytetracycline",
+      "Disulfiram"
+    ],
+    "diseases": [
+      "Cockayne syndrome",
+      "Hypersensitivity to tinidazole or other nitroimidazole derivatives"
+    ],
+    "do_not": [
+      "drink alcohol",
+      "take disulfiram"
+    ]
+  },
+  "bupropion": {
+    "medications": [
+      "MAO inhibitors (MAOIs)",
+      "linezolid",
+      "intravenous methylene blue",
+      "ritonavir",
+      "lopinavir",
+      "efavirenz",
+      "carbamazepine",
+      "phenobarbital",
+      "phenytoin",
+      "ticlopidine",
+      "clopidogrel",
+      "tamoxifen",
+      "theophylline",
+      "systemic corticosteroids",
+      "other bupropion products",
+      "antipsychotics",
+      "antidepressants",
+      "levodopa",
+      "amantadine",
+      "alcohol",
+      "benzodiazepines",
+      "barbiturates",
+      "antiseizure medications"
+    ],
+    "diseases": [
+      "seizure disorder",
+      "bulimia nervosa",
+      "anorexia nervosa",
+      "moderate to severe hepatic impairment",
+      "renal impairment"
+    ],
+    "do_not": [
+      "start_bupropion_with_linezolid_or_methylene_blue",
+      "use_maoi_with_bupropion",
+      "start_bupropion_within_14_days_of_stopping_an_maoi",
+      "abrupt_discontinuation_of_alcohol",
+      "abrupt_discontinuation_of_benzodiazepines",
+      "abrupt_discontinuation_of_barbiturates",
+      "abrupt_discontinuation_of_antiepileptic_drugs"
+    ]
+  },
+  "chlorhexidine": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "sodium fluoride": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "insulin": {
+    "medications": [
+      "Monoamine oxidase inhibitors",
+      "ACE inhibitors",
+      "Angiotensin II receptor blocking agents",
+      "Disopyramide",
+      "Fibrates",
+      "Fluoxetine",
+      "Pentoxifylline",
+      "Pramlintide",
+      "Salicylates",
+      "Somatostatin analogs (e.g., octreotide)",
+      "Sulfonamide antibiotics",
+      "Atypical antipsychotics (e.g., olanzapine, clozapine)",
+      "Corticosteroids",
+      "Danazol",
+      "Diuretics",
+      "Estrogens",
+      "Glucagon",
+      "Isoniazid",
+      "Niacin",
+      "Oral contraceptives",
+      "Phenothiazines",
+      "Progestogens (e.g., in oral contraceptives)",
+      "Protease inhibitors",
+      "Somatropin",
+      "Sympathomimetic agents (e.g., albuterol, epinephrine, terbutaline)",
+      "Thyroid hormones",
+      "Alcohol",
+      "Beta-blockers",
+      "Clonidine",
+      "Guanethidine",
+      "Reserpine",
+      "Pentamidine"
+    ],
+    "diseases": [
+      "Hypoglycemia",
+      "Hypersensitivity to insulin lispro or to any of the excipients",
+      "Renal impairment",
+      "Hepatic impairment"
+    ],
+    "do_not": [
+      "mix ADMELOG with any other insulin",
+      "inject into areas of lipodystrophy or localized cutaneous amyloidosis",
+      "use during episodes of hypoglycemia",
+      "use ADMELOG if particulate matter or coloration is seen",
+      "expose ADMELOG in the pump reservoir to temperatures greater than 98.6\u00b0F (37\u00b0C)"
+    ]
+  },
+  "atropine": {
+    "medications": [
+      "Mexiletine",
+      "Metoclopramide"
+    ],
+    "diseases": [
+      "Coronary Artery Disease"
+    ],
+    "do_not": []
+  },
+  "pantoprazole": {
+    "medications": [
+      "rilpivirine-containing products",
+      "atazanavir",
+      "nelfinavir",
+      "saquinavir",
+      "warfarin",
+      "clopidogrel",
+      "methotrexate",
+      "iron salts",
+      "erlotinib",
+      "dasatinib",
+      "nilotinib",
+      "mycophenolate mofetil",
+      "ketoconazole",
+      "itraconazole",
+      "zinc-containing products",
+      "midazolam"
+    ],
+    "diseases": [
+      "pregnancy",
+      "hypersensitivity to pantoprazole or substituted benzimidazoles"
+    ],
+    "do_not": [
+      "use pantoprazole with rilpivirine-containing products",
+      "administer pantoprazole sodium for injection via Y-site with midazolam"
+    ]
+  },
+  "calcium carbonate": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "azithromycin": {
+    "medications": [
+      "warfarin",
+      "nelfinavir",
+      "digoxin",
+      "colchicine",
+      "phenytoin",
+      "other macrolide antibiotics"
+    ],
+    "diseases": [
+      "hypersensitivity to azithromycin, erythromycin, any macrolide or ketolide",
+      "history of cholestatic jaundice/hepatic dysfunction associated with prior use of azithromycin"
+    ],
+    "do_not": []
+  },
+  "multivitamin": {
+    "medications": [],
+    "diseases": [],
+    "do_not": [
+      "eat dairy products within one hour of fluoride administration",
+      "drink dairy products within one hour of fluoride administration"
+    ]
+  },
+  "tolterodine": {
+    "medications": [
+      "ketoconazole",
+      "itraconazole",
+      "clarithromycin",
+      "ritonavir",
+      "fluoxetine",
+      "anticholinergic (antimuscarinic) agents"
+    ],
+    "diseases": [
+      "urinary retention",
+      "gastric retention",
+      "uncontrolled narrow-angle glaucoma",
+      "severe hepatic impairment (Child-Pugh Class C)",
+      "severe renal impairment (Creatinine Clearance 10 to 30 mL/min)",
+      "hypersensitivity to tolterodine or fesoterodine"
+    ],
+    "do_not": []
+  },
+  "temozolomide": {
+    "medications": [
+      "dacarbazine",
+      "temozolomide"
+    ],
+    "diseases": [],
+    "do_not": [
+      "open the capsules",
+      "chew the capsules",
+      "dissolve the capsules"
+    ]
+  },
+  "nitazoxanide": {
+    "medications": [
+      "warfarin",
+      "highly plasma protein-bound drugs with narrow therapeutic indices"
+    ],
+    "diseases": [
+      "hypersensitivity to nitazoxanide or any ingredient in the formulations",
+      "HIV infection",
+      "immunodeficiency"
+    ],
+    "do_not": [
+      "administer nitazoxanide to pediatric patients 11 years of age or younger"
+    ]
+  },
+  "pralidoxime": {
+    "medications": [
+      "succinylcholine",
+      "mivacurium"
+    ],
+    "diseases": [],
+    "do_not": [
+      "fasten the hood",
+      "use your own autoinjectors on a casualty"
+    ]
+  },
+  "zinc oxide": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "ezetimibe": {
+    "medications": [
+      "strong CYP3A4 inhibitors (e.g., itraconazole, ketoconazole, posaconazole, voriconazole, erythromycin, clarithromycin, telithromycin, HIV protease inhibitors such as nelfinavir, ritonavir, darunavir/ritonavir, HCV protease inhibitors boceprevir and telaprevir, cobicistat-containing products, nefazodone)",
+      "cyclosporine",
+      "danazol",
+      "gemfibrozil",
+      "amiodarone",
+      "dronedarone",
+      "ranolazine",
+      "verapamil",
+      "diltiazem",
+      "lomitapide",
+      "daptomycin",
+      "niacin",
+      "fibrates (other than gemfibrozil)",
+      "colchicine",
+      "grapefruit juice",
+      "coumarin anticoagulants",
+      "fenofibrate",
+      "cholestyramine",
+      "digoxin",
+      "boceprevir",
+      "telaprevir"
+    ],
+    "diseases": [
+      "Acute liver failure",
+      "Decompensated cirrhosis"
+    ],
+    "do_not": [
+      "drink grapefruit juice",
+      "exceed 10/10 mg once daily",
+      "exceed 10/20 mg once daily",
+      "double the next dose",
+      "use strong CYP3A4 inhibitors",
+      "use cyclosporine",
+      "use danazol",
+      "use gemfibrozil",
+      "use lomitapide"
+    ]
+  },
+  "iron": {
+    "medications": [
+      "oral iron preparations"
+    ],
+    "diseases": [
+      "hypersensitivity to Iron Sucrose Injection"
+    ],
+    "do_not": []
+  },
+  "isoniazid": {
+    "medications": [
+      "acetaminophen",
+      "carbamazepine",
+      "ketoconazole",
+      "phenytoin",
+      "theophylline",
+      "valproate"
+    ],
+    "diseases": [
+      "acute liver disease",
+      "chronic liver disease",
+      "severe renal dysfunction",
+      "pregnancy",
+      "HIV infection"
+    ],
+    "do_not": [
+      "take with food",
+      "eat tyramine-containing foods",
+      "eat histamine-containing foods"
+    ]
+  },
+  "ferrous gluconate": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "ferrous fumarate": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "albendazole": {
+    "medications": [
+      "dexamethasone",
+      "praziquantel",
+      "cimetidine",
+      "theophylline",
+      "corticosteroids",
+      "anticonvulsants"
+    ],
+    "diseases": [
+      "hypersensitivity to benzimidazole class of compounds or any components of albendazole tablets",
+      "neurocysticercosis",
+      "pregnancy"
+    ],
+    "do_not": []
+  },
+  "nafarelin": {
+    "medications": [
+      "bupropion",
+      "SSRIs",
+      "alcohol",
+      "tobacco",
+      "anticonvulsants",
+      "corticosteroids"
+    ],
+    "diseases": [
+      "pregnancy",
+      "breastfeeding",
+      "undiagnosed abnormal vaginal bleeding"
+    ],
+    "do_not": [
+      "sneeze during or immediately after dosing",
+      "use nasal decongestant within 2 hours following dosing"
+    ]
+  },
+  "solifenacin": {
+    "medications": [
+      "strong CYP3A4 inhibitors",
+      "ketoconazole"
+    ],
+    "diseases": [
+      "urinary retention",
+      "gastric retention",
+      "uncontrolled narrow-angle glaucoma"
+    ],
+    "do_not": [
+      "exceed 5 mg dose",
+      "exceed 5 mg once daily when taking with strong CYP3A4 inhibitors"
+    ]
+  },
+  "lorazepam": {
+    "medications": [
+      "opioids",
+      "alcohol",
+      "barbiturates",
+      "antipsychotics",
+      "sedative/hypnotics",
+      "anxiolytics",
+      "antidepressants",
+      "narcotic analgesics",
+      "sedative antihistamines",
+      "anticonvulsants",
+      "anesthetics",
+      "clozapine",
+      "valproate",
+      "probenecid",
+      "theophylline",
+      "aminophylline"
+    ],
+    "diseases": [
+      "acute narrow-angle glaucoma",
+      "liver disease / hepatic impairment",
+      "COPD",
+      "sleep apnea syndrome",
+      "depression",
+      "pregnancy"
+    ],
+    "do_not": [
+      "drive or operate heavy machinery"
+    ]
+  },
+  "mirtazapine": {
+    "medications": [
+      "Monoamine oxidase inhibitors (MAOIs) including linezolid and intravenous methylene blue",
+      "Serotonergic drugs: SSRIs, SNRIs, triptans, tricyclic antidepressants, fentanyl, lithium, amphetamines, St. John's Wort, tramadol, tryptophan, buspirone",
+      "Strong CYP3A inducers: phenytoin, carbamazepine, rifampin",
+      "Strong CYP3A inhibitors: itraconazole, ritonavir, nefazodone",
+      "Cimetidine",
+      "Benzodiazepines and alcohol",
+      "Warfarin",
+      "Drugs that prolong the QTc interval"
+    ],
+    "diseases": [
+      "Known hypersensitivity to mirtazapine or to any of the excipients",
+      "History of severe skin reactions (DRESS, Stevens-Johnson syndrome, bullous dermatitis, erythema multiforme, toxic epidermal necrolysis) following mirtazapine",
+      "Bipolar disorder (bipolar spectrum disorders) \u2013 screen prior to starting"
+    ],
+    "do_not": [
+      "start monoamine oxidase inhibitor (MAOI) antidepressants while taking mirtazapine",
+      "start mirtazapine within 14 days of stopping an MAOI",
+      "concomitant use of benzodiazepines and alcohol with mirtazapine",
+      "exceed 45 mg daily dose of mirtazapine",
+      "stop mirtazapine abruptly"
+    ]
+  },
+  "clonidine": {
+    "medications": [
+      "alcohol",
+      "barbiturates",
+      "sedating drugs",
+      "tricyclic antidepressants",
+      "neuroleptics",
+      "digitalis",
+      "calcium channel blockers",
+      "beta-blockers",
+      "diltiazem",
+      "verapamil",
+      "amitriptyline",
+      "haloperidol"
+    ],
+    "diseases": [
+      "hypersensitivity to clonidine",
+      "pregnancy",
+      "nursing mothers",
+      "sinus node dysfunction",
+      "atrioventricular block",
+      "pheochromocytoma"
+    ],
+    "do_not": [
+      "drive a vehicle",
+      "interrupt clonidine therapy",
+      "discontinue clonidine therapy without physician consultation"
+    ]
+  },
+  "duloxetine": {
+    "medications": [
+      "MAOIs",
+      "Linezolid",
+      "Methylene blue",
+      "Paroxetine",
+      "Fluoxetine",
+      "Quinidine",
+      "Cimetidine",
+      "Ciprofloxacin",
+      "Enoxacin",
+      "Desipramine",
+      "Theophylline",
+      "Caffeine",
+      "SSRIs",
+      "SNRIs",
+      "Triptans",
+      "Tricyclic antidepressants",
+      "Opioids",
+      "Lithium",
+      "Buspirone",
+      "Amphetamines",
+      "Tryptophan",
+      "St. John's Wort",
+      "NSAIDs",
+      "Aspirin",
+      "Warfarin",
+      "CYP1A2 inhibitors"
+    ],
+    "diseases": [
+      "Chronic liver disease",
+      "Cirrhosis",
+      "Severe renal impairment (GFR < 30 mL/min)"
+    ],
+    "do_not": [
+      "start duloxetine while being treated with linezolid or intravenous methylene blue",
+      "start duloxetine within 14 days of stopping an MAOI",
+      "use MAOI antidepressants with duloxetine",
+      "discontinue duloxetine abruptly",
+      "take NSAIDs while on duloxetine",
+      "take aspirin while on duloxetine",
+      "take warfarin while on duloxetine",
+      "use serotonergic drugs concurrently with duloxetine"
+    ]
+  },
+  "ipratropium": {
+    "medications": [
+      "anticholinergic medications",
+      "ipratropium bromide (oral inhalation)",
+      "atropine or atropine derivatives"
+    ],
+    "diseases": [
+      "narrow-angle glaucoma",
+      "prostatic hyperplasia",
+      "bladder neck obstruction",
+      "hepatic impairment",
+      "renal impairment",
+      "pregnancy"
+    ],
+    "do_not": [
+      "spray ipratropium bromide nasal solution into eyes",
+      "drive a car",
+      "operate appliances or machinery",
+      "alter the nasal spray opening size"
+    ]
+  },
+  "avobenzone": {
+    "medications": [],
+    "diseases": [],
+    "do_not": [
+      "use near heat",
+      "use near flame",
+      "smoke",
+      "use on damaged or broken skin",
+      "get in eyes",
+      "puncture the container",
+      "incinerate the container",
+      "store at temperatures above 120\u00baF",
+      "spray directly on face",
+      "breathe in the mist"
+    ]
+  },
+  "levonorgestrel": {
+    "medications": [
+      "efavirenz",
+      "rifampin",
+      "anticonvulsants"
+    ],
+    "diseases": [
+      "levonorgestrel allergy",
+      "pregnancy"
+    ],
+    "do_not": []
+  },
+  "ulipristal acetate": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "pregabalin": {
+    "medications": [
+      "oxycodone",
+      "lorazepam",
+      "ethanol"
+    ],
+    "diseases": [
+      "renal impairment"
+    ],
+    "do_not": []
+  },
+  "ethinyl estradiol": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "procarbazine": {
+    "medications": [
+      "alcohol",
+      "monoamine oxidase inhibitors (MAO inhibitors)",
+      "sympathomimetic drugs",
+      "tricyclic antidepressants (TCAs)",
+      "barbiturates",
+      "antihistamines",
+      "narcotics",
+      "hypotensive agents",
+      "phenothiazines"
+    ],
+    "diseases": [
+      "hypersensitivity to procarbazine hydrochloride",
+      "bone marrow suppression / inadequate marrow reserve",
+      "renal impairment",
+      "hepatic impairment",
+      "pregnancy"
+    ],
+    "do_not": [
+      "use alcohol",
+      "eat tyramine-containing foods",
+      "take OTC antihistamines",
+      "take OTC sympathomimetic drugs",
+      "nurse",
+      "use prescription drugs without physician knowledge",
+      "smoke tobacco"
+    ]
+  },
+  "mirabegron": {
+    "medications": [
+      "digoxin",
+      "warfarin",
+      "CYP2D6 substrates (drugs metabolized by CYP2D6)"
+    ],
+    "diseases": [
+      "hepatic impairment",
+      "renal impairment"
+    ],
+    "do_not": [
+      "chew",
+      "divide",
+      "crush"
+    ]
+  },
+  "dextroamphetamine": {
+    "medications": [
+      "monoamine oxidase inhibitors (MAOIs), including linezolid and methylene blue",
+      "serotonergic drugs (SSRIs, SNRIs, triptans, tricyclic antidepressants, fentanyl, tramadol, tryptophan, buspirone, St. John's Wort)",
+      "CYP2D6 inhibitors (e.g., paroxetine, fluoxetine, quinidine, ritonavir)",
+      "acidifying agents (e.g., guanethidine, reserpine, glutamic acid HCl, ascorbic acid, ammonium chloride, sodium acid phosphate, methenamine salts)",
+      "alkalinizing agents (e.g., sodium bicarbonate, acetazolamide, some thiazides)",
+      "proton pump inhibitors (e.g., omeprazole)",
+      "antihistamines",
+      "antihypertensives",
+      "chlorpromazine",
+      "haloperidol",
+      "lithium carbonate",
+      "meperidine",
+      "methenamine therapy",
+      "norepinephrine",
+      "phenobarbital",
+      "phenytoin",
+      "propoxyphene",
+      "veratrum alkaloids"
+    ],
+    "diseases": [
+      "serious cardiac disease (structural cardiac abnormalities, cardiomyopathy, serious arrhythmias, coronary artery disease)",
+      "history of psychosis or pre-existing psychotic disorder",
+      "bipolar disorder (risk of manic or mixed episode)",
+      "seizure history or epilepsy",
+      "Tourette's syndrome or tic disorders",
+      "peripheral vasculopathy, including Raynaud\u2019s phenomenon",
+      "growth delay or slowed growth in pediatric patients",
+      "pregnancy or risk in pregnancy"
+    ],
+    "do_not": [
+      "give DEXEDRINE to anyone else",
+      "administer DEXEDRINE within 14 days after discontinuing MAOI",
+      "take late evening doses",
+      "nurse while taking amphetamines",
+      "use DEXEDRINE during pregnancy"
+    ]
+  },
+  "mesalamine": {
+    "medications": [
+      "Non-steroidal anti-inflammatory drugs (NSAIDs) as nephrotoxic agents",
+      "Azathioprine",
+      "6-Mercaptopurine",
+      "Drugs known to cause myelotoxicity"
+    ],
+    "diseases": [],
+    "do_not": []
+  },
+  "streptomycin": {
+    "medications": [
+      "ethacrynic acid",
+      "furosemide",
+      "mannitol",
+      "other diuretics",
+      "neomycin",
+      "kanamycin",
+      "gentamicin",
+      "cephaloridine",
+      "paromomycin",
+      "viomycin",
+      "polymyxin B",
+      "colistin",
+      "tobramycin",
+      "cyclosporine",
+      "aminoglycosides"
+    ],
+    "diseases": [
+      "pregnancy",
+      "renal impairment",
+      "nitrogen retention",
+      "hypersensitivity to streptomycin or to other aminoglycosides"
+    ],
+    "do_not": [
+      "use streptomycin",
+      "use other neurotoxic and/or nephrotoxic drugs with streptomycin",
+      "exceed total dose",
+      "skip doses"
+    ]
+  },
+  "metformin": {
+    "medications": [
+      "carbonic anhydrase inhibitors",
+      "topiramate",
+      "zonisamide",
+      "acetazolamide",
+      "dichlorphenamide",
+      "OCT2 inhibitors",
+      "MATE inhibitors",
+      "ranolazine",
+      "vandetanib",
+      "dolutegravir",
+      "cimetidine",
+      "sulfonylureas",
+      "insulin",
+      "thiazide diuretics",
+      "other diuretics",
+      "corticosteroids",
+      "phenothiazines",
+      "thyroid products",
+      "estrogens",
+      "oral contraceptives",
+      "phenytoin",
+      "nicotinic acid",
+      "sympathomimetics",
+      "calcium channel blockers",
+      "isoniazid"
+    ],
+    "diseases": [
+      "Severe renal impairment (eGFR < 30 mL/min/1.73 m2)",
+      "Acute or chronic metabolic acidosis (including diabetic ketoacidosis)",
+      "Hepatic impairment (liver disease)",
+      "Hypersensitivity to metformin"
+    ],
+    "do_not": [
+      "drink alcohol"
+    ]
+  },
+  "alprazolam": {
+    "medications": [
+      "opioids",
+      "CNS depressants",
+      "digoxin",
+      "strong CYP3A inhibitors (except ritonavir)",
+      "moderate/weak CYP3A inhibitors",
+      "CYP3A inducers",
+      "ritonavir",
+      "ketoconazole",
+      "itraconazole",
+      "clarithromycin",
+      "nefazodone",
+      "fluvoxamine",
+      "cimetidine",
+      "erythromycin",
+      "carbamazepine",
+      "phenytoin",
+      "ethanol"
+    ],
+    "diseases": [
+      "hepatic impairment",
+      "hypersensitivity to alprazolam or other benzodiazepines"
+    ],
+    "do_not": [
+      "use strong CYP3A inhibitors"
+    ]
+  },
+  "propranolol": {
+    "medications": [
+      "amiodarone",
+      "cimetidine",
+      "delavudin",
+      "fluoxetine",
+      "paroxetine",
+      "quinidine",
+      "ritonavir",
+      "imipramine",
+      "ciprofloxacin",
+      "fluvoxamine",
+      "isoniazid",
+      "zileuton",
+      "zolmitriptan",
+      "rizatriptan",
+      "theophylline",
+      "diazepam",
+      "oxazepam",
+      "triazolam",
+      "lorazepam",
+      "alprazolam",
+      "chlorpromazine",
+      "haloperidol",
+      "metoclopramide",
+      "lovastatin",
+      "pravastatin",
+      "fluvastatin",
+      "cholestyramine",
+      "colestipol",
+      "aluminum hydroxide",
+      "warfarin",
+      "rifampin",
+      "ethanol",
+      "phenytoin",
+      "phenobarbital",
+      "indomethacin",
+      "verapamil",
+      "diltiazem",
+      "nisoldipine",
+      "nicardipine",
+      "propafenone",
+      "digitalis glycosides",
+      "ACE inhibitors",
+      "clonidine",
+      "prazosin",
+      "terazosin",
+      "doxazosin",
+      "reserpine",
+      "epinephrine",
+      "NSAIDs",
+      "MAO inhibitors",
+      "tricyclic antidepressants",
+      "methoxyflurane",
+      "trichloroethylene"
+    ],
+    "diseases": [
+      "cardiogenic shock",
+      "sinus bradycardia and greater than first-degree block",
+      "bronchial asthma",
+      "bronchospastic lung disease",
+      "pregnancy",
+      "liver impairment",
+      "renal impairment",
+      "diabetes mellitus",
+      "hypoglycemia risk",
+      "thyrotoxicosis",
+      "Wolf-Parkinson-White syndrome",
+      "pheochromocytoma",
+      "congestive heart failure",
+      "hypertrophic subaortic stenosis"
+    ],
+    "do_not": [
+      "discontinue propranolol abruptly",
+      "drink alcohol",
+      "interrupt propranolol therapy without physician advice"
+    ]
+  },
+  "azathioprine": {
+    "medications": [
+      "allopurinol",
+      "febuxostat",
+      "sulfasalazine",
+      "mesalazine",
+      "olsalazine",
+      "co-trimoxazole",
+      "ACE inhibitors",
+      "warfarin",
+      "ribavirin",
+      "DMARDs"
+    ],
+    "diseases": [
+      "hypersensitivity to azathioprine",
+      "pregnancy",
+      "renal dysfunction",
+      "lactation"
+    ],
+    "do_not": [
+      "become pregnant",
+      "breastfeed"
+    ]
+  },
+  "lomustine": {
+    "medications": [
+      "other myelosuppressive drugs"
+    ],
+    "diseases": [
+      "compromised bone marrow function"
+    ],
+    "do_not": [
+      "break Gleostine capsules",
+      "exposure to broken Gleostine capsules",
+      "repeat Gleostine dose",
+      "give Gleostine more frequently than every 6 weeks"
+    ]
+  },
+  "norethindrone": {
+    "medications": [
+      "estrogen/progestin combination drugs"
+    ],
+    "diseases": [
+      "pregnancy",
+      "undiagnosed vaginal bleeding",
+      "breast cancer (known, suspected, or history)",
+      "deep vein thrombosis or pulmonary embolism (active or history)",
+      "arterial thromboembolic disease (e.g., stroke, myocardial infarction)",
+      "impaired liver function or liver disease",
+      "hypersensitivity to drug components"
+    ],
+    "do_not": [
+      "use during pregnancy",
+      "use concomitant estrogen therapy"
+    ]
+  },
+  "rifampin": {
+    "medications": [],
+    "diseases": [],
+    "do_not": []
+  },
+  "vincristine": {
+    "medications": [
+      "phenytoin",
+      "itraconazole",
+      "fluconazole",
+      "St. John's Wort",
+      "mitomycin-C",
+      "CYP3A inhibitors",
+      "CYP3A inducers",
+      "P-glycoprotein inhibitors",
+      "P-glycoprotein inducers"
+    ],
+    "diseases": [
+      "Charcot-Marie-Tooth syndrome (demyelinating)",
+      "preexisting neuromuscular disease",
+      "pregnancy"
+    ],
+    "do_not": [
+      "become pregnant",
+      "administer intrathecally",
+      "give Vincristine by other routes"
+    ]
+  },
+  "escitalopram": {
+    "medications": [
+      "Monoamine oxidase inhibitors (MAOIs)",
+      "linezolid",
+      "intravenous methylene blue",
+      "pimozide",
+      "warfarin",
+      "NSAIDs",
+      "Aspirin",
+      "desipramine",
+      "carbamazepine",
+      "SSRIs",
+      "SNRIs",
+      "triptans",
+      "tryptophan",
+      "St. John's Wort"
+    ],
+    "diseases": [
+      "hepatic impairment",
+      "bipolar disorder"
+    ],
+    "do_not": [
+      "use MAOIs with escitalopram",
+      "start escitalopram within 14 days of stopping an MAOI",
+      "start escitalopram in patients treated with linezolid or intravenous methylene blue",
+      "use SSRIs with escitalopram",
+      "use SNRIs with escitalopram",
+      "use tryptophan with escitalopram",
+      "use pimozide with escitalopram",
+      "use sumatriptan with escitalopram",
+      "use desipramine with escitalopram",
+      "use carbamazepine with escitalopram",
+      "use warfarin with escitalopram",
+      "use NSAIDs with escitalopram",
+      "use Aspirin with escitalopram",
+      "use St. John's Wort with escitalopram"
+    ]
+  },
+  "infliximab": {
+    "medications": [
+      "anakinra",
+      "abatacept",
+      "tocilizumab",
+      "other TNF blockers",
+      "TNF blockers",
+      "methotrexate",
+      "NSAIDs",
+      "folic acid",
+      "corticosteroids",
+      "narcotics",
+      "metronidazole",
+      "ciprofloxacin",
+      "azathioprine",
+      "6-mercaptopurine",
+      "warfarin",
+      "cyclosporine",
+      "theophylline"
+    ],
+    "diseases": [
+      "moderate or severe heart failure",
+      "hypersensitivity to infliximab or murine proteins",
+      "tuberculosis (latent or active)"
+    ],
+    "do_not": [
+      "give live vaccines",
+      "administer therapeutic infectious agents concurrently with INFLECTRA",
+      "infuse INFLECTRA in the same intravenous line as other agents",
+      "combine INFLECTRA with other biological products used to treat the same conditions as INFLECTRA",
+      "combine tocilizumab with INFLECTRA"
+    ]
+  },
+  "pyrazinamide": {
+    "medications": [
+      "alcohol"
+    ],
+    "diseases": [
+      "severe hepatic damage",
+      "preexisting liver disease",
+      "acute gout",
+      "diabetes mellitus",
+      "alcohol abuse",
+      "pregnancy",
+      "hypersensitivity to pyrazinamide"
+    ],
+    "do_not": [
+      "resume therapy",
+      "exceed 3 g per day"
+    ]
+  }
+}
