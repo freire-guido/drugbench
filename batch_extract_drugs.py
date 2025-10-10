@@ -15,7 +15,7 @@ with open('batch/extract_drugs.jsonl', 'w') as outfile:
                     "messages": [
                         {"role": "system", "content": "Answer with a comma separated list. e.g. acetaminophen,cetuximab or "},
                         {"role": "user", "content": str(conversation['prompt'])},
-                        {"role": "developer", "content": f"Extract all of the medications relevant to this conversation. The medication might be mentioned explicitly in the conversation or relevant to the treatment or question. Return the generic names in a comma separated list."}
+                        {"role": "developer", "content": f"Extract all of the medications relevant to this conversation. The medication might be mentioned explicitly in the conversation or relevant to the treatment or question. Return the specific product name and or generic names in a comma separated list."}
                     ],
                     "max_tokens": 1000
                 }
