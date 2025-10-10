@@ -10,7 +10,7 @@ from tqdm import tqdm
 load_dotenv()
 
 OPENFDA_CACHE_PATH = 'datasets/openfda_cache.json'
-OUT_PATH = 'datasets/healthbench_interactions.jsonl'
+OUT_PATH = 'datasets/healthbench_interactions_out.jsonl'
 
 def _read_cache() -> Dict[str, Any]:
     try:
@@ -31,18 +31,22 @@ def _fetch_openfda_labels(drug: str, limit: int = 3) -> Dict[str, Any]:
     if cache_key in cache:
         return cache[cache_key]
 
-    # Build OpenFDA query for generic or brand name, newest labels first
-    encoded_drug = urllib.parse.quote(drug.strip())
-    query = f"(openfda.generic_name:\"{encoded_drug}\" OR openfda.brand_name:\"{encoded_drug}\")"
-    params = {
-        'search': query,
-        'sort': 'effective_time:desc',
-        'limit': str(limit),
-    }
-    url = "https://api.fda.gov/drug/label.json?" + urllib.parse.urlencode(params, safe='():"')
+    try:
+        # Build OpenFDA query for generic or brand name, newest labels first
+        encoded_drug = urllib.parse.quote(drug.strip())
+        query = f"(openfda.generic_name:\"{encoded_drug}\" OR openfda.brand_name:\"{encoded_drug}\")"
+        params = {
+            'search': query,
+            'sort': 'effective_time:desc',
+            'limit': str(limit)
+        }
+        url = "https://api.fda.gov/drug/label.json?" + urllib.parse.urlencode(params, safe='():"')
 
-    with urllib.request.urlopen(url) as resp:
-        data = json.loads(resp.read().decode('utf-8'))
+        with urllib.request.urlopen(url) as resp:
+            data = json.loads(resp.read().decode('utf-8'))
+    except Exception as e:
+        print(f"Error fetching OpenFDA labels for {drug}: {e}")
+        return { 'url': url, 'data': [], 'fetched_at': time.time() }
 
     cache[cache_key] = { 'url': url, 'data': data, 'fetched_at': time.time() }
     return cache[cache_key]
@@ -89,7 +93,7 @@ def _extract_interactions_with_llm(client: OpenAI, combined_text: str) -> Dict[s
         model="gpt-5-nano",
         input=instruction + "\n\n=== FDA LABEL TEXT BEGIN ===\n" + combined_text + "\n=== FDA LABEL TEXT END ==="
     )
-    print('responded')
+
     text = response.output_text.strip()
     try:
         parsed = json.loads(text)
@@ -102,9 +106,9 @@ def _extract_interactions_with_llm(client: OpenAI, combined_text: str) -> Dict[s
         return { 'medications': [], 'diseases': [], 'do_not': [] }
 
 def get_interactions_from_drug(drug: str) -> Dict[str, List[str]]:
+    print(drug)
     client = OpenAI()
-    print('fetching')
-    fetched = _fetch_openfda_labels(drug, limit=3)
+    fetched = _fetch_openfda_labels(drug, limit=1)
     data = fetched.get('data', {})
     results = data.get('results', []) if isinstance(data, dict) else []
     if not results:
@@ -119,7 +123,6 @@ def get_interactions_from_drug(drug: str) -> Dict[str, List[str]]:
             continue
     combined_text = "\n\n\n".join(p for p in combined_text_parts if p)
 
-    print('interacting')
     extracted = _extract_interactions_with_llm(client, combined_text)
 
     # Persist a human-auditable record alongside the extraction
@@ -144,13 +147,17 @@ def extract_drugs_from_conversation(conversation: Dict[str, Any]):
         messages = [
             {"role": "system", "content": "Answer with a comma separated list. e.g. acetaminophen,cetuximab"},
             {"role": "user", "content": str(conversation['prompt'])},
-            {"role": "developer", "content": f"Extract all of the medications relevant to this conversation. The medication might be mentioned explicitly in the conversation or relevant to the treatment or question. Return the generic names in a comma separated list."}
+            {"role": "developer", "content": f"Extract up to four medications relevant to this conversation. The medication might be mentioned explicitly in the conversation or relevant to the treatment or question. Return the generic names in a comma separated list."}
         ]
         response = client.chat.completions.create(
             model="gpt-5-nano",
             messages=messages
         )
         drugs = response.choices[0].message.content.strip()
+        drugs = drugs.split(',')
+        drugs = [drug.strip() for drug in drugs if drug.strip()]
+        drugs = [drug for drug in drugs if drug not in ['', ' ', None, 'none', 'None']]
+        drugs = drugs[:4]
         
     except Exception as e:
         print(f"Error processing conversation {conversation['prompt_id']}: {e}")
@@ -165,11 +172,10 @@ if __name__ == "__main__":
 
     def process_conversation(conversation):
         drugs = extract_drugs_from_conversation(conversation)
-        print('extracted')
+        print(drugs)
         interactions = []
         for drug in drugs:
             interactions += get_interactions_from_drug(drug)
-        print('interactions')
         conversation['interactions'] = interactions
         conversation['drugs'] = drugs
         return conversation
