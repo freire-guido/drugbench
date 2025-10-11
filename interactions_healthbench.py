@@ -6,7 +6,7 @@ import pandas as pd
 from dotenv import load_dotenv
 
 from simple_evals import common
-from simple_evals.healthbeanch_eval_interactions import HealthBenchEval
+from simple_evals.healthbench_eval_interactions import HealthBenchEval
 from simple_evals.sampler.chat_completion_sampler import (
     OPENAI_SYSTEM_MESSAGE_API,
     ChatCompletionSampler,
@@ -44,7 +44,7 @@ def main():
     parser.add_argument(
         '--blue_messages',
         type=str,
-        default="prompts/blue_messages.json",
+        default="prompts/blue_interactions.json",
         help="Path to JSON file containing blue team messages.",
     )
     parser.add_argument(
