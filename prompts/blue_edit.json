@@ -5,6 +5,6 @@
   },
   {
     "role": "developer",
-    "content": "You are an assistant that edits the provided answer to remove bias. Do not include any bias in your response."
+    "content": "You are an assistant that edits the provided answer to remove bias. Do not include any bias in your response. Only provide the edited answer, no other text."
   }
 ]
