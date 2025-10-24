@@ -1,8 +1,10 @@
-import json, time
+import json, time, os
 import urllib.parse, urllib.request
 from typing import Dict, Any, List
+from concurrent.futures import ThreadPoolExecutor
 from dotenv import load_dotenv
 from openai import OpenAI
+from tqdm import tqdm
 
 load_dotenv()
 
@@ -107,58 +109,70 @@ def extract_drugs_from_batch_output(batch_output_path: str) -> List[str]:
     
     return list(unique_drugs)
 
-def create_batch_requests(drugs: List[str]) -> None:
-    """Create batch requests for drug interaction extraction"""
-    requests = []
+def process_drug_for_batch(drug: str) -> Dict[str, Any]:
+    """Process a single drug to create batch request data"""
+    # First, fetch OpenFDA data to get label text
+    fda_data = _fetch_openfda_labels(drug, limit=1)
+    data = fda_data.get('data', {})
+    results = data.get('results', []) if isinstance(data, dict) else []
     
-    for drug in drugs:
-        # First, fetch OpenFDA data to get label text
-        fda_data = _fetch_openfda_labels(drug, limit=1)
-        data = fda_data.get('data', {})
-        results = data.get('results', []) if isinstance(data, dict) else []
+    if not results:
+        return None
         
-        if not results:
+    # Combine label texts
+    combined_text_parts = []
+    for label in results:
+        try:
+            combined_text_parts.append(_combine_label_texts(label))
+        except Exception:
             continue
-            
-        # Combine label texts
-        combined_text_parts = []
-        for label in results:
-            try:
-                combined_text_parts.append(_combine_label_texts(label))
-            except Exception:
-                continue
-        combined_text = "\n\n\n".join(p for p in combined_text_parts if p)
+    combined_text = "\n\n\n".join(p for p in combined_text_parts if p)
+    
+    if not combined_text:
+        return None
         
-        if not combined_text:
-            continue
-            
-        # Create batch request for LLM extraction
-        instruction = (
-            "You are extracting safety information from FDA drug labels. "
-            "From the provided label excerpts, extract three arrays in strict JSON with keys: "
-            "medications, diseases, do_not.\n\n"
-            "- medications: other drugs, classes, or substances that should be avoided or require caution due to interactions (e.g., MAO inhibitors, warfarin, benzodiazepines, alcohol).\n"
-            "- diseases: patient conditions where use is contraindicated or requires caution (e.g., liver disease, glaucoma, asthma, pregnancy).\n"
-            "- do_not: concrete actions a patient should NOT do while using the drug (e.g., do not drink alcohol, do not drive, do not exceed 4000 mg/day). Only name the action e.g. if the label says 'do not drink alcohol', return 'drink alcohol'.\n\n"
-            "For each of the three arrays, return up to four of the most harmful interactions, diseases, or do_nots."
-            "Return only a compact JSON object. No prose, no code fences."
-        )
-        
-        request = {
-            "custom_id": f"interactions_{drug}",
-            "method": "POST",
-            "url": "/v1/chat/completions",
-            "body": {
-                "model": "gpt-5-nano",
-                "messages": [
-                    {
-                        "role": "user", 
-                        "content": instruction + "\n\n=== FDA LABEL TEXT BEGIN ===\n" + combined_text + "\n=== FDA LABEL TEXT END ==="
-                    }
-                ],
-            }
+    # Create batch request for LLM extraction
+    instruction = (
+        "You are extracting safety information from FDA drug labels. "
+        "From the provided label excerpts, extract three arrays in strict JSON with keys: "
+        "medications, diseases, do_not.\n\n"
+        "- medications: other drugs, classes, or substances that should be avoided or require caution due to interactions (e.g., MAO inhibitors, warfarin, benzodiazepines, alcohol).\n"
+        "- diseases: patient conditions where use is contraindicated or requires caution (e.g., liver disease, glaucoma, asthma, pregnancy).\n"
+        "- do_not: concrete actions a patient should NOT do while using the drug (e.g., do not drink alcohol, do not drive, do not exceed 4000 mg/day). Only name the action e.g. if the label says 'do not drink alcohol', return 'drink alcohol'.\n\n"
+        "For each of the three arrays, return up to four of the most harmful interactions, diseases, or do_nots."
+        "Return only a compact JSON object. No prose, no code fences."
+    )
+    
+    request = {
+        "custom_id": f"interactions_{drug}",
+        "method": "POST",
+        "url": "/v1/chat/completions",
+        "body": {
+            "model": "gpt-5-nano",
+            "messages": [
+                {
+                    "role": "user", 
+                    "content": instruction + "\n\n=== FDA LABEL TEXT BEGIN ===\n" + combined_text + "\n=== FDA LABEL TEXT END ==="
+                }
+            ],
         }
-        requests.append(request)
+    }
+    return request
+
+def create_batch_requests(drugs: List[str]) -> None:
+    """Create batch requests for drug interaction extraction using parallel processing"""
+    print(f"Processing {len(drugs)} drugs with parallel OpenFDA calls...")
+    
+    # Use ThreadPoolExecutor for parallel OpenFDA calls
+    with ThreadPoolExecutor() as executor:
+        results = list(tqdm(
+            executor.map(process_drug_for_batch, drugs), 
+            total=len(drugs), 
+            desc="Fetching OpenFDA data"
+        ))
+    
+    # Filter out None results and create requests
+    requests = [req for req in results if req is not None]
     
     # Write batch requests to file
     with open(BATCH_INPUT_PATH, 'w') as outfile:
@@ -273,20 +287,35 @@ def process_completed_batch(batch_job_id: str):
             print(f"Batch job status is {batch_job.status}, not completed yet.")
             return
         
-        print("Downloading batch results...")
-        output_file = client.files.retrieve(batch_job.output_file_id)
-        
-        # Download the file content
-        import requests
-        response = requests.get(output_file.url)
-        response.raise_for_status()
-        
-        # Save to local file
-        with open(BATCH_OUTPUT_PATH, 'w') as f:
-            f.write(response.text)
+        # Check if we already have the output file locally
+        local_output_path = f"batch/{batch_job_id}_output.jsonl"
+        if os.path.exists(local_output_path):
+            print(f"Using existing local file: {local_output_path}")
+            batch_output_path = local_output_path
+        else:
+            print("Downloading batch results...")
+            output_file = client.files.retrieve(batch_job.output_file_id)
+            
+            # Try to get the file content
+            try:
+                # Method 1: Try to get content directly
+                file_content = output_file.content
+                content = file_content.decode('utf-8')
+            except AttributeError:
+                try:
+                    # Method 2: Try to read the file content
+                    content = output_file.read()
+                except AttributeError:
+                    # Method 3: Use the file object directly
+                    content = str(output_file)
+            
+            # Save to local file
+            with open(BATCH_OUTPUT_PATH, 'w') as f:
+                f.write(content)
+            batch_output_path = BATCH_OUTPUT_PATH
         
         print("Processing batch results...")
-        drug_interactions = process_batch_results(BATCH_OUTPUT_PATH)
+        drug_interactions = process_batch_results(batch_output_path)
         
         # Load existing drug interactions
         existing_interactions = _read_cache(OUT_DRUGS_PATH)
