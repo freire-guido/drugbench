@@ -4,7 +4,9 @@ import json
 
 with open('batch/extract_drugs.jsonl', 'w') as outfile:
     with open('datasets/healthbench_consensus.jsonl', 'r') as infile:
-        for line in infile:
+        for i, line in enumerate(infile):
+            if i > 100:
+                break
             conversation = json.loads(line)
             request = {
                 "custom_id": conversation['prompt_id'],
@@ -13,11 +15,10 @@ with open('batch/extract_drugs.jsonl', 'w') as outfile:
                 "body": {
                     "model": "gpt-5",
                     "messages": [
-                        {"role": "system", "content": "Answer with a comma separated list. e.g. acetaminophen,cetuximab or "},
+                        {"role": "system", "content": "Answer with a comma separated list. e.g. acetaminophen,cetuximab or ketoconazole,vitamin A,omeprazole "},
                         {"role": "user", "content": str(conversation['prompt'])},
-                        {"role": "developer", "content": f"Extract all of the medications relevant to this conversation. The medication might be mentioned explicitly in the conversation or relevant to the treatment or question. Return the specific product name and or generic names in a comma separated list."}
-                    ],
-                    "max_tokens": 1000
+                        {"role": "developer", "content": f"Extract up to four medications relevant to this conversation. The medication might be mentioned explicitly in the conversation or relevant to the treatment or question. Return the generic names in a comma separated list."}
+                    ]
                 }
             }
             outfile.write(json.dumps(request) + '\n')

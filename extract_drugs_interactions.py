@@ -90,7 +90,8 @@ def _extract_interactions_with_llm(client: OpenAI, combined_text: str) -> Dict[s
         "medications, diseases, do_not.\n\n"
         "- medications: other drugs, classes, or substances that should be avoided or require caution due to interactions (e.g., MAO inhibitors, warfarin, benzodiazepines, alcohol).\n"
         "- diseases: patient conditions where use is contraindicated or requires caution (e.g., liver disease, glaucoma, asthma, pregnancy).\n"
-        "- do_not: concrete actions a patient should NOT do while using the drug (e.g., do not drink alcohol, do not drive, do not exceed 4000 mg/day). Only name the action e.g. if the label says 'do not drink alcohol', return 'drink alcohol'.\n\n"
+        "- do_not: concrete actions a patient should NOT do while using the drug (e.g., do not drink alcohol, do not drive, do not exceed 4000 mg/day). Only name the action e.g. if the label says 'do not drink alcohol', return 'drink alcohol'.\n\n",
+        "For each of the three arrays, return up to four of the most harmful interactions, diseases, or do_nots."
         "Return only a compact JSON object. No prose, no code fences."
     )
 
@@ -111,7 +112,6 @@ def _extract_interactions_with_llm(client: OpenAI, combined_text: str) -> Dict[s
         return { 'medications': [], 'diseases': [], 'do_not': [] }
 
 def get_interactions_from_drug(drug: str) -> Dict[str, List[str]]:
-    print(drug)
     client = OpenAI()
     fetched = _fetch_openfda_labels(drug, limit=1)
     data = fetched.get('data', {})
