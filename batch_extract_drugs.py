@@ -2,11 +2,9 @@ from dotenv import load_dotenv
 from openai import OpenAI
 import json
 
-with open('batch/extract_drugs.jsonl', 'w') as outfile:
-    with open('datasets/healthbench_consensus.jsonl', 'r') as infile:
+with open('batch/extract_drugs_hard.jsonl', 'w') as outfile:
+    with open('datasets/healthbench_hard.jsonl', 'r') as infile:
         for i, line in enumerate(infile):
-            if i > 100:
-                break
             conversation = json.loads(line)
             request = {
                 "custom_id": conversation['prompt_id'],
@@ -27,7 +25,7 @@ load_dotenv()
 client = OpenAI()
 
 batch_input_file = client.files.create(
-    file=open("batch/extract_drugs.jsonl", "rb"),
+    file=open("batch/extract_drugs_hard.jsonl", "rb"),
     purpose="batch"
 )
 

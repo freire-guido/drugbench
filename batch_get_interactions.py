@@ -9,9 +9,9 @@ from tqdm import tqdm
 load_dotenv()
 
 OPENFDA_CACHE_PATH = 'datasets/openfda_cache.json'
-OUT_DRUGS_PATH = 'datasets/drug_interactions.json'
-BATCH_INPUT_PATH = 'batch/get_interactions.jsonl'
-BATCH_OUTPUT_PATH = 'batch/get_interactions_output.jsonl'
+OUT_DRUGS_PATH = 'datasets/drug_interactions_hard.json'
+BATCH_INPUT_PATH = 'batch/get_interactions_hard.jsonl'
+BATCH_OUTPUT_PATH = 'batch/get_interactions_hard_output.jsonl'
 
 def _read_cache(cache_path: str) -> Dict[str, Any]:
     """Read cache from file"""
