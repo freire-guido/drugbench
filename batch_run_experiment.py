@@ -10,6 +10,13 @@ import copy
 
 load_dotenv()
 client = OpenAI()
+
+def read_batch_output(batch_id: str):
+    batch_output = client.files.retrieve(client.batches.retrieve(batch_id).output_file_id)
+    batch_output = batch_output.read().decode('utf-8')
+    batch_output = [json.loads(line) for line in batch_output.split('\n') if line.strip()]
+    return batch_output
+
 def wait_for_batch(batch_id: str, delay: int = 5, timeout: int = 86400):
     # 86400 seconds = 24 hours
     start_time = time.time()
@@ -18,11 +25,11 @@ def wait_for_batch(batch_id: str, delay: int = 5, timeout: int = 86400):
     if client.batches.retrieve(batch_id).status != "completed":
         raise Exception(f"Batch {batch_id} failed to complete: status {client.batches.retrieve(batch_id).status} after {time.time() - start_time} seconds")
 
-def add_red_responses(conversations: list[dict], batch_output: list[dict]):
+def add_responses(conversations: list[dict], batch_output: list[dict]):
     conversations_red = copy.deepcopy(conversations)
     for conversation in conversations_red:
-        red_response = batch_output[conversation['prompt_id']]['response']['body']['choices'][0]['message']
-        conversation['prompt'] = conversation['prompt'] + red_response
+        response = batch_output[conversation['prompt_id']]['response']['body']['choices'][0]['message']
+        conversation['prompt'] = conversation['prompt'] + response
     return conversations_red
 
 if __name__ == "__main__":
@@ -46,12 +53,12 @@ if __name__ == "__main__":
         batch_id = batch_prompt_conversation(conversations, prompt, args.tracker, step, prev_responses)
 
     wait_for_batch(batch_id)
+    batch_output = read_batch_output(batch_id)
+    conversations_red = add_responses(conversations, batch_output)
+    with open(args.file, 'w') as f:
+        for conversation in conversations_red:
+            f.write(json.dumps(conversation) + '\n')
 
-    batch_output = client.files.retrieve(client.batches.retrieve(batch_id).output_file_id)
-    batch_output = batch_output.read().decode('utf-8')
-    batch_output = [json.loads(line) for line in batch_output.split('\n') if line.strip()]
-
-    conversations_red = add_red_responses(conversations, batch_output)
     for step, prompt in enumerate(blue_prompts):
         prev_responses = None
         if step > 0:
@@ -60,3 +67,8 @@ if __name__ == "__main__":
         batch_id = batch_prompt_conversation(conversations_red, prompt, args.tracker, step, prev_responses)
 
     wait_for_batch(batch_id)
+    batch_output = read_batch_output(batch_id)
+    conversations_blue = add_responses(conversations, batch_output)
+    with open(args.file, 'w') as f:
+        for conversation in conversations_blue:
+            f.write(json.dumps(conversation) + '\n')
