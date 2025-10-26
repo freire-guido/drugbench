@@ -21,7 +21,7 @@ def read_previous_batch(file: str) -> dict:
         res = [json.loads(line) for line in f]
         return {res['custom_id']: res['response']['body']['choices'][0]['message']['content'] for res in res}
 
-def main(conversations: list[dict], prompt: dict[str: str], tracker: dict[str: str], step: int, prev_responses: dict[str: str] | None = None):
+def main(conversations: list[dict], prompt: dict[str: str], step: int, prev_responses: dict[str: str] | None = None):
     with open(f'batch/blue_team_{step}.jsonl', 'w') as outfile:
         for convo in conversations:
             request = generate_blue_request(convo, prompt, prev_responses)
@@ -37,12 +37,6 @@ def main(conversations: list[dict], prompt: dict[str: str], tracker: dict[str: s
             completion_window="24h",
         )
 
-        print(res)
-
-        tracker['blue_team'][step] = res['id']
-        with open(tracker, 'w') as f:
-            json.dump(tracker, f) 
-    
     return res['id']
 
 if __name__ == "__main__":
@@ -61,5 +55,9 @@ if __name__ == "__main__":
     if args.step > 0:
         prev_batch_file = f'batch/{tracker["blue_team"][args.step-1]}_output.jsonl'
         prev_responses = read_previous_batch(prev_batch_file)
+    
+    id = main(conversations, prompts[args.step], args.step, prev_responses)
 
-    main(conversations, prompts[args.step], tracker, args.step)
+    tracker['blue_team'][args.step] = id
+    with open(tracker, 'w') as f:
+        json.dump(tracker, f) 

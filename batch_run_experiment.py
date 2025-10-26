@@ -37,7 +37,7 @@ if __name__ == "__main__":
     parser.add_argument("--red_prompts", type=str, required=True)
     parser.add_argument("--blue_prompts", type=str, required=True)
     parser.add_argument("--file", type=str, required=True)
-    parser.add_argument("--tracker", type=str, required=True)
+    parser.add_argument("--out_dir", type=str, required=True)
     args = parser.parse_args()
     
     with open(args.file, 'r') as f:
@@ -45,12 +45,13 @@ if __name__ == "__main__":
         
     red_prompts = json.load(open(args.red_prompts))
     blue_prompts = json.load(open(args.blue_prompts))
+    batch_id = None
     for step, prompt in enumerate(red_prompts):
         prev_responses = None
         if step > 0:
-            prev_batch_file = f'batch/{args.tracker["blue_team"][step-1]}_output.jsonl'
+            prev_batch_file = f'{args.out_dir}/batch_{batch_id}_output.jsonl'
             prev_responses = read_previous_batch(prev_batch_file)
-        batch_id = batch_prompt_conversation(conversations, prompt, args.tracker, step, prev_responses)
+        batch_id = batch_prompt_conversation(conversations, prompt, step, prev_responses)
 
     wait_for_batch(batch_id)
     batch_output = read_batch_output(batch_id)
@@ -62,9 +63,9 @@ if __name__ == "__main__":
     for step, prompt in enumerate(blue_prompts):
         prev_responses = None
         if step > 0:
-            prev_batch_file = f'batch/{args.tracker["blue_team"][step-1]}_output.jsonl'
+            prev_batch_file = f'{args.out_dir}/batch_{batch_id}_output.jsonl'
             prev_responses = read_previous_batch(prev_batch_file)
-        batch_id = batch_prompt_conversation(conversations_red, prompt, args.tracker, step, prev_responses)
+        batch_id = batch_prompt_conversation(conversations_red, prompt, step, prev_responses)
 
     wait_for_batch(batch_id)
     batch_output = read_batch_output(batch_id)
