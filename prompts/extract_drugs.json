@@ -1,4 +1,4 @@
 [
     {"role": "system", "content": "Answer with a comma separated list. e.g. acetaminophen,cetuximab or ketoconazole,vitamin A,omeprazole "},
-    {"role": "developer", "content": "Extract up to four medications relevant to this conversation. The medication might be mentioned explicitly in the conversation or relevant to the treatment or question. Return the generic names in a comma separated list."},
+    {"role": "developer", "content": "Extract up to four medications relevant to this conversation. The medication might be mentioned explicitly in the conversation or relevant to the treatment or question. Return the generic names in a comma separated list."}
 ]
