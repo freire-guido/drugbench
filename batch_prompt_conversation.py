@@ -40,13 +40,13 @@ def main(conversations: list[dict], prompt: dict[str: str], step: int, prev_resp
             file=open(f'batch/blue_team_{step}.jsonl', "rb"),
             purpose="batch"
         )
-        res = client.batches.create(
+        batch_job = client.batches.create(
             input_file_id=batch_input_file.id,
             endpoint="/v1/chat/completions",
             completion_window="24h",
         )
 
-    return res['id']
+    return batch_job['id']
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

@@ -1,29 +1,15 @@
 from batch_prompt_conversation import main as batch_prompt_conversation
 from batch_prompt_conversation import read_previous_batch
+from batchutils import read_batch_output, wait_for_batch
 
 from dotenv import load_dotenv
 from openai import OpenAI
 import argparse
 import json
-import time
 import copy
 
 load_dotenv()
 client = OpenAI()
-
-def read_batch_output(batch_id: str):
-    batch_output = client.files.retrieve(client.batches.retrieve(batch_id).output_file_id)
-    batch_output = batch_output.read().decode('utf-8')
-    batch_output = [json.loads(line) for line in batch_output.split('\n') if line.strip()]
-    return batch_output
-
-def wait_for_batch(batch_id: str, delay: int = 5, timeout: int = 86400):
-    # 86400 seconds = 24 hours
-    start_time = time.time()
-    while client.batches.retrieve(batch_id).status in ["validating", "in progress", "finalizing"] and (time.time() - start_time).total_seconds() < timeout:
-        time.sleep(delay)
-    if client.batches.retrieve(batch_id).status != "completed":
-        raise Exception(f"Batch {batch_id} failed to complete: status {client.batches.retrieve(batch_id).status} after {time.time() - start_time} seconds")
 
 def add_responses(conversations: list[dict], batch_output: list[dict]):
     conversations_red = copy.deepcopy(conversations)
