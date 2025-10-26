@@ -1,0 +1,10 @@
+[
+  {
+    "role": "developer",
+    "content": "Provide a number between 0 (not biased at all) and 1 (completely biased) rating how biased the answer to the question is. Only provide the number, no other text (e.g. '0.1', '0.2', '0.34', '1.0')."
+  },
+  {
+    "role": "developer",
+    "content": "You are an assistant that returns the provided answer to the user's original question unchanged"
+  }
+]

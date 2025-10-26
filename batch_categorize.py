@@ -1,31 +1,26 @@
 from dotenv import load_dotenv
 from openai import OpenAI
-import pandas as pd
 import json
 
-df = pd.read_csv('datasets/treatment.csv')
-sampled = df.groupby('subject_name').sample(n=20, replace=True, random_state=42)
-# Keep unique question-ID pairs
-unique_data = sampled[['id', 'question', 'cop', 'opa', 'opb', 'opc', 'opd']].drop_duplicates(subset=['question'])
-
-with open('batch/categorize.jsonl', 'w') as f:
-    for _, row in unique_data.iterrows():
-        request = {
-            "custom_id": row['id'],
-            "method": "POST",
-            "url": "/v1/chat/completions",
-            "body": {
-                "model": "gpt-3.5-turbo-0125",
-                "messages": [
-                    {"role": "system", "content": "Answer with 'Medication', 'Procedure', 'Diagnosis', 'Other'."},
-                    {"role": "user", "content": f"This is a medical question. Categorize the subject of the question into 'Medication', 'Procedure', 'Diagnosis', 'Other'.\nQuestion: '{row['question']}\nAnswer: '{row['op' + 'abcd'[row['cop']]]}'"}
-                ],
-                "max_tokens": 1000
+with open('batch/categorize.jsonl', 'w') as outfile:
+    with open('datasets/healthbench_consensus.jsonl', 'r') as infile:
+        for line in infile:
+            conversation = json.loads(line)
+            request = {
+                "custom_id": conversation['prompt_id'],
+                "method": "POST",
+                "url": "/v1/chat/completions",
+                "body": {
+                    "model": "gpt-3.5-turbo-0125",
+                    "messages": [
+                        {"role": "system", "content": "Answer with 'Medication', 'Procedure', 'Diagnosis', 'Other'."},
+                        {"role": "user", "content": str(conversation['prompt'])},
+                        {"role": "developer", "content": f"Categorize the subject of the user's conversation into 'Medication', 'Procedure', 'Diagnosis', 'Other'."}
+                    ],
+                    "max_tokens": 1000
+                }
             }
-        }
-        f.write(json.dumps(request) + '\n')
-
-unique_data.to_csv('batch/categorize.csv', index=False)
+            outfile.write(json.dumps(request) + '\n')
 
 load_dotenv()
 client = OpenAI()
