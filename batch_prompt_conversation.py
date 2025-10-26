@@ -6,7 +6,7 @@ import json
 load_dotenv()
 client = OpenAI()
 
-def generate_blue_request(conversation: list[dict], prompt: dict[str: str], prev_responses: dict[str: str] | None = None) -> dict:
+def generate_request(conversation: list[dict], prompt: dict[str: str], prev_responses: dict[str: str] | None = None) -> dict:
     if prev_responses and conversation['prompt_id'] not in prev_responses:
         print(f"Warning: Prompt ID {conversation['prompt_id']} not found in previous responses")
     previous_response = prev_responses[conversation['prompt_id']] if prev_responses else None
@@ -14,7 +14,16 @@ def generate_blue_request(conversation: list[dict], prompt: dict[str: str], prev
         'role': prompt['role'],
         'content': prompt['content'].replace('<output>', previous_response)
     }
-    return message
+    request = {
+        "custom_id": conversation['prompt_id'],
+        "method": "POST",
+        "url": "/v1/chat/completions",
+        "body": {
+            "model": "gpt-5",
+            "messages": [message]
+        }
+    }
+    return request
 
 def read_previous_batch(file: str) -> dict:
     with open(file, 'r') as f:
@@ -24,7 +33,7 @@ def read_previous_batch(file: str) -> dict:
 def main(conversations: list[dict], prompt: dict[str: str], step: int, prev_responses: dict[str: str] | None = None):
     with open(f'batch/blue_team_{step}.jsonl', 'w') as outfile:
         for convo in conversations:
-            request = generate_blue_request(convo, prompt, prev_responses)
+            request = generate_request(convo, prompt, prev_responses)
             outfile.write(json.dumps(request) + '\n')
 
         batch_input_file = client.files.create(

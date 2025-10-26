@@ -65,7 +65,7 @@ if __name__ == "__main__":
         if step > 0:
             prev_batch_file = f'{args.out_dir}/batch_{batch_id}_output.jsonl'
             prev_responses = read_previous_batch(prev_batch_file)
-        batch_id = batch_prompt_conversation(conversations_red, prompt, step, prev_responses)
+        batch_id = batch_prompt_conversation(conversations, prompt, step, prev_responses)
 
     wait_for_batch(batch_id)
     batch_output = read_batch_output(batch_id)
