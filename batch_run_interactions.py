@@ -91,9 +91,12 @@ def extract_drugs_request(conversation: dict, extract_prompt: list[dict]):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--file", type=str, required=True)
+    parser.add_argument("--cache", type=str, default=None)
     parser.add_argument("--out_dir", type=str, required=True)
     args = parser.parse_args()
 
+    global fda_cache
+    fda_cache = json.load(open(args.cache)) if args.cache else {}
     with open(args.file, 'r') as f:
         conversations = [json.loads(line) for line in f]
 
@@ -137,3 +140,7 @@ def main():
         endpoint="/v1/chat/completions",
         completion_window="24h",
     )
+
+    if args.cache:
+        with open(args.cache, 'w') as f:
+            json.dump(fda_cache, f)
