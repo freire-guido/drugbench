@@ -22,6 +22,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--red_prompts", type=str, required=True)
     parser.add_argument("--blue_prompts", type=str, required=True)
+    parser.add_argument("--red_model", type=str, default="gpt-5")
+    parser.add_argument("--blue_model", type=str, default="gpt-4o")
     parser.add_argument("--file", type=str, required=True)
     parser.add_argument("--out_dir", type=str, required=True)
     args = parser.parse_args()
@@ -37,7 +39,7 @@ if __name__ == "__main__":
         if step > 0:
             prev_batch_file = f'{args.out_dir}/batch_{batch_id}_output.jsonl'
             prev_responses = read_previous_batch(prev_batch_file)
-        batch_id = batch_prompt_conversation(conversations, prompt, step, prev_responses)
+        batch_id = batch_prompt_conversation(conversations, prompt, step, args.red_model, prev_responses)
 
     wait_for_batch(batch_id)
     batch_output = read_batch_output(batch_id)
@@ -51,7 +53,7 @@ if __name__ == "__main__":
         if step > 0:
             prev_batch_file = f'{args.out_dir}/batch_{batch_id}_output.jsonl'
             prev_responses = read_previous_batch(prev_batch_file)
-        batch_id = batch_prompt_conversation(conversations, prompt, step, prev_responses)
+        batch_id = batch_prompt_conversation(conversations, prompt, step, args.blue_model, prev_responses)
 
     wait_for_batch(batch_id)
     batch_output = read_batch_output(batch_id)
