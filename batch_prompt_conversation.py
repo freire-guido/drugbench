@@ -25,7 +25,7 @@ def generate_request(conversation: list[dict], prompt: dict[str: str], model: st
     }
     return request
 
-def read_previous_batch(file: str) -> dict:
+def read_responses_batch(file: str) -> dict:
     with open(file, 'r') as f:
         res = [json.loads(line) for line in f]
         return {res['custom_id']: res['response']['body']['choices'][0]['message']['content'] for res in res}
@@ -63,7 +63,7 @@ if __name__ == "__main__":
 
     if args.step > 0:
         prev_batch_file = f'batch/{tracker["blue_team"][args.step-1]}_output.jsonl'
-        prev_responses = read_previous_batch(prev_batch_file)
+        prev_responses = read_responses_batch(prev_batch_file)
     
     id = main(conversations, prompts[args.step], args.step, prev_responses)
 
