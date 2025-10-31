@@ -12,7 +12,7 @@ def generate_request(conversation: list[dict], prompt: dict[str: str], model: st
     previous_response = prev_responses[conversation['prompt_id']] if prev_responses else None
     message = conversation['prompt'] + {
         'role': prompt['role'],
-        'content': prompt['content'].replace('<output>', previous_response)
+        'content': prompt['content'].replace('<output>', str(previous_response)).replace('<interactions>', str(conversation['interactions']))
     }
     request = {
         "custom_id": conversation['prompt_id'],
