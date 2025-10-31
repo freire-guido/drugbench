@@ -51,22 +51,14 @@ def main(conversations: list[dict], prompt: dict[str: str], step: int, model: st
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--prompts", type=str, required=True)
-    parser.add_argument("--tracker", type=str, required=True)
+    parser.add_argument("--previous_batch", type=str, required=True)
     parser.add_argument("--file", type=str, required=True)
     parser.add_argument("--step", type=int, required=True)
     args = parser.parse_args()
 
     prompts = json.load(open(args.prompts))
-    tracker = json.load(open(args.tracker))
+    prev_responses = read_responses_batch(args.previous_batch)
     with open(args.file, 'r') as f:
         conversations = [json.loads(line) for line in f]
 
-    if args.step > 0:
-        prev_batch_file = f'batch/{tracker["blue_team"][args.step-1]}_output.jsonl'
-        prev_responses = read_responses_batch(prev_batch_file)
-    
-    id = main(conversations, prompts[args.step], args.step, prev_responses)
-
-    tracker['blue_team'][args.step] = id
-    with open(tracker, 'w') as f:
-        json.dump(tracker, f) 
+    main(conversations, prompts[args.step], args.step, prev_responses)
