@@ -1,10 +1,11 @@
 import time, json
 
 def read_batch_output(client, batch_id: str):
-    batch_output = client.files.retrieve(client.batches.retrieve(batch_id).output_file_id)
-    batch_output = batch_output.read().decode('utf-8')
-    batch_output = [json.loads(line) for line in batch_output.split('\n') if line.strip()]
-    return batch_output
+    file_id = client.batches.retrieve(batch_id).output_file_id
+    file_content_response = client.files.content(file_id)
+    text = file_content_response.content.decode('utf-8')
+    lines = [json.loads(line) for line in text.split('\n') if line.strip()]
+    return lines
 
 def wait_for_batch(client,batch_id: str, delay: int = 5, timeout: int = 86400):
     # 86400 seconds = 24 hours

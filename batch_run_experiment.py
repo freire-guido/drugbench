@@ -23,16 +23,16 @@ def generate_responses_batch(conversations: list[dict], prompts: list[dict], mod
     prev_responses_copy = prev_responses
     for step, prompt in enumerate(prompts):
         if step > 0:
-            prev_batch_file = f'{out_dir}/batch_{batch_id}_output.jsonl'
+            prev_batch_file = f'{out_dir}/{batch_id}_output.jsonl'
             prev_responses_copy = read_responses_batch(prev_batch_file)
         batch_id = batch_prompt_conversation(conversations, prompt, step, model, prev_responses_copy)
         print(f"Waiting for batch {batch_id} to complete")
         wait_for_batch(client, batch_id)    
-        with open(f'{out_dir}/batch_{batch_id}_output.jsonl', 'w+') as f:
+        with open(f'{out_dir}/{batch_id}_output.jsonl', 'w+') as f:
             for response in read_batch_output(client, batch_id):
                 f.write(json.dumps(response) + '\n')
                 
-    return read_responses_batch(f'{out_dir}/batch_{batch_id}_output.jsonl')
+    return read_responses_batch(f'{out_dir}/{batch_id}_output.jsonl')
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
