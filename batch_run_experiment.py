@@ -25,8 +25,9 @@ def generate_responses_batch(conversations: list[dict], prompts: list[dict], mod
             prev_batch_file = f'{out_dir}/batch_{batch_id}_output.jsonl'
             prev_responses_copy = read_responses_batch(prev_batch_file)
         batch_id = batch_prompt_conversation(conversations, prompt, step, model, prev_responses_copy)
+        print(f"Waiting for batch {batch_id} to complete")
         wait_for_batch(client, batch_id)    
-        with open(f'{out_dir}/batch_{batch_id}_output.jsonl', 'w') as f:
+        with open(f'{out_dir}/batch_{batch_id}_output.jsonl', 'w+') as f:
             for response in read_batch_output(client, batch_id):
                 f.write(json.dumps(response) + '\n')
                 
@@ -48,12 +49,16 @@ if __name__ == "__main__":
     red_prompts = json.load(open(args.red_prompts))
     blue_prompts = json.load(open(args.blue_prompts))
 
+    print(f"Generating responses for red team with {len(red_prompts)} prompts")
     responses_red = generate_responses_batch(conversations, red_prompts, args.red_model, args.out_dir)
-    with open(args.out_dir + '/responses_red.jsonl', 'w') as f:
+    with open(args.out_dir + '/responses_red.jsonl', 'w+') as f:
         for response in responses_red:
             f.write(json.dumps(response) + '\n')
-
+    print(f"Responses for red team saved to {args.out_dir}/responses_red.jsonl")
+    
+    print(f"Generating responses for blue team with {len(blue_prompts)} prompts")
     responses_blue = generate_responses_batch(conversations, blue_prompts, args.blue_model, args.out_dir, responses_red)
-    with open(args.out_dir + '/responses_blue.jsonl', 'w') as f:
+    with open(args.out_dir + '/responses_blue.jsonl', 'w+') as f:
         for response in responses_blue:
             f.write(json.dumps(response) + '\n')
+    print(f"Responses for blue team saved to {args.out_dir}/responses_blue.jsonl")

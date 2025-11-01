@@ -10,17 +10,17 @@ def generate_request(conversation: list[dict], prompt: dict[str: str], model: st
     if prev_responses and conversation['prompt_id'] not in prev_responses:
         print(f"Warning: Prompt ID {conversation['prompt_id']} not found in previous responses")
     previous_response = prev_responses[conversation['prompt_id']] if prev_responses else None
-    message = conversation['prompt'] + {
+    message = conversation['prompt'] + [{
         'role': prompt['role'],
         'content': prompt['content'].replace('<output>', str(previous_response)).replace('<interactions>', str(conversation['interactions']))
-    }
+    }]
     request = {
         "custom_id": conversation['prompt_id'],
         "method": "POST",
         "url": "/v1/chat/completions",
         "body": {
             "model": model,
-            "messages": [message]
+            "messages": message
         }
     }
     return request
@@ -31,7 +31,7 @@ def read_responses_batch(file: str) -> dict:
         return {res['custom_id']: res['response']['body']['choices'][0]['message']['content'] for res in res}
 
 def main(conversations: list[dict], prompt: dict[str: str], step: int, model: str, prev_responses: dict[str: str] | None = None):
-    with open(f'batch/blue_team_{step}.jsonl', 'w') as outfile:
+    with open(f'batch/blue_team_{step}.jsonl', 'w+') as outfile:
         for convo in conversations:
             request = generate_request(convo, prompt, model, prev_responses)
             outfile.write(json.dumps(request) + '\n')
@@ -46,7 +46,7 @@ def main(conversations: list[dict], prompt: dict[str: str], step: int, model: st
             completion_window="24h",
         )
 
-    return batch_job['id']
+    return batch_job.id
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

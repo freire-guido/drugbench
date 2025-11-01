@@ -9,7 +9,8 @@ def read_batch_output(client, batch_id: str):
 def wait_for_batch(client,batch_id: str, delay: int = 5, timeout: int = 86400):
     # 86400 seconds = 24 hours
     start_time = time.time()
-    while client.batches.retrieve(batch_id).status in ["validating", "in progress", "finalizing"] and (time.time() - start_time).total_seconds() < timeout:
+    while client.batches.retrieve(batch_id).status in ["validating", "in_progress", "finalizing"] and (time.time() - start_time) < timeout:
         time.sleep(delay)
     if client.batches.retrieve(batch_id).status != "completed":
         raise Exception(f"Batch {batch_id} failed to complete: status {client.batches.retrieve(batch_id).status} after {time.time() - start_time} seconds")
+    print(f"Batch {batch_id} completed in {time.time() - start_time} seconds")
