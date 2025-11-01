@@ -56,6 +56,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--prompts", type=str, required=True)
     parser.add_argument("--previous_batch", type=str, default=None)
+    parser.add_argument("--model", type=str, required=True)
     parser.add_argument("--file", type=str, required=True)
     parser.add_argument("--step", type=int, required=True)
     args = parser.parse_args()
@@ -68,4 +69,4 @@ if __name__ == "__main__":
     with open(args.file, 'r') as f:
         conversations = [json.loads(line) for line in f]
 
-    main(conversations, prompts[args.step], args.step, prev_responses)
+    main(conversations, prompts[args.step], args.step, args.model, prev_responses)
