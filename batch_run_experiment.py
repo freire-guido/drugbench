@@ -46,7 +46,8 @@ if __name__ == "__main__":
     
     with open(args.file, 'r') as f:
         conversations = [json.loads(line) for line in f]
-        
+    print(f"Loaded {len(conversations)} conversations")
+    
     red_prompts = json.load(open(args.red_prompts))
     blue_prompts = json.load(open(args.blue_prompts))
     os.makedirs(args.out_dir, exist_ok=True)
@@ -54,8 +55,8 @@ if __name__ == "__main__":
     print(f"Generating responses for red team with {len(red_prompts)} prompts")
     responses_red = generate_responses_batch(conversations, red_prompts, args.red_model, args.out_dir)
     with open(args.out_dir + '/responses_red.jsonl', 'w+') as f:
-        for response in responses_red:
-            f.write(json.dumps(response) + '\n')
+        for id, response in responses_red.items():
+            f.write(json.dumps({'prompt_id': id, 'response': response}) + '\n')
     print(f"Responses for red team saved to {args.out_dir}/responses_red.jsonl")
     
     print(f"Generating responses for blue team with {len(blue_prompts)} prompts")

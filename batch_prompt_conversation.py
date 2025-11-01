@@ -9,7 +9,11 @@ client = OpenAI()
 def generate_request(conversation: list[dict], prompt: dict[str: str], model: str, prev_responses: dict[str: str] | None = None) -> dict:
     if prev_responses and conversation['prompt_id'] not in prev_responses:
         print(f"Warning: Prompt ID {conversation['prompt_id']} not found in previous responses")
-    previous_response = prev_responses[conversation['prompt_id']] if prev_responses else None
+        previous_response = None
+    elif not prev_responses:
+        previous_response = None
+    else:
+        previous_response = prev_responses[conversation['prompt_id']]
     message = conversation['prompt'] + [{
         'role': prompt['role'],
         'content': prompt['content'].replace('<output>', str(previous_response)).replace('<interactions>', str(conversation['interactions']))
