@@ -66,18 +66,18 @@ def generate_evaluation_requests(conversation: dict, model: str, key: str,step: 
     convo_str = "\n\n".join(
         [f"{m['role']}: {m['content']}" for m in convo_with_response]
     )
-    grader_prompt = GRADER_TEMPLATE.replace(
-        "<<conversation>>", convo_str
-    ).replace("<<rubric_item>>", str(rubric_item))
     requests = []
-    for rubric_item in conversation['rubrics']:
+    for i, rubric_item in enumerate(conversation['rubrics']):
+        grader_prompt = GRADER_TEMPLATE.replace(
+            "<<conversation>>", convo_str
+        ).replace("<<rubric_item>>", str(rubric_item))
         request = {
-            "custom_id": conversation['prompt_id'],
+            "custom_id": conversation['prompt_id'] + f'_{i}',
             "method": "POST",
             "url": "/v1/chat/completions",
             "body": {
                 "model": model,
-                "messages": grader_prompt
+                "messages": [{"role": "user", "content": grader_prompt}]
             }
         }
         requests.append(request)
@@ -133,12 +133,15 @@ if __name__ == "__main__":
         completion_window="24h",
     )
 
+    print(f"Waiting for blue batch job {blue_batch_job.id} to complete")
     wait_for_batch(client, blue_batch_job.id)
+    print(f"Waiting for red batch job {red_batch_job.id} to complete")
     wait_for_batch(client, red_batch_job.id)
 
     blue_batch_output = read_responses_batch(client, blue_batch_job.id)
     red_batch_output = read_responses_batch(client, red_batch_job.id)
 
+    print(f"Saving evaluations to {args.dir + f'/evaluations_{args.step}.jsonl'}")
     with open(args.dir + f'/evaluations_{args.step}.jsonl', 'w+') as f:
         ids = set(blue_batch_output.keys()) & set(red_batch_output.keys())
         for id in ids:
