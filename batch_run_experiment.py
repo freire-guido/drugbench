@@ -7,6 +7,7 @@ from openai import OpenAI
 import argparse
 import json
 import copy
+import os
 
 load_dotenv()
 client = OpenAI()
@@ -48,6 +49,7 @@ if __name__ == "__main__":
         
     red_prompts = json.load(open(args.red_prompts))
     blue_prompts = json.load(open(args.blue_prompts))
+    os.makedirs(args.out_dir, exist_ok=True)
 
     print(f"Generating responses for red team with {len(red_prompts)} prompts")
     responses_red = generate_responses_batch(conversations, red_prompts, args.red_model, args.out_dir)
