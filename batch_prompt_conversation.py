@@ -55,13 +55,16 @@ def main(conversations: list[dict], prompt: dict[str: str], step: int, model: st
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--prompts", type=str, required=True)
-    parser.add_argument("--previous_batch", type=str, required=True)
+    parser.add_argument("--previous_batch", type=str, default=None)
     parser.add_argument("--file", type=str, required=True)
     parser.add_argument("--step", type=int, required=True)
     args = parser.parse_args()
 
     prompts = json.load(open(args.prompts))
-    prev_responses = read_responses_batch(args.previous_batch)
+    if args.previous_batch:
+        prev_responses = read_responses_batch(args.previous_batch)
+    else:
+        prev_responses = None
     with open(args.file, 'r') as f:
         conversations = [json.loads(line) for line in f]
 

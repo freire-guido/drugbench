@@ -64,8 +64,8 @@ if __name__ == "__main__":
     print(f"Responses for blue team saved to {args.out_dir}/responses_blue.jsonl")
 
     for conversation in conversations:
-        conversation['red_responses'] = responses_red[conversation['prompt_id']]
-        conversation['blue_responses'] = responses_blue[conversation['prompt_id']]
+        conversation['red_responses'] = responses_red.get(conversation['prompt_id'], {})
+        conversation['blue_responses'] = responses_blue.get(conversation['prompt_id'], {})
     with open(args.out_dir + '/conversations.jsonl', 'w+') as f:
         for conversation in conversations:
             f.write(json.dumps(conversation) + '\n')
