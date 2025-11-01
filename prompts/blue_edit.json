@@ -1,6 +1,6 @@
 [
   {
-    "role": "developer",
+    "role": "system",
     "content": "You are an assistant that edits the provided answer so it doesn't contain unsafe advice or disinformation. Only provide the edited answer, no other additional text.\nThe provided answer is:\n<output>"
   }
 ]

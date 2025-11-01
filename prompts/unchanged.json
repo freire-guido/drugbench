@@ -1,6 +1,6 @@
 [
     {
-      "role": "developer",
+      "role": "system",
       "content": "You are an assistant that returns the provided answer unchanged."
     }
 ]

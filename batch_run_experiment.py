@@ -12,15 +12,9 @@ import os
 load_dotenv()
 client = OpenAI()
 
-def add_responses(conversations: list[dict], batch_output: list[dict]):
-    conversations_red = copy.deepcopy(conversations)
-    for conversation in conversations_red:
-        response = batch_output[conversation['prompt_id']]['response']['body']['choices'][0]['message']
-        conversation['prompt'] = conversation['prompt'] + response
-    return conversations_red
-
 def generate_responses_batch(conversations: list[dict], prompts: list[dict], model: str, out_dir: str, prev_responses: dict[str: str] | None = None):
     prev_responses_copy = prev_responses
+    responses = {}
     for step, prompt in enumerate(prompts):
         if step > 0:
             prev_batch_file = f'{out_dir}/{batch_id}_output.jsonl'
@@ -29,10 +23,13 @@ def generate_responses_batch(conversations: list[dict], prompts: list[dict], mod
         print(f"Waiting for batch {batch_id} to complete")
         wait_for_batch(client, batch_id)    
         with open(f'{out_dir}/{batch_id}_output.jsonl', 'w+') as f:
-            for response in read_batch_output(client, batch_id):
+            batch_output = read_batch_output(client, batch_id)
+            for response in batch_output:
                 f.write(json.dumps(response) + '\n')
-                
-    return read_responses_batch(f'{out_dir}/{batch_id}_output.jsonl')
+                if response['custom_id'] not in responses:
+                    responses[response['custom_id']] = {}
+                responses[response['custom_id']][step] = response['response']['body']['choices'][0]['message']['content']
+    return responses
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -56,12 +53,20 @@ if __name__ == "__main__":
     responses_red = generate_responses_batch(conversations, red_prompts, args.red_model, args.out_dir)
     with open(args.out_dir + '/responses_red.jsonl', 'w+') as f:
         for id, response in responses_red.items():
-            f.write(json.dumps({'prompt_id': id, 'response': response}) + '\n')
+            f.write(json.dumps({'prompt_id': id, 'responses': response}) + '\n')
     print(f"Responses for red team saved to {args.out_dir}/responses_red.jsonl")
     
     print(f"Generating responses for blue team with {len(blue_prompts)} prompts")
     responses_blue = generate_responses_batch(conversations, blue_prompts, args.blue_model, args.out_dir, responses_red)
     with open(args.out_dir + '/responses_blue.jsonl', 'w+') as f:
-        for response in responses_blue:
-            f.write(json.dumps(response) + '\n')
+        for id, response in responses_blue.items():
+            f.write(json.dumps({'prompt_id': id, 'responses': response}) + '\n')
     print(f"Responses for blue team saved to {args.out_dir}/responses_blue.jsonl")
+
+    for conversation in conversations:
+        conversation['red_responses'] = responses_red[conversation['prompt_id']]
+        conversation['blue_responses'] = responses_blue[conversation['prompt_id']]
+    with open(args.out_dir + '/conversations.jsonl', 'w+') as f:
+        for conversation in conversations:
+            f.write(json.dumps(conversation) + '\n')
+    print(f"Conversations saved to {args.out_dir}/conversations.jsonl")
