@@ -1,6 +1,5 @@
 from logging import exception
-from batchutils import wait_for_batch
-from batch_prompt_conversation import read_responses_batch
+from batchutils import wait_for_batch, read_batch_output
 
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -93,16 +92,19 @@ if __name__ == "__main__":
     with open(args.dir + '/conversations.jsonl', 'r') as f:
         conversations = [json.loads(line) for line in f]
 
+    requests = []
     for conversation in conversations:
         try:
-            requests = generate_evaluation_requests(conversation, args.model, 'blue_responses', args.step)
+            reqs = generate_evaluation_requests(conversation, args.model, 'blue_responses', args.step)
         except Exception as e:
             print(f"Error generating evaluation request for conversation {conversation['prompt_id']}: {e}")
             continue
-        with open(f'batch/blue_evaluations_{args.step}.jsonl', 'w+') as f:
-            for request in requests:
-                f.write(json.dumps(request) + '\n')
+        requests.extend(reqs)
+    with open(f'batch/blue_evaluations_{args.step}.jsonl', 'w+') as f:
+        for request in requests:
+            f.write(json.dumps(request) + '\n')
 
+    print(f"Creating blue batch job")
     batch_input_file = client.files.create(
         file=open(f'batch/blue_evaluations_{args.step}.jsonl', "rb"),
         purpose="batch"
@@ -113,16 +115,19 @@ if __name__ == "__main__":
         completion_window="24h",
     )
 
+    requests = []
     for conversation in conversations:
         try:
-            requests = generate_evaluation_requests(conversation, args.model, 'red_responses', args.step)
+            reqs = generate_evaluation_requests(conversation, args.model, 'red_responses', args.step)
         except Exception as e:
             print(f"Error generating evaluation request for conversation {conversation['prompt_id']}: {e}")
             continue
-        with open(f'batch/red_evaluations_{args.step}.jsonl', 'w+') as f:
-            for request in requests:
-                f.write(json.dumps(request) + '\n')
+        requests.extend(reqs)
+    with open(f'batch/red_evaluations_{args.step}.jsonl', 'w+') as f:
+        for request in requests:
+            f.write(json.dumps(request) + '\n')
 
+    print(f"Creating red batch job")
     batch_input_file = client.files.create(
         file=open(f'batch/red_evaluations_{args.step}.jsonl', "rb"),
         purpose="batch"
@@ -138,8 +143,10 @@ if __name__ == "__main__":
     print(f"Waiting for red batch job {red_batch_job.id} to complete")
     wait_for_batch(client, red_batch_job.id)
 
-    blue_batch_output = read_responses_batch(client, blue_batch_job.id)
-    red_batch_output = read_responses_batch(client, red_batch_job.id)
+    blue_batch_output = read_batch_output(client, blue_batch_job.id)
+    blue_batch_output = {res['custom_id']: res['response']['body']['choices'][0]['message']['content'] for res in blue_batch_output}
+    red_batch_output = read_batch_output(client, red_batch_job.id)
+    red_batch_output = {res['custom_id']: res['response']['body']['choices'][0]['message']['content'] for res in red_batch_output}
 
     print(f"Saving evaluations to {args.dir + f'/evaluations_{args.step}.jsonl'}")
     with open(args.dir + f'/evaluations_{args.step}.jsonl', 'w+') as f:
