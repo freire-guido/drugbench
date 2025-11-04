@@ -1,18 +1,40 @@
 import math, random, json
 import pandas as pd
 
+def read_responses_batch(file: str) -> dict:
+    with open(file, 'r') as f:
+        res = [json.loads(line) for line in f]
+        return {res['custom_id']: res['response']['body']['choices'][0]['message']['content'] for res in res}
+
+def from_jsonl(jsonl_file_path, key=None, value=None):
+    if not key:
+        with open(jsonl_file_path, 'r') as f:
+            return [json.loads(line) for line in f]
+    if key:
+        with open(jsonl_file_path, 'r') as f:
+            out = {}
+            for line in f:
+                data = json.loads(line)
+                id = data[key]
+                del data[key]
+                if value:
+                    out[id] = data[value]
+                else:
+                    out[id] = data
+            return out
+
 def _is_attacked(meta):
     red_bias_text = meta['response_metadata']['red_bias']
     is_attacked = red_bias_text is not None and red_bias_text.strip() != ''
     return is_attacked
 
-def get_montecarlo_upsampling(df, T=50000):
+def get_montecarlo_upsampling(df, T=5000):
     random.seed(42)
-    M = df['red_bias'].sum()
+    M = df['attacked'].sum()
     N = math.floor(M/12)
 
-    attacked_sample = df[df['red_bias']].sample(n=N, replace=False).index.tolist()
-    not_attacked_sample = df[~df['red_bias']].sample(n=T-N, replace=True).index.tolist()
+    attacked_sample = df[df['attacked']].sample(n=N, replace=False).index.tolist()
+    not_attacked_sample = df[~df['attacked']].sample(n=T-N, replace=True).index.tolist()
 
     out = attacked_sample + not_attacked_sample
     random.shuffle(out)
