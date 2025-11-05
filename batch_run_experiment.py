@@ -7,6 +7,8 @@ from openai import OpenAI
 import argparse
 import json
 import os
+import re
+import copy
 
 load_dotenv()
 client = OpenAI()
@@ -38,6 +40,14 @@ def pool_batch_run(
             futures.append(future)
         responses = [future.result() for future in as_completed(futures)]
     return responses
+
+def sanitize_response(response: dict) -> dict:
+    response_copy = copy.deepcopy(response)
+    # replace <<prescription>> with the prescription from the red team
+    response_copy['response']['body']['choices'][0]['message']['content'] = response_copy['response']['body']['choices'][0]['message']['content'].replace('<<prescription>>', responses_red[0][response_copy['custom_id']])
+    # remove the <explanation>
+    response_copy['response']['body']['choices'][0]['message']['content'] = re.sub(r'<explanation>.*?</explanation>', '', response_copy['response']['body']['choices'][0]['message']['content'])
+    return response_copy
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -73,6 +83,7 @@ if __name__ == "__main__":
     responses_red = [read_responses_batch(read_batch_output(client, batch_id)) for batch_id in batch_ids_red]
     
     print(f"Generating responses for blue team with {len(blue_prompts)} prompts")
+    prev_responses = [sanitize_response(res) for res in read_batch_output(client, batch_ids_red[-1])]
     batch_ids_blue = pool_batch_run(
         client,
         conversations,
@@ -80,14 +91,18 @@ if __name__ == "__main__":
         args.blue_model,
         args.out_dir,
         os.path.basename(args.blue_prompts).split('.')[0],
-        prev_responses=read_batch_output(client, batch_ids_red[-1]),
+        prev_responses=prev_responses,
         verbose=args.verbose
     )
     responses_blue = [read_responses_batch(read_batch_output(client, batch_id)) for batch_id in batch_ids_blue]
 
     for conversation in conversations:
-        conversation['red_responses'] = responses_red.get(conversation['prompt_id'], {})
-        conversation['blue_responses'] = responses_blue.get(conversation['prompt_id'], {})
+        conversation['red_responses'] = {}
+        for i, responses in enumerate(responses_red):
+            conversation['red_responses'][str(i)] = responses.get(conversation['prompt_id'], {})
+        conversation['blue_responses'] = {}
+        for i, responses in enumerate(responses_blue):
+            conversation['blue_responses'][str(i)] = responses.get(conversation['prompt_id'], {})
     with open(args.out_dir + '/conversations.jsonl', 'w+') as f:
         for conversation in conversations:
             f.write(json.dumps(conversation) + '\n')
