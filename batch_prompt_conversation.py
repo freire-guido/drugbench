@@ -1,7 +1,10 @@
+from batchutils import wait_for_batch, read_batch_output, read_responses_batch
+
 from dotenv import load_dotenv
 from openai import OpenAI
 import argparse
 import json
+import os
 
 load_dotenv()
 client = OpenAI()
@@ -16,7 +19,8 @@ def generate_request(conversation: list[dict], prompt: dict[str: str], model: st
         previous_response = prev_responses[conversation['prompt_id']]
     message = conversation['prompt'] + [{
         'role': prompt['role'],
-        'content': prompt['content'].replace('<output>', str(previous_response)).replace('<interactions>', str(conversation['interactions']))
+        'content': prompt['content'].replace(
+            '<output>', str(previous_response)).replace('<interactions>', str(conversation['interactions']))
     }]
     request = {
         "custom_id": conversation['prompt_id'],
@@ -29,19 +33,22 @@ def generate_request(conversation: list[dict], prompt: dict[str: str], model: st
     }
     return request
 
-def read_responses_batch(file: str) -> dict:
-    with open(file, 'r') as f:
-        res = [json.loads(line) for line in f]
-        return {res['custom_id']: res['response']['body']['choices'][0]['message']['content'] for res in res}
 
-def main(conversations: list[dict], prompt: dict[str: str], step: int, model: str, prev_responses: dict[str: str] | None = None):
-    with open(f'batch/blue_team_{step}.jsonl', 'w+') as outfile:
+def create_batch_job(
+    client: OpenAI,
+    conversations: list[dict],
+    prompt: dict[str: str],
+    model: str,
+    input_file_name: str,
+    prev_responses: dict[str: str] | None = None,
+) -> str:
+    with open(input_file_name, 'w+') as outfile:
         for convo in conversations:
             request = generate_request(convo, prompt, model, prev_responses)
             outfile.write(json.dumps(request) + '\n')
 
         batch_input_file = client.files.create(
-            file=open(f'batch/blue_team_{step}.jsonl', "rb"),
+            file=open(input_file_name, "rb"),
             purpose="batch"
         )
         batch_job = client.batches.create(
@@ -52,21 +59,39 @@ def main(conversations: list[dict], prompt: dict[str: str], step: int, model: st
 
     return batch_job.id
 
+def generate_output_batch(
+    client: OpenAI,
+    conversations: list[dict],
+    prompt: dict[str: str],
+    model: str,
+    input_file_name: str,
+    output_file_name: str,
+    prev_responses: str | None = None,
+):
+    if prev_responses:
+        prev_responses = read_responses_batch(prev_responses)
+    batch_id = create_batch_job(client, conversations, prompt, model, input_file_name, prev_responses)
+    wait_for_batch(client, batch_id)
+    with open(output_file_name, 'w+') as f:
+        batch_output = read_batch_output(client, batch_id)
+        for response in batch_output:
+            f.write(json.dumps(response) + '\n')
+    return batch_output
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    parser.add_argument("--conversations", type=str, required=True)
     parser.add_argument("--prompts", type=str, required=True)
-    parser.add_argument("--previous_batch", type=str, default=None)
     parser.add_argument("--model", type=str, required=True)
-    parser.add_argument("--file", type=str, required=True)
-    parser.add_argument("--step", type=int, required=True)
+    parser.add_argument("--out_dir", type=str, required=True)
+    parser.add_argument("--previous_batch", type=str, default=None)
     args = parser.parse_args()
 
+    name = os.path.basename(args.prompts).split('.')[0]
     prompts = json.load(open(args.prompts))
-    if args.previous_batch:
-        prev_responses = read_responses_batch(args.previous_batch)
-    else:
-        prev_responses = None
-    with open(args.file, 'r') as f:
+    os.makedirs(args.out_dir, exist_ok=True)
+    with open(args.conversations, 'r') as f:
         conversations = [json.loads(line) for line in f]
 
-    main(conversations, prompts[args.step], args.step, args.model, prev_responses)
+    for i, prompt in enumerate(prompts):
+        generate_output_batch(client, conversations, prompt, args.model, f'{args.out_dir}/{name}_{i}_input.jsonl', f'{args.out_dir}/{name}_{i}_output.jsonl', args.previous_batch)
