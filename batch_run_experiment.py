@@ -1,5 +1,5 @@
 from batch_prompt_conversation import generate_output_batch
-from batchutils import read_responses_batch
+from batchutils import read_responses_batch, read_batch_output
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dotenv import load_dotenv
@@ -10,6 +10,34 @@ import os
 
 load_dotenv()
 client = OpenAI()
+
+def pool_batch_run(
+    client: OpenAI,
+    conversations: list[dict],
+    prompts: list[dict],
+    model: str,
+    out_dir: str,
+    name,
+    prev_responses = None,
+    verbose: bool = False
+) -> list[dict]:
+    with ThreadPoolExecutor() as executor:
+        futures = []
+        for i, prompt in enumerate(prompts):
+            future = executor.submit(
+                generate_output_batch,
+                client,
+                conversations,
+                prompt,
+                model,
+                out_dir + f'/{name}_{i}_input.jsonl',
+                out_dir + f'/{name}_{i}_output.jsonl',
+                prev_responses,
+                verbose=verbose
+            )
+            futures.append(future)
+        responses = [future.result() for future in as_completed(futures)]
+    return responses
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -33,42 +61,29 @@ if __name__ == "__main__":
     os.makedirs(args.out_dir, exist_ok=True)
 
     print(f"Generating responses for red team with {len(red_prompts)} prompts")
-    name = os.path.basename(args.red_prompts).split('.')[0]
-    with ThreadPoolExecutor() as executor:
-        futures = []
-        for i, prompt in enumerate(red_prompts):
-            future = executor.submit(
-                generate_output_batch,
-                client,
-                conversations,
-                prompt,
-                args.red_model,
-                args.out_dir + f'/{name}_{i}_input.jsonl',
-                args.out_dir + f'/{name}_{i}_output.jsonl',
-                verbose=args.verbose
-            )
-            futures.append(future)
-        responses_red = [future.result() for future in as_completed(futures)]
+    batch_ids_red = pool_batch_run(
+        client,
+        conversations,
+        red_prompts,
+        args.red_model,
+        args.out_dir,
+        os.path.basename(args.red_prompts).split('.')[0],
+        verbose=args.verbose
+    )
+    responses_red = [read_responses_batch(read_batch_output(client, batch_id)) for batch_id in batch_ids_red]
     
     print(f"Generating responses for blue team with {len(blue_prompts)} prompts")
-    responses_red_file = f'/{name}_{len(red_prompts)-1}_output.jsonl'
-    name = os.path.basename(args.blue_prompts).split('.')[0]
-    with ThreadPoolExecutor() as executor:
-        futures = []
-        for i, prompt in enumerate(blue_prompts):
-            future = executor.submit(
-                generate_output_batch,
-                client,
-                conversations,
-                prompt,
-                args.blue_model,
-                args.out_dir + f'/{name}_{i}_input.jsonl',
-                args.out_dir + f'/{name}_{i}_output.jsonl',
-                responses_red_file,
-                verbose=args.verbose
-            )
-            futures.append(future)
-        responses_blue = [future.result() for future in as_completed(futures)]
+    batch_ids_blue = pool_batch_run(
+        client,
+        conversations,
+        blue_prompts,
+        args.blue_model,
+        args.out_dir,
+        os.path.basename(args.blue_prompts).split('.')[0],
+        prev_responses=read_batch_output(client, batch_ids_red[-1]),
+        verbose=args.verbose
+    )
+    responses_blue = [read_responses_batch(read_batch_output(client, batch_id)) for batch_id in batch_ids_blue]
 
     for conversation in conversations:
         conversation['red_responses'] = responses_red.get(conversation['prompt_id'], {})

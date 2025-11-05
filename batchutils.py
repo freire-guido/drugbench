@@ -1,9 +1,8 @@
 import time, json
 
-def read_responses_batch(file: str) -> dict:
-    with open(file, 'r') as f:
-        res = [json.loads(line) for line in f]
-        return {res['custom_id']: res['response']['body']['choices'][0]['message']['content'] for res in res}
+def read_responses_batch(iterable) -> dict:
+    res = [json.loads(line) for line in iterable]
+    return {res['custom_id']: res['response']['body']['choices'][0]['message']['content'] for res in res}
 
 def read_batch_output(client, batch_id: str):
     file_id = client.batches.retrieve(batch_id).output_file_id

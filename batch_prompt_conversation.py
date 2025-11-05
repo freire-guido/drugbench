@@ -74,12 +74,16 @@ def generate_output_batch(
     model: str,
     input_file_name: str,
     output_file_name: str,
-    prev_responses: str | None = None,
+    prev_responses = None,
     verbose: bool = False,
 ):
-    if prev_responses:
+    if type(prev_responses) == str:
         if verbose:
             print(f"Loading previous responses from {prev_responses}...")
+        prev_responses = read_responses_batch(open(prev_responses, 'r'))
+    elif type(prev_responses) == list:
+        if verbose:
+            print(f"Loading previous responses from list of {len(prev_responses)} responses...")
         prev_responses = read_responses_batch(prev_responses)
     batch_id = create_batch_job(client, conversations, prompt, model, input_file_name, prev_responses, verbose)
     if verbose:
@@ -94,7 +98,7 @@ def generate_output_batch(
     if verbose:
         print(f"Saved {len(batch_output)} responses to {output_file_name}")
 
-    return batch_output
+    return batch_id
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
