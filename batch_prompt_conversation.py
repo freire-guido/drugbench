@@ -77,11 +77,11 @@ def generate_output_batch(
     prev_responses = None,
     verbose: bool = False,
 ):
-    if type(prev_responses) == str:
+    if isinstance(prev_responses, str):
         if verbose:
             print(f"Loading previous responses from {prev_responses}...")
         prev_responses = read_responses_batch(open(prev_responses, 'r'))
-    elif type(prev_responses) == list:
+    elif isinstance(prev_responses, list):
         if verbose:
             print(f"Loading previous responses from list of {len(prev_responses)} responses...")
         prev_responses = read_responses_batch(prev_responses)

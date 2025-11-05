@@ -1,7 +1,7 @@
 import time, json
 
 def read_responses_batch(iterable) -> dict:
-    res = [json.loads(line) for line in iterable]
+    res = [json.loads(line) if isinstance(line, str) else line for line in iterable]
     return {res['custom_id']: res['response']['body']['choices'][0]['message']['content'] for res in res}
 
 def read_batch_output(client, batch_id: str):
