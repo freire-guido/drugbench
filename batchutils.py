@@ -1,5 +1,15 @@
 import time, json, re
 
+def parse_json_to_dict(json_string: str) -> dict:
+    # Remove markdown-style ```json``` markers if present
+    json_cleaned = re.sub(r"^```json\s*|\s*```$", "", json_string.strip())
+
+    try:
+        return json.loads(json_cleaned)
+    except json.JSONDecodeError as e:
+        print(f"JSON decoding failed: {e}")
+        return {}
+
 def read_responses_batch(iterable) -> dict:
     res = [json.loads(line) if isinstance(line, str) else line for line in iterable]
     return {res['custom_id']: res['response']['body']['choices'][0]['message']['content'] for res in res}
