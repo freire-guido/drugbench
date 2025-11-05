@@ -2,8 +2,7 @@ from batchutils import read_batch_output, read_responses_batch, sanitize_respons
 
 from dotenv import load_dotenv
 from openai import OpenAI
-import argparse
-import json
+import argparse, json, datetime
 
 from combine_batch_evaluations import output
 
@@ -115,28 +114,50 @@ def create_batch_job(
 
     return batch_job.id
 
+def generate_output_batch(
+    client: OpenAI,
+    conversations: list[dict],
+    responses: dict,
+    model: str,
+    input_file_name: str,
+    output_file_name: str,
+    verbose: bool = False,
+):
+    batch_id = create_batch_job(client, conversations, responses, model, input_file_name)
+    if verbose:
+        print(f"Waiting for batch {batch_id} to complete...")
+    wait_for_batch(client, batch_id)
+    if verbose:
+        print(f"Batch completed, reading output...")
+    batch_output = read_batch_output(client, batch_id)
+    with open(output_file_name, 'w+') as f:
+        for response in batch_output:
+            f.write(json.dumps(response) + '\n')
+    if verbose:
+        print(f"Saved {len(batch_output)} responses to {output_file_name}")
+
+    return batch_id
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--conversations", type=str, required=True)
     parser.add_argument("--responses", type=str, required=True)
     parser.add_argument("--model", type=str, required=True)
-    parser.add_argument("--out_path", type=str, required=True)
+    parser.add_argument("--out_dir", type=str, required=True)
+    parser.add_argument("--name", type=str, default = str(datetime.datetime.now()).split('.')[0])
     parser.add_argument("--verbose", "-v", action="store_true", default=False, help="Enable verbose output")
     args = parser.parse_args()
 
+    responses = read_responses_batch(open(args.responses, 'r'))
     with open(args.conversations, 'r') as f:
         conversations = [json.loads(line) for line in f]
-    print(f"Loaded {len(conversations)} conversations")
-    responses = read_responses_batch(open(args.responses, 'r'))
 
-    batch_id = create_batch_job(client, conversations, responses, args.model, args.out_path)
-    wait_for_batch(client, batch_id)
     if args.verbose:
-        print(f"Batch completed, reading output...")
-    batch_output = read_batch_output(client, batch_id)
-    output_path = args.out_path.split('.')[0] + '_output' + args.out_path.split('.')[1]
-    with open(output_path, 'w+'):
-        for response in batch_output:
-            f.write(json.dumps(response) + '\n')
-    print('\nCompleted')
-        
+        print(f"Processing {len(responses)} response(s) for {len(conversations)} conversation(s)")
+        print(f"Model: {args.model}")
+        print(f"Output directory: {args.out_dir}")
+
+    generate_output_batch(client, conversations, responses, args.model, f'{args.out_dir}/{args.name}_input.jsonl', f'{args.out_dir}/{args.name}_output.jsonl', args.verbose)
+    
+    if args.verbose:
+        print("\nCompleted")
