@@ -1,4 +1,5 @@
 from batchutils import wait_for_batch, read_batch_output, read_responses_batch
+from batch_evaluate_conversations import create_batch_job as create_eval_job
 
 from dotenv import load_dotenv
 from openai import OpenAI

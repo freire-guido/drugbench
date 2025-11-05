@@ -4,8 +4,6 @@ from dotenv import load_dotenv
 from openai import OpenAI
 import argparse, json, datetime
 
-from combine_batch_evaluations import output
-
 load_dotenv()
 client = OpenAI()
 
@@ -61,7 +59,10 @@ Return just the json object in markdown format. Do not include any other text in
 """.strip()
 
 def generate_requests(conversation: dict, response: dict, model: str) -> list[dict]:
-    convo_with_response = conversation['prompt'] + [sanitize_response(response)]
+    convo_with_response = conversation['prompt'] + [{
+        "role": "assistant",
+        "content": sanitize_response(response)
+    }]
     convo_str = "\n\n".join(
         [f"{m['role']}: {m['content']}" for m in convo_with_response]
     )
@@ -142,8 +143,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--conversations", type=str, required=True)
     parser.add_argument("--responses", type=str, required=True)
-    parser.add_argument("--model", type=str, required=True)
     parser.add_argument("--out_dir", type=str, required=True)
+    parser.add_argument("--model", type=str, default='gpt-4.1')
     parser.add_argument("--name", type=str, default = str(datetime.datetime.now()).split('.')[0])
     parser.add_argument("--verbose", "-v", action="store_true", default=False, help="Enable verbose output")
     args = parser.parse_args()

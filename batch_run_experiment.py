@@ -1,5 +1,6 @@
 from batchutils import read_responses_batch, read_batch_output, sanitize_response
-from batch_prompt_conversation import generate_output_batch
+from batch_prompt_conversation import generate_output_batch as prompt_outputs
+from batch_evaluate_conversations import generate_output_batch as eval_outputs
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dotenv import load_dotenv
@@ -25,7 +26,7 @@ def pool_batch_run(
         futures = []
         for i, prompt in enumerate(prompts):
             future = executor.submit(
-                generate_output_batch,
+                prompt_outputs,
                 client,
                 conversations,
                 prompt,
@@ -73,7 +74,7 @@ if __name__ == "__main__":
     responses_red = [read_responses_batch(read_batch_output(client, batch_id)) for batch_id in batch_ids_red]
     
     print(f"Generating responses for blue team with {len(blue_prompts)} prompts")
-    prev_responses = {custom_id: sanitize_response(res, responses_red[0][custom_id]) for custom_id, res in responses_red[-1].items()}
+    red_sanitized = {custom_id: sanitize_response(res, responses_red[0][custom_id]) for custom_id, res in responses_red[1].items()}
     batch_ids_blue = pool_batch_run(
         client,
         conversations,
@@ -81,7 +82,7 @@ if __name__ == "__main__":
         args.blue_model,
         args.out_dir,
         os.path.basename(args.blue_prompts).split('.')[0],
-        prev_responses=prev_responses,
+        prev_responses=red_sanitized,
         verbose=args.verbose
     )
     responses_blue = [read_responses_batch(read_batch_output(client, batch_id)) for batch_id in batch_ids_blue]
@@ -96,4 +97,25 @@ if __name__ == "__main__":
     with open(args.out_dir + '/conversations.jsonl', 'w+') as f:
         for conversation in conversations:
             f.write(json.dumps(conversation) + '\n')
+
+    print(f"Evaluating conversations conversations")
+    with ThreadPoolExecutor() as executor:
+        blue_future = executor.submit(
+            eval_outputs,
+            client,
+            conversations,
+            responses_blue[1],
+            args.green_model,
+            args.out_dir,
+            args.name,
+        )
+        red_future = executor.submit(
+            eval_outputs,
+            client,
+            conversations,
+            red_sanitized,
+            args.green_model,
+            args.out_dir,
+            args.name,
+        )
     print(f"Conversations saved to {args.out_dir}/conversations.jsonl")
