@@ -51,19 +51,19 @@ def create_batch_job(
             request = generate_request(convo, prompt, model, prev_responses)
             outfile.write(json.dumps(request) + '\n')
 
-        batch_input_file = client.files.create(
-            file=open(input_file_name, "rb"),
-            purpose="batch"
-        )
-        if verbose:
-            print(f"Uploaded input file: {batch_input_file.id}")
-        batch_job = client.batches.create(
-            input_file_id=batch_input_file.id,
-            endpoint="/v1/chat/completions",
-            completion_window="24h",
-        )
-        if verbose:
-            print(f"Created batch job: {batch_job.id}")
+    batch_input_file = client.files.create(
+        file=open(input_file_name, "rb"),
+        purpose="batch"
+    )
+    if verbose:
+        print(f"Uploaded input file: {batch_input_file.id}")
+    batch_job = client.batches.create(
+        input_file_id=batch_input_file.id,
+        endpoint="/v1/chat/completions",
+        completion_window="24h",
+    )
+    if verbose:
+        print(f"Created batch job: {batch_job.id}")
 
     return batch_job.id
 
