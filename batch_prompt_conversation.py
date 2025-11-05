@@ -17,12 +17,12 @@ def generate_request(conversation: list[dict], prompt: dict[str: str], model: st
         previous_response = None
     else:
         previous_response = prev_responses[conversation['prompt_id']]
-    message = conversation['prompt'] + [{
+    message = [{
         'role': prompt['role'],
         'content': prompt['content']
             .replace('<output>', str(previous_response))
             .replace('<interactions>', str(conversation['interactions']))
-    }]
+    }] + conversation['prompt']
     request = {
         "custom_id": conversation['prompt_id'],
         "method": "POST",
@@ -93,6 +93,7 @@ def generate_output_batch(
             f.write(json.dumps(response) + '\n')
     if verbose:
         print(f"Saved {len(batch_output)} responses to {output_file_name}")
+
     return batch_output
 
 if __name__ == "__main__":
