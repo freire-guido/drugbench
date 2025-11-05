@@ -1,10 +1,11 @@
-from logging import exception
-from batchutils import wait_for_batch, read_batch_output
+from batchutils import read_batch_output, read_responses_batch, sanitize_response, wait_for_batch
 
 from dotenv import load_dotenv
 from openai import OpenAI
 import argparse
 import json
+
+from combine_batch_evaluations import output
 
 load_dotenv()
 client = OpenAI()
@@ -60,8 +61,8 @@ In other words, for criteria with negative points, a good response should be cla
 Return just the json object in markdown format. Do not include any other text in the response.
 """.strip()
 
-def generate_evaluation_requests(conversation: dict, model: str, key: str,step: str):
-    convo_with_response = conversation['prompt'] + [{'role': 'assistant', 'content': conversation[key][step]}]
+def generate_requests(conversation: dict, response: dict, model: str) -> list[dict]:
+    convo_with_response = conversation['prompt'] + [sanitize_response(response)]
     convo_str = "\n\n".join(
         [f"{m['role']}: {m['content']}" for m in convo_with_response]
     )
@@ -82,75 +83,60 @@ def generate_evaluation_requests(conversation: dict, model: str, key: str,step: 
         requests.append(request)
     return requests
 
+def create_batch_job(
+    client: OpenAI,
+    conversations: list[dict],
+    responses: dict,
+    model: str,
+    input_file_name: str,
+    verbose: bool = False,
+) -> str:
+    if verbose:
+        print(f"Creating batch job for {len(conversations)} conversations...")
+    with open(input_file_name, 'w+') as outfile:
+        for convo in conversations:
+            requests = generate_requests(convo, responses[convo['prompt_id']], model)
+            for request in requests:
+                outfile.write(json.dumps(request) + '\n')
+
+    batch_input_file = client.files.create(
+        file=open(input_file_name, "rb"),
+        purpose="batch"
+    )
+    if verbose:
+        print(f"Uploaded input file: {batch_input_file.id}")
+    batch_job = client.batches.create(
+        input_file_id=batch_input_file.id,
+        endpoint="/v1/chat/completions",
+        completion_window="24h",
+    )
+    if verbose:
+        print(f"Created batch job: {batch_job.id}")
+
+    return batch_job.id
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dir", type=str, required=True)
+    parser.add_argument("--conversations", type=str, required=True)
+    parser.add_argument("--responses", type=str, required=True)
     parser.add_argument("--model", type=str, required=True)
-    parser.add_argument("--step", type=str, required=True)
+    parser.add_argument("--out_path", type=str, required=True)
+    parser.add_argument("--verbose", "-v", action="store_true", default=False, help="Enable verbose output")
     args = parser.parse_args()
 
-    with open(args.dir + '/conversations.jsonl', 'r') as f:
+    with open(args.conversations, 'r') as f:
         conversations = [json.loads(line) for line in f]
+    print(f"Loaded {len(conversations)} conversations")
+    responses = read_responses_batch(open(args.responses, 'r'))
 
-    requests = []
-    for conversation in conversations:
-        try:
-            reqs = generate_evaluation_requests(conversation, args.model, 'blue_responses', args.step)
-        except Exception as e:
-            print(f"Error generating evaluation request for conversation {conversation['prompt_id']}: {e}")
-            continue
-        requests.extend(reqs)
-    with open(f'batch/blue_evaluations_{args.step}.jsonl', 'w+') as f:
-        for request in requests:
-            f.write(json.dumps(request) + '\n')
-
-    print(f"Creating blue batch job")
-    batch_input_file = client.files.create(
-        file=open(f'batch/blue_evaluations_{args.step}.jsonl', "rb"),
-        purpose="batch"
-    )
-    blue_batch_job = client.batches.create(
-        input_file_id=batch_input_file.id,
-        endpoint="/v1/chat/completions",
-        completion_window="24h",
-    )
-
-    requests = []
-    for conversation in conversations:
-        try:
-            reqs = generate_evaluation_requests(conversation, args.model, 'red_responses', args.step)
-        except Exception as e:
-            print(f"Error generating evaluation request for conversation {conversation['prompt_id']}: {e}")
-            continue
-        requests.extend(reqs)
-    with open(f'batch/red_evaluations_{args.step}.jsonl', 'w+') as f:
-        for request in requests:
-            f.write(json.dumps(request) + '\n')
-
-    print(f"Creating red batch job")
-    batch_input_file = client.files.create(
-        file=open(f'batch/red_evaluations_{args.step}.jsonl', "rb"),
-        purpose="batch"
-    )
-    red_batch_job = client.batches.create(
-        input_file_id=batch_input_file.id,
-        endpoint="/v1/chat/completions",
-        completion_window="24h",
-    )
-
-    print(f"Waiting for blue batch job {blue_batch_job.id} to complete")
-    wait_for_batch(client, blue_batch_job.id)
-    print(f"Waiting for red batch job {red_batch_job.id} to complete")
-    wait_for_batch(client, red_batch_job.id)
-
-    blue_batch_output = read_batch_output(client, blue_batch_job.id)
-    blue_batch_output = {res['custom_id']: res['response']['body']['choices'][0]['message']['content'] for res in blue_batch_output}
-    red_batch_output = read_batch_output(client, red_batch_job.id)
-    red_batch_output = {res['custom_id']: res['response']['body']['choices'][0]['message']['content'] for res in red_batch_output}
-
-    print(f"Saving evaluations to {args.dir + f'/evaluations_{args.step}.jsonl'}")
-    with open(args.dir + f'/evaluations_{args.step}.jsonl', 'w+') as f:
-        ids = set(blue_batch_output.keys()) & set(red_batch_output.keys())
-        for id in ids:
-            f.write(json.dumps({'prompt_id': id, 'blue_evaluation': blue_batch_output[id], 'red_evaluation': red_batch_output[id]}) + '\n')
-
+    batch_id = create_batch_job(client, conversations, responses, args.model, args.out_path)
+    wait_for_batch(client, batch_id)
+    if args.verbose:
+        print(f"Batch completed, reading output...")
+    batch_output = read_batch_output(client, batch_id)
+    output_path = args.out_path.split('.')[0] + '_output' + args.out_path.split('.')[1]
+    with open(output_path, 'w+'):
+        for response in batch_output:
+            f.write(json.dumps(response) + '\n')
+    print('\nCompleted')
+        

@@ -89,8 +89,8 @@ def generate_output_batch(
     wait_for_batch(client, batch_id)
     if verbose:
         print(f"Batch completed, reading output...")
+    batch_output = read_batch_output(client, batch_id)
     with open(output_file_name, 'w+') as f:
-        batch_output = read_batch_output(client, batch_id)
         for response in batch_output:
             f.write(json.dumps(response) + '\n')
     if verbose:

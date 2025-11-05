@@ -1,5 +1,5 @@
+from batchutils import read_responses_batch, read_batch_output, sanitize_response
 from batch_prompt_conversation import generate_output_batch
-from batchutils import read_responses_batch, read_batch_output
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dotenv import load_dotenv
@@ -7,8 +7,6 @@ from openai import OpenAI
 import argparse
 import json
 import os
-import re
-import copy
 
 load_dotenv()
 client = OpenAI()
@@ -40,14 +38,6 @@ def pool_batch_run(
             futures.append(future)
         responses = [future.result() for future in as_completed(futures)]
     return responses
-
-def sanitize_response(response: dict) -> dict:
-    response_copy = copy.deepcopy(response)
-    # replace <<prescription>> with the prescription from the red team
-    response_copy['response']['body']['choices'][0]['message']['content'] = response_copy['response']['body']['choices'][0]['message']['content'].replace('<<prescription>>', responses_red[0][response_copy['custom_id']])
-    # remove the <explanation>
-    response_copy['response']['body']['choices'][0]['message']['content'] = re.sub(r'<explanation>.*?</explanation>', '', response_copy['response']['body']['choices'][0]['message']['content'])
-    return response_copy
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -83,7 +73,7 @@ if __name__ == "__main__":
     responses_red = [read_responses_batch(read_batch_output(client, batch_id)) for batch_id in batch_ids_red]
     
     print(f"Generating responses for blue team with {len(blue_prompts)} prompts")
-    prev_responses = [sanitize_response(res) for res in read_batch_output(client, batch_ids_red[-1])]
+    prev_responses = {custom_id: sanitize_response(res, responses_red[0][custom_id]) for custom_id, res in responses_red[-1].items()}
     batch_ids_blue = pool_batch_run(
         client,
         conversations,
