@@ -26,7 +26,7 @@ def sanitize_response(response: str, prescription: str | None = None) -> str:
     if prescription:
         response = response.replace('<<prescription>>', prescription)
     # remove the <explanation>
-    response = re.sub(r'<explanation>.*?</explanation>', '', response)
+    response = re.sub(r'<explanation>.*?</explanation>', '', response, flags=re.DOTALL)
     return response
 
 def wait_for_batch(client,batch_id: str, delay: int = 5, timeout: int = 86400) -> bool:

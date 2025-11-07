@@ -30,10 +30,15 @@ def pool_batch_run(
     out_dir: str,
     name,
     prev_responses = None,
-    verbose: bool = False
+    tracker: dict | None = None,
+    verbose: bool = False,
 ) -> list[dict]:
     def run_prompt(args):
         i, prompt = args
+        if tracker is not None and name in tracker:
+            if verbose:
+                print(f"Using batch IDs from tracker for {name}_{i}")
+            return tracker[name][i]
         return prompt_outputs(
             client,
             conversations,
@@ -46,8 +51,8 @@ def pool_batch_run(
         )
     
     with ThreadPoolExecutor() as executor:
-        responses = list(executor.map(run_prompt, enumerate(prompts)))
-    return responses
+        batch_ids = list(executor.map(run_prompt, enumerate(prompts)))
+    return batch_ids
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -58,6 +63,7 @@ if __name__ == "__main__":
     parser.add_argument("--red_model", type=str, default="gpt-5")
     parser.add_argument("--blue_model", type=str, default="gpt-4o")
     parser.add_argument("--green_model", type=str, default="gpt-4.1")
+    parser.add_argument("--tracker", type=str, default=None)
     parser.add_argument("--verbose", "-v", action="store_true", default=False, help="Enable verbose output")
     args = parser.parse_args()
     
@@ -67,7 +73,14 @@ if __name__ == "__main__":
     
     red_prompts = json.load(open(args.red_prompts))
     blue_prompts = json.load(open(args.blue_prompts))
+
     os.makedirs(args.out_dir, exist_ok=True)
+    if not args.tracker:
+        args.tracker = args.out_dir + '/tracker.json'
+    if os.path.exists(args.tracker):
+        tracker = json.load(open(args.tracker))
+    else:
+        tracker = {}
 
     print(f"GENERATING RESPONSES FOR RED TEAM WITH {len(red_prompts)} PROMPTS")
     batch_ids_red = pool_batch_run(
@@ -77,6 +90,7 @@ if __name__ == "__main__":
         args.red_model,
         args.out_dir,
         os.path.basename(args.red_prompts).split('.')[0],
+        tracker=tracker,
         verbose=args.verbose
     )
     responses_red = [read_responses_batch(read_batch_output(client, batch_id)) for batch_id in batch_ids_red]
@@ -91,6 +105,7 @@ if __name__ == "__main__":
         args.out_dir,
         os.path.basename(args.blue_prompts).split('.')[0],
         prev_responses=red_sanitized,
+        tracker=tracker,
         verbose=args.verbose
     )
     responses_blue = [read_responses_batch(read_batch_output(client, batch_id)) for batch_id in batch_ids_blue]
@@ -102,9 +117,6 @@ if __name__ == "__main__":
         conversation['blue_responses'] = {}
         for i, responses in enumerate(responses_blue):
             conversation['blue_responses'][str(i)] = responses.get(conversation['prompt_id'], {})
-    with open(args.out_dir + '/conversations.jsonl', 'w+') as f:
-        for conversation in conversations:
-            f.write(json.dumps(conversation) + '\n')
 
     print(f"EVALUATING CONVERSATIONS")
     for conversation in conversations:
@@ -141,4 +153,7 @@ if __name__ == "__main__":
         prompt_id = conversation['prompt_id']
         conversation['blue_eval'] = {k: parse_json_to_dict(v) for k, v in blue_eval.get(prompt_id, {}).items()}
         conversation['red_eval'] = {k: parse_json_to_dict(v) for k, v in red_eval.get(prompt_id, {}).items()}
+    with open(args.out_dir + '/conversations.jsonl', 'w+') as f:
+        for conversation in conversations:
+            f.write(json.dumps(conversation) + '\n')
     print(f"Conversations saved to {args.out_dir}/conversations.jsonl")
