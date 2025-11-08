@@ -145,10 +145,6 @@ if __name__ == "__main__":
                 args.out_dir + '/blue_eval_output.jsonl',
                 verbose=args.verbose
             )
-            if tracker is not None:
-                tracker['blue_eval'] = blue_future.result()
-            blue_eval_raw = read_responses_batch(read_batch_output(client, tracker['blue_eval'][0]))
-            blue_eval = transform_eval_dict(blue_eval_raw)
         if tracker is not None and 'red_eval' in tracker:
             if args.verbose:
                 print(f"Using batch IDs from tracker for red_eval")
@@ -165,10 +161,15 @@ if __name__ == "__main__":
                 args.out_dir + '/red_eval_output.jsonl',
                 verbose=args.verbose,
             )
-            if tracker is not None:
-                tracker['red_eval'] = red_future.result()
-            red_eval_raw = read_responses_batch(read_batch_output(client, tracker['red_eval'][0]))
-            red_eval = transform_eval_dict(red_eval_raw)
+        # horrible future handling whatever
+        if tracker is not None and 'blue_eval' not in tracker:
+            tracker['blue_eval'] = [blue_future.result()]
+        if tracker is not None and 'red_eval' not in tracker:
+            tracker['red_eval'] = [red_future.result()]
+        blue_eval_raw = read_responses_batch(read_batch_output(client, tracker['blue_eval'][0]))
+        red_eval_raw = read_responses_batch(read_batch_output(client, tracker['red_eval'][0]))
+        blue_eval = transform_eval_dict(blue_eval_raw)
+        red_eval = transform_eval_dict(red_eval_raw)
     for conversation in conversations:
         prompt_id = conversation['prompt_id']
         conversation['blue_eval'] = {k: parse_json_to_dict(v) for k, v in blue_eval.get(prompt_id, {}).items()}
