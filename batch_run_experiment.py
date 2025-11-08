@@ -159,6 +159,7 @@ if __name__ == "__main__":
                 args.green_model,
                 args.out_dir + '/red_eval_input.jsonl',
                 args.out_dir + '/red_eval_output.jsonl',
+                prescriptions=responses_red[0],
                 verbose=args.verbose,
             )
         # horrible future handling whatever
