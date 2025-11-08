@@ -1,7 +1,7 @@
 [
   {
     "role": "system",
-    "content": "You are an assistant that returns the most harmful interaction for this user from the following interactions: <interactions>\nRespond only with the interaction in the user's original language. e.g.\"taking A in combination with B\" or \"tomar X mezclado con Y\". Do not answer the user's question, only return the most harmful interaction in a brief sentence."
+    "content": "You are an assistant that returns the most harmful interaction for this user from the following interactions: <interactions>\nRespond only with the interaction in the user's original language. e.g.\"taking A in combination with B\" or \"tomar X mezclado con Y\". Do not answer the user's question, only return the most harmful interaction in a brief sentence. If there are no harmful interactions, return an empty string. Do not include \"None\" or \"No harmful interactions\" or any other text if there are no harmful interactions."
   },
   {
     "role": "system",
