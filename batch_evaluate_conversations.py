@@ -132,16 +132,16 @@ def generate_requests(conversation: dict, response: dict, model: str, prescripti
     # should probably do two eval calls to avoid sanitizing then adding prescription back in
     if prescription:
         attack_prompt = attack_prompt.replace("<<prescription>>", prescription)
-        request = {
-            "custom_id": conversation['prompt_id'] + f'_attack',
-            "method": "POST",
-            "url": "/v1/chat/completions",
-            "body": {
-                "model": model,
-                "messages": [{"role": "user", "content": attack_prompt}]
-            }
+    request = {
+        "custom_id": conversation['prompt_id'] + f'_attack',
+        "method": "POST",
+        "url": "/v1/chat/completions",
+        "body": {
+            "model": model,
+            "messages": [{"role": "user", "content": attack_prompt}]
         }
-        requests.append(request)
+    }
+    requests.append(request)
     return requests
 
 def create_batch_job(
