@@ -179,5 +179,5 @@ if __name__ == "__main__":
     if tracker is not None:
         print(f"Updated tracker to {args.tracker}")
         with open(args.tracker, 'w+') as f:
-            json.dump(tracker, f)
+            json.dump(tracker, f, indent=4)
     print(f"Conversations saved to {args.out_dir}/conversations.jsonl")
