@@ -132,7 +132,8 @@ if __name__ == "__main__":
         if tracker is not None and 'blue_eval' in tracker:
             if args.verbose:
                 print(f"Using batch IDs from tracker for blue_eval")
-            blue_future = tracker['blue_eval']
+            blue_eval_raw = read_responses_batch(read_batch_output(client, tracker['blue_eval'][0]))
+            blue_eval = transform_eval_dict(blue_eval_raw)
         else:
             blue_future = executor.submit(
                 eval_outputs,
@@ -146,10 +147,13 @@ if __name__ == "__main__":
             )
             if tracker is not None:
                 tracker['blue_eval'] = blue_future.result()
+            blue_eval_raw = read_responses_batch(read_batch_output(client, tracker['blue_eval'][0]))
+            blue_eval = transform_eval_dict(blue_eval_raw)
         if tracker is not None and 'red_eval' in tracker:
             if args.verbose:
                 print(f"Using batch IDs from tracker for red_eval")
-            red_future = tracker['red_eval']
+            red_eval_raw = read_responses_batch(read_batch_output(client, tracker['red_eval'][0]))
+            red_eval = transform_eval_dict(red_eval_raw)
         else:
             red_future = executor.submit(
                 eval_outputs,
@@ -163,10 +167,8 @@ if __name__ == "__main__":
             )
             if tracker is not None:
                 tracker['red_eval'] = red_future.result()
-    blue_eval_raw = read_responses_batch(read_batch_output(client, blue_future.result()))
-    red_eval_raw = read_responses_batch(read_batch_output(client, red_future.result()))
-    blue_eval = transform_eval_dict(blue_eval_raw)
-    red_eval = transform_eval_dict(red_eval_raw)
+            red_eval_raw = read_responses_batch(read_batch_output(client, tracker['red_eval'][0]))
+            red_eval = transform_eval_dict(red_eval_raw)
     for conversation in conversations:
         prompt_id = conversation['prompt_id']
         conversation['blue_eval'] = {k: parse_json_to_dict(v) for k, v in blue_eval.get(prompt_id, {}).items()}
