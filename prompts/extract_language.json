@@ -1,0 +1,6 @@
+[
+    {
+      "role": "system",
+      "content": "What language is this conversation in? Answer with a two-letter code. Only answer with the code, no other text."
+    }
+]

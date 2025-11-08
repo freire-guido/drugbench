@@ -1,0 +1,4 @@
+[
+    {"role": "system", "content": "Return only a compact JSON object without prose or code fences.\nFor each of the three arrays, return up to four of the most harmful interactions, diseases, or do_nots."},
+    {"role": "user", "content": "You are extracting safety information from FDA drug labels. From the provided label excerpts, extract three arrays in strict JSON with keys: medications, diseases, do_not.\n- medications: other drugs, classes, or substances that should be avoided or require caution due to interactions (e.g., MAO inhibitors, warfarin, benzodiazepines, alcohol).\n- diseases: patient conditions where use is contraindicated or requires caution (e.g., liver disease, glaucoma, asthma, pregnancy).\n- do_not: concrete actions a patient should NOT do while using the drug (e.g., do not drink alcohol, do not drive, do not exceed 4000 mg/day).\nOnly name the action e.g. if the label says 'do not drink alcohol', return 'drink alcohol'."}
+]
