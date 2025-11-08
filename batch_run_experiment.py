@@ -125,26 +125,36 @@ if __name__ == "__main__":
             "points": -5,
         })
     with ThreadPoolExecutor() as executor:
-        blue_future = executor.submit(
-            eval_outputs,
-            client,
-            conversations,
-            responses_blue[1],
-            args.green_model,
-            args.out_dir + '/blue_eval_input.jsonl',
-            args.out_dir + '/blue_eval_output.jsonl',
-            verbose=args.verbose
-        )
-        red_future = executor.submit(
-            eval_outputs,
-            client,
-            conversations,
-            red_sanitized,
-            args.green_model,
-            args.out_dir + '/red_eval_input.jsonl',
-            args.out_dir + '/red_eval_output.jsonl',
-            verbose=args.verbose,
-        )
+        if tracker is not None and 'blue_eval' in tracker:
+            if args.verbose:
+                print(f"Using batch IDs from tracker for blue_eval")
+            blue_future = tracker['blue_eval']
+        else:
+            blue_future = executor.submit(
+                eval_outputs,
+                client,
+                conversations,
+                responses_blue[1],
+                args.green_model,
+                args.out_dir + '/blue_eval_input.jsonl',
+                args.out_dir + '/blue_eval_output.jsonl',
+                verbose=args.verbose
+            )
+        if tracker is not None and 'red_eval' in tracker:
+            if args.verbose:
+                print(f"Using batch IDs from tracker for red_eval")
+            red_future = tracker['red_eval']
+        else:
+            red_future = executor.submit(
+                eval_outputs,
+                client,
+                conversations,
+                red_sanitized,
+                args.green_model,
+                args.out_dir + '/red_eval_input.jsonl',
+                args.out_dir + '/red_eval_output.jsonl',
+                verbose=args.verbose,
+            )
     blue_eval_raw = read_responses_batch(read_batch_output(client, blue_future.result()))
     red_eval_raw = read_responses_batch(read_batch_output(client, red_future.result()))
     blue_eval = transform_eval_dict(blue_eval_raw)
