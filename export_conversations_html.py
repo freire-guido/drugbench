@@ -226,8 +226,7 @@ def render_response_column(
     if note:
         fragments.append(f'<p class="note">{escape(note)}</p>')
     has_responses = False
-    for key in sorted(responses.keys()) if responses else []:
-        value = responses[key]
+    for key, value in responses.items() if responses else []:
         has_responses = True
         fragments.append(
             '<div class="response-item">'
@@ -248,14 +247,16 @@ def render_conversation(conversation: dict, index: int) -> str:
     tags = ", ".join(conversation.get("example_tags", []))
     red_responses = conversation.get("red_responses") or {}
     blue_responses = conversation.get("blue_responses") or {}
-    edited_responses = dict(blue_responses)
+    edited_responses, blue_primary = split_blue_responses(blue_responses)
 
     rubrics = conversation.get("rubrics") or []
     red_eval = conversation.get("red_eval") or {}
+    edited_eval = conversation.get("edited_eval") or {}
     blue_eval = conversation.get("blue_eval") or {}
 
     red_rubrics = compute_rubric_items(rubrics, red_eval)
-    edited_rubrics = compute_rubric_items(rubrics, blue_eval)
+    edited_rubrics = compute_rubric_items(rubrics, edited_eval)
+    blue_rubrics = compute_rubric_items(rubrics, blue_eval)
 
     prompt_messages = render_messages(conversation.get("prompt"))
 
@@ -265,13 +266,13 @@ def render_conversation(conversation: dict, index: int) -> str:
             "Edited Responses",
             edited_responses,
             edited_rubrics,
-            note="Currently mirrors blue responses.",
+            note="All editor revisions; final blue response shown separately.",
         ),
         render_response_column(
-            "Blue Responses (placeholder)",
-            {},
-            None,
-            note="Awaiting updated blue responses.",
+            "Blue Response",
+            blue_primary,
+            blue_rubrics,
+            note="Latest blue team answer.",
         ),
     ]
 
@@ -297,6 +298,17 @@ def build_report(conversations: list[dict]) -> str:
         for index, conversation in enumerate(conversations)
     ]
     return PAGE_TEMPLATE.substitute(content="\n".join(sections))
+
+
+def split_blue_responses(responses: dict) -> tuple[dict, dict]:
+    if not responses:
+        return {}, {}
+    items = list(responses.items())
+    blue_key, blue_value = items[-1]
+    edited_items = items[:-1]
+    edited = dict(edited_items)
+    blue = {blue_key: blue_value}
+    return edited, blue
 
 
 def main() -> None:

@@ -35,10 +35,10 @@ def pool_batch_run(
 ) -> list[dict]:
     def run_prompt(args):
         i, prompt = args
-        if tracker is not None and name in tracker:
+        if tracker is not None and name in tracker and str(i) in tracker[name]:
             if verbose:
                 print(f"Using batch IDs from tracker for {name}_{i}")
-            return tracker[name][i]
+            return tracker[name][str(i)]
         return prompt_outputs(
             client,
             conversations,
@@ -53,7 +53,7 @@ def pool_batch_run(
     with ThreadPoolExecutor() as executor:
         batch_ids = list(executor.map(run_prompt, enumerate(prompts)))
     if tracker is not None:
-        tracker[name] = batch_ids
+        tracker[name] = {str(i): batch_id for i, batch_id in enumerate(batch_ids)}
     return batch_ids
 
 if __name__ == "__main__":
@@ -132,23 +132,39 @@ if __name__ == "__main__":
         if tracker is not None and 'blue_eval' in tracker:
             if args.verbose:
                 print(f"Using batch IDs from tracker for blue_eval")
-            blue_eval_raw = read_responses_batch(read_batch_output(client, tracker['blue_eval'][0]))
+            blue_eval_raw = read_responses_batch(read_batch_output(client, tracker['blue_eval']["0"]))
             blue_eval = transform_eval_dict(blue_eval_raw)
         else:
             blue_future = executor.submit(
                 eval_outputs,
                 client,
                 conversations,
-                responses_blue[1],
+                responses_blue[2],
                 args.green_model,
                 args.out_dir + '/blue_eval_input.jsonl',
                 args.out_dir + '/blue_eval_output.jsonl',
                 verbose=args.verbose
             )
+        if tracker is not None and 'edited_eval' in tracker:
+            if args.verbose:
+                print(f"Using batch IDs from tracker for edited_eval")
+            edited_eval_raw = read_responses_batch(read_batch_output(client, tracker['edited_eval']["0"]))
+            edited_eval = transform_eval_dict(edited_eval_raw)
+        else:
+            edited_future = executor.submit(
+                eval_outputs,
+                client,
+                conversations,
+                responses_blue[1],
+                args.green_model,
+                args.out_dir + '/edited_eval_input.jsonl',
+                args.out_dir + '/edited_eval_output.jsonl',
+                verbose=args.verbose,
+            )
         if tracker is not None and 'red_eval' in tracker:
             if args.verbose:
                 print(f"Using batch IDs from tracker for red_eval")
-            red_eval_raw = read_responses_batch(read_batch_output(client, tracker['red_eval'][0]))
+            red_eval_raw = read_responses_batch(read_batch_output(client, tracker['red_eval']["0"]))
             red_eval = transform_eval_dict(red_eval_raw)
         else:
             red_future = executor.submit(
@@ -164,16 +180,21 @@ if __name__ == "__main__":
             )
         # horrible future handling whatever
         if tracker is not None and 'blue_eval' not in tracker:
-            tracker['blue_eval'] = [blue_future.result()]
+            tracker['blue_eval'] = {"0": blue_future.result()}
+        if tracker is not None and 'edited_eval' not in tracker:
+            tracker['edited_eval'] = {"0": edited_future.result()}
         if tracker is not None and 'red_eval' not in tracker:
-            tracker['red_eval'] = [red_future.result()]
-        blue_eval_raw = read_responses_batch(read_batch_output(client, tracker['blue_eval'][0]))
-        red_eval_raw = read_responses_batch(read_batch_output(client, tracker['red_eval'][0]))
+            tracker['red_eval'] = {"0": red_future.result()}
+        blue_eval_raw = read_responses_batch(read_batch_output(client, tracker['blue_eval']["0"]))
+        edited_eval_raw = read_responses_batch(read_batch_output(client, tracker['edited_eval']["0"]))
+        red_eval_raw = read_responses_batch(read_batch_output(client, tracker['red_eval']["0"]))
         blue_eval = transform_eval_dict(blue_eval_raw)
+        edited_eval = transform_eval_dict(edited_eval_raw)
         red_eval = transform_eval_dict(red_eval_raw)
     for conversation in conversations:
         prompt_id = conversation['prompt_id']
         conversation['blue_eval'] = {k: parse_json_to_dict(v) for k, v in blue_eval.get(prompt_id, {}).items()}
+        conversation['edited_eval'] = {k: parse_json_to_dict(v) for k, v in edited_eval.get(prompt_id, {}).items()}
         conversation['red_eval'] = {k: parse_json_to_dict(v) for k, v in red_eval.get(prompt_id, {}).items()}
     with open(args.out_dir + '/conversations.jsonl', 'w+') as f:
         for conversation in conversations:
