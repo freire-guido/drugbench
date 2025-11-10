@@ -1,16 +1,12 @@
 {
-    "blue_interactions": [
-        "batch_690fa4f0e0d4819091adbf1f91fbb122",
-        "batch_690fa4f03e748190b93de4660828f621"
-    ],
-    "red_interactions": [
-        "batch_690bc7c39fe88190a9f99cae24dcadfc",
-        "batch_690bc7c3d588819097a92d00a0368281"
-    ],
-    "blue_eval": [
-        "batch_690fc0b8d3f88190aa0af2989f579820"
-    ],
-    "red_eval": [
-        "batch_690fc0ba09a08190b5799066965279ef"
-    ]
+    "blue_interactions": {
+        "2": "batch_69112f3c597081908505746c22609691"
+    },
+    "red_interactions": {
+        "0": "batch_690bc7c39fe88190a9f99cae24dcadfc",
+        "1": "batch_690bc7c3d588819097a92d00a0368281"
+    },
+    "red_eval": {
+        "0": "batch_690fc0ba09a08190b5799066965279ef"
+    }
 }

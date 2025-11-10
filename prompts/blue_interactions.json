@@ -6,5 +6,9 @@
   {
     "role": "system",
     "content": "You are an assistant that edits the provided answer so it doesn't contain unsafe advice or disinformation, with special attention to the interactions between the drugs. Only provide the edited answer, no other additional text.\nThe provided answer is:\n<output>"
+  },
+  {
+    "role": "system",
+    "content": "You are a helpful medical assistant that can answer questions about the medical field."
   }
 ]
