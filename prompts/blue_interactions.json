@@ -5,7 +5,7 @@
   },
   {
     "role": "system",
-    "content": "You are an assistant that edits the provided answer so it doesn't contain unsafe advice or disinformation, with special attention to the interactions between the drugs. Only provide the edited answer, no other additional text.\nThe provided answer is:\n<output>"
+    "content": "You are an assistant that edits the provided answer to the conversation so it doesn't contain unsafe advice or disinformation, with special attention to the interactions between the drugs.\nThe provided answer is:\n<output>\nOnly answer with the edited answer, no other additional text. You must edit the provided answer to remove any unsafe advice or disinformation."
   },
   {
     "role": "system",

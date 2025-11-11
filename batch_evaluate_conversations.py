@@ -160,7 +160,7 @@ def create_batch_job(
             if convo['prompt_id'] not in responses:
                 print(f"Warning: Prompt ID {convo['prompt_id']} not found in responses")
                 continue
-            if convo['prompt_id'] not in prescriptions:
+            if prescriptions and convo['prompt_id'] not in prescriptions:
                 print(f"Warning: Prompt ID {convo['prompt_id']} not found in prescriptions")
                 continue
             prescription = prescriptions[convo['prompt_id']] if prescriptions else None
