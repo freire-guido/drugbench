@@ -123,6 +123,20 @@ PAGE_TEMPLATE = Template("""<!DOCTYPE html>
         font-size: 12px;
         white-space: pre-wrap;
       }
+      .attack-block {
+        margin-top: 12px;
+        border-top: 1px dashed #d32f2f;
+        padding-top: 10px;
+      }
+      .attack-block h4 {
+        margin: 0 0 8px 0;
+        font-size: 14px;
+        color: #b71c1c;
+      }
+      .attack-line {
+        font-size: 13px;
+        margin-bottom: 6px;
+      }
       .score-positive {
         color: #1b5e20;
       }
@@ -141,6 +155,40 @@ PAGE_TEMPLATE = Template("""<!DOCTYPE html>
   </body>
 </html>
 """)
+
+
+def _to_float(value: object, default: float = 0.0) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _format_number(value: float) -> str:
+    if abs(value - round(value)) < 1e-9:
+        return str(int(round(value)))
+    return f"{value:.2f}".rstrip("0").rstrip(".")
+
+
+def _format_signed_number(value: float) -> str:
+    epsilon = 1e-9
+    if value > epsilon:
+        return f"+{_format_number(value)}"
+    if value < -epsilon:
+        return f"-{_format_number(abs(value))}"
+    return _format_number(0.0)
+
+
+def _parse_fraction(value: object) -> float | None:
+    if isinstance(value, bool):
+        return 1.0 if value else 0.0
+    if value is None:
+        return None
+    try:
+        fraction = float(value)
+    except (TypeError, ValueError):
+        return None
+    return max(0.0, min(1.0, fraction))
 
 
 def load_conversations(path: str) -> list[dict]:
@@ -188,14 +236,19 @@ def compute_rubric_items(
     items: list[dict] = []
     for index, rubric in enumerate(rubrics or []):
         eval_entry = evaluations.get(str(index)) or {}
-        criteria_met = bool(eval_entry.get("criteria_met"))
-        points = rubric.get("points", 0)
-        earned = points if criteria_met else 0
+        criteria_value = eval_entry.get("criteria_met")
+        fraction = _parse_fraction(criteria_value)
+        if fraction is None:
+            fraction = 1.0 if criteria_value else 0.0
+        points_value = _to_float(rubric.get("points", 0))
+        earned = points_value * fraction
+
         items.append(
             {
                 "criterion": rubric.get("criterion", f"Criterion {index}"),
-                "points": points,
+                "points": points_value,
                 "earned": earned,
+                "fraction": fraction,
                 "explanation": eval_entry.get("explanation"),
             }
         )
@@ -207,19 +260,32 @@ def render_rubric_scores(items: list[dict] | None) -> str:
         return '<p class="placeholder">No rubric scores available.</p>'
     rows: list[str] = ["<ul>"]
     for item in items:
-        earned = item.get("earned", 0)
-        css_class = (
-            "score-positive"
-            if earned > 0
-            else "score-negative"
-            if earned < 0
-            else "score-neutral"
-        )
-        sign = "+" if earned > 0 else ""
+        fraction = item.get("fraction")
+        fraction_text = ""
+        if isinstance(fraction, (int, float)) and 0.0 < fraction < 1.0:
+            fraction_text = f" ({fraction * 100:.0f}%)"
+        points_value = _to_float(item.get("points", 0))
+        earned = _to_float(item.get("earned", 0))
+        css_class = "score-neutral"
+        score_display: str
+        if points_value < 0 and isinstance(fraction, (int, float)):
+            score_display = _format_number(fraction)
+            if fraction > 0:
+                css_class = "score-negative"
+        else:
+            score_display = _format_signed_number(earned)
+            css_class = (
+                "score-positive"
+                if earned > 0
+                else "score-negative"
+                if earned < 0
+                else "score-neutral"
+            )
+        points_display = _format_number(points_value)
         rows.append("<li>")
         rows.append(
-            f'<div class="rubric-line"><span class="{css_class}">{sign}{earned}</span>'
-            f" / {item.get('points', 0)} — {escape(item.get('criterion', ''))}</div>"
+            f'<div class="rubric-line"><span class="{css_class}">{score_display}</span>'
+            f" / {points_display} — {escape(item.get('criterion', ''))}{fraction_text}</div>"
         )
         explanation = item.get("explanation")
         if explanation:
@@ -229,10 +295,51 @@ def render_rubric_scores(items: list[dict] | None) -> str:
     return "\n".join(rows)
 
 
+def extract_attack_evaluation(evaluations: dict | None) -> dict | None:
+    if not evaluations:
+        return None
+    entry = evaluations.get("attack")
+    if not entry:
+        return None
+    fraction = _parse_fraction(entry.get("criteria_met"))
+    if fraction is None:
+        return None
+    return {
+        "score": fraction,
+        "explanation": entry.get("explanation"),
+    }
+
+
+def render_attack_score(item: dict | None) -> str:
+    if not item:
+        return ""
+    score = item.get("score")
+    if score is None:
+        return ""
+    score_float = max(0.0, min(1.0, float(score)))
+    score_display = _format_number(score_float)
+    if score_float >= 0.75:
+        css_class = "score-negative"
+    elif score_float <= 0.25:
+        css_class = "score-positive"
+    else:
+        css_class = "score-neutral"
+    fragments: list[str] = [
+        '<div class="attack-block"><h4>Attack Score</h4>',
+        f'<div class="attack-line"><span class="{css_class}">{score_display}</span> / 1.0</div>',
+    ]
+    explanation = item.get("explanation")
+    if explanation:
+        fragments.append(f'<div class="rubric-explanation">{escape(explanation)}</div>')
+    fragments.append("</div>")
+    return "\n".join(fragments)
+
+
 def render_response_column(
     title: str,
     responses: dict | None,
     rubric_items: list[dict] | None,
+    attack_item: dict | None = None,
     note: str | None = None,
 ) -> str:
     fragments: list[str] = [f'<div class="response-column"><h3>{escape(title)}</h3>']
@@ -252,6 +359,9 @@ def render_response_column(
     fragments.append('<div class="rubric-block"><h4>Rubric Scores</h4>')
     fragments.append(render_rubric_scores(rubric_items))
     fragments.append("</div></div>")
+    attack_html = render_attack_score(attack_item)
+    if attack_html:
+        fragments.insert(-1, attack_html)
     return "\n".join(fragments)
 
 
@@ -270,21 +380,26 @@ def render_conversation(conversation: dict, index: int) -> str:
     red_rubrics = compute_rubric_items(rubrics, red_eval)
     edited_rubrics = compute_rubric_items(rubrics, edited_eval)
     blue_rubrics = compute_rubric_items(rubrics, blue_eval)
+    red_attack = extract_attack_evaluation(red_eval)
+    edited_attack = extract_attack_evaluation(edited_eval)
+    blue_attack = extract_attack_evaluation(blue_eval)
 
     prompt_messages = render_messages(conversation.get("prompt"))
 
     columns = [
-        render_response_column("Red Responses", red_responses, red_rubrics),
+        render_response_column("Red Responses", red_responses, red_rubrics, red_attack),
         render_response_column(
             "Edited Responses",
             edited_responses,
             edited_rubrics,
+            edited_attack,
             note="All editor revisions; final blue response shown separately.",
         ),
         render_response_column(
             "Blue Response",
             blue_primary,
             blue_rubrics,
+            blue_attack,
             note="Latest blue team answer.",
         ),
     ]
