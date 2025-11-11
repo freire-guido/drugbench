@@ -114,6 +114,15 @@ PAGE_TEMPLATE = Template("""<!DOCTYPE html>
         margin-bottom: 6px;
         font-size: 13px;
       }
+      .rubric-line {
+        margin-bottom: 4px;
+      }
+      .rubric-explanation {
+        margin-left: 18px;
+        color: #555555;
+        font-size: 12px;
+        white-space: pre-wrap;
+      }
       .score-positive {
         color: #1b5e20;
       }
@@ -187,6 +196,7 @@ def compute_rubric_items(
                 "criterion": rubric.get("criterion", f"Criterion {index}"),
                 "points": points,
                 "earned": earned,
+                "explanation": eval_entry.get("explanation"),
             }
         )
     return items
@@ -206,12 +216,15 @@ def render_rubric_scores(items: list[dict] | None) -> str:
             else "score-neutral"
         )
         sign = "+" if earned > 0 else ""
+        rows.append("<li>")
         rows.append(
-            "<li>"
-            f'<span class="{css_class}">{sign}{earned}</span>'
-            f" / {item.get('points', 0)} — {escape(item.get('criterion', ''))}"
-            "</li>"
+            f'<div class="rubric-line"><span class="{css_class}">{sign}{earned}</span>'
+            f" / {item.get('points', 0)} — {escape(item.get('criterion', ''))}</div>"
         )
+        explanation = item.get("explanation")
+        if explanation:
+            rows.append(f'<div class="rubric-explanation">{escape(explanation)}</div>')
+        rows.append("</li>")
     rows.append("</ul>")
     return "\n".join(rows)
 
