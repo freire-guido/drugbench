@@ -28,10 +28,9 @@ def _is_attacked(meta):
     is_attacked = red_bias_text is not None and red_bias_text.strip() != ''
     return is_attacked
 
-def get_montecarlo_upsampling(df, T=5000):
-    random.seed(42)
+def get_montecarlo_upsampling(df, T=5000, r=1/12):
     M = df['attacked'].sum()
-    N = math.floor(M/12)
+    N = math.floor(M*r)
 
     attacked_sample = df[df['attacked']].sample(n=N, replace=False).index.tolist()
     not_attacked_sample = df[~df['attacked']].sample(n=T-N, replace=True).index.tolist()
