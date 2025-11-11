@@ -98,7 +98,7 @@ if __name__ == "__main__":
     responses_red = [read_responses_batch(read_batch_output(client, batch_id)) for batch_id in batch_ids_red]
     
     print(f"GENERATING RESPONSES FOR BLUE TEAM WITH {len(blue_prompts)} PROMPTS")
-    red_sanitized = {custom_id: sanitize_response(res, responses_red[0][custom_id]) for custom_id, res in responses_red[1].items()}
+    red_sanitized = {custom_id: sanitize_response(res, responses_red[0].get(custom_id)) for custom_id, res in responses_red[1].items()}
     batch_ids_blue = pool_batch_run(
         client,
         conversations,

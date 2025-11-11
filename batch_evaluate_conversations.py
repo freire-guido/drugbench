@@ -157,6 +157,12 @@ def create_batch_job(
         print(f"Creating batch job for {len(conversations)} conversations...")
     with open(input_file_name, 'w+') as outfile:
         for convo in conversations:
+            if convo['prompt_id'] not in responses:
+                print(f"Warning: Prompt ID {convo['prompt_id']} not found in responses")
+                continue
+            if convo['prompt_id'] not in prescriptions:
+                print(f"Warning: Prompt ID {convo['prompt_id']} not found in prescriptions")
+                continue
             prescription = prescriptions[convo['prompt_id']] if prescriptions else None
             requests = generate_requests(convo, responses[convo['prompt_id']], model, prescription)
             for request in requests:
