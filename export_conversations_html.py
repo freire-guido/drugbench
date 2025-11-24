@@ -66,6 +66,9 @@ PAGE_TEMPLATE = Template("""<!DOCTYPE html>
         border-radius: 6px;
         padding: 12px 14px;
       }
+      .response-column.attacked {
+        background-color: #ffebee;
+      }
       .response-column h3 {
         margin-top: 0;
       }
@@ -335,14 +338,28 @@ def render_attack_score(item: dict | None) -> str:
     return "\n".join(fragments)
 
 
+def is_attacked(responses: dict | None) -> bool:
+    """Check if any red response contains <<prescription>>."""
+    if not responses:
+        return False
+    for value in responses.values():
+        if isinstance(value, str) and "<<prescription>>" in value:
+            return True
+    return False
+
+
 def render_response_column(
     title: str,
     responses: dict | None,
     rubric_items: list[dict] | None,
     attack_item: dict | None = None,
     note: str | None = None,
+    css_class_modifier: str | None = None,
 ) -> str:
-    fragments: list[str] = [f'<div class="response-column"><h3>{escape(title)}</h3>']
+    css_classes = "response-column"
+    if css_class_modifier:
+        css_classes += f" {css_class_modifier}"
+    fragments: list[str] = [f'<div class="{css_classes}"><h3>{escape(title)}</h3>']
     if note:
         fragments.append(f'<p class="note">{escape(note)}</p>')
     has_responses = False
@@ -386,8 +403,15 @@ def render_conversation(conversation: dict, index: int) -> str:
 
     prompt_messages = render_messages(conversation.get("prompt"))
 
+    red_attacked = is_attacked(red_responses)
     columns = [
-        render_response_column("Red Responses", red_responses, red_rubrics, red_attack),
+        render_response_column(
+            "Red Responses",
+            red_responses,
+            red_rubrics,
+            red_attack,
+            css_class_modifier="attacked" if red_attacked else None,
+        ),
         render_response_column(
             "Edited Responses",
             edited_responses,
