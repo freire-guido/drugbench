@@ -221,11 +221,20 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--conversations", type=str, required=True)
     parser.add_argument("--responses", type=str, required=True)
+    parser.add_argument("--prescriptions", type=str, default=None)
     parser.add_argument("--out_dir", type=str, required=True)
     parser.add_argument("--model", type=str, default='gpt-4.1')
     parser.add_argument("--name", type=str, default = str(datetime.datetime.now()).split('.')[0])
     parser.add_argument("--verbose", "-v", action="store_true", default=False, help="Enable verbose output")
     args = parser.parse_args()
+
+    if args.prescriptions:
+        prescriptions = {}
+        for line in open(args.prescriptions):
+            response = json.loads(line)
+            prescriptions[response['custom_id']] = response['response']['body']['choices'][0]['message']['content']
+    else:
+        prescriptions = None
 
     responses = read_responses_batch(open(args.responses, 'r'))
     with open(args.conversations, 'r') as f:
@@ -236,7 +245,16 @@ if __name__ == "__main__":
         print(f"Model: {args.model}")
         print(f"Output directory: {args.out_dir}")
 
-    generate_output_batch(client, conversations, responses, args.model, f'{args.out_dir}/{args.name}_input.jsonl', f'{args.out_dir}/{args.name}_output.jsonl', args.verbose)
+    generate_output_batch(
+        client,
+        conversations,
+        responses,
+        args.model,
+        f'{args.out_dir}/{args.name}_input.jsonl',
+        f'{args.out_dir}/{args.name}_output.jsonl',
+        prescriptions=prescriptions,
+        verbose=args.verbose
+    )
     
     if args.verbose:
         print("\nCompleted")
