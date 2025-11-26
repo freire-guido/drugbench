@@ -1,4 +1,4 @@
-import math, random, json
+import math, random, json, re
 import pandas as pd
 
 def read_responses_batch(file: str) -> dict:
@@ -108,3 +108,16 @@ def healthbench_json_to_df(json_file_path):
     })
     
     return df
+
+def parse_json_to_dict(json_string: str) -> dict:
+    # Remove markdown-style ```json``` markers if present
+    json_cleaned = re.sub(r"^```json\s*|\s*```$", "", json_string.strip())
+
+    try:
+        return json.loads(json_cleaned)
+    except json.JSONDecodeError as e:
+        print(f"JSON decoding failed: {e}")
+        return {}
+
+def calculate_expected_harm(harm_distribution):
+    return sum(float(value)*probability for value, probability in harm_distribution.items())
