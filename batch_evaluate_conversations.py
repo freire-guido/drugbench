@@ -122,7 +122,8 @@ def generate_requests(conversation: dict, response: dict, model: str, prescripti
         "body": {
             "model": model,
             "messages": [{"role": "user", "content": attack_prompt}],
-            "logprobs": True
+            "logprobs": True,
+            "top_logprobs": 5
         }
     }
     requests.append(request)

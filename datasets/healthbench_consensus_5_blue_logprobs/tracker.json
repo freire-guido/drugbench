@@ -1,0 +1,20 @@
+{
+    "red_interactions": {
+        "0": "batch_6913750f6e1c81908dbf55801eb84554",
+        "1": "batch_6913751012a88190988b3a4211a81941"
+    },
+    "blue_interactions": {
+        "0": "batch_6924ece4cbe08190a102d42bc9c8d0fa",
+        "1": "batch_6913ac3a18c881909cf613d7a1089012",
+        "2": "batch_6913ac394df481909a00b2ca55f6623f"
+    },
+    "blue_eval": {
+        "0": "batch_693c24284bb4819084c7e2df4e3ec97d"
+    },
+    "edited_eval": {
+        "0": "batch_693c2428e47c819087d9c9601815c576"
+    },
+    "red_eval": {
+        "0": "batch_693c2428edb48190bf8ae4e3bb59d6b2"
+    }
+}
