@@ -1,4 +1,5 @@
 import time, json, re
+from openai import NotFoundError
 
 def parse_json_to_dict(json_string: str) -> dict:
     # Remove markdown-style ```json``` markers if present
@@ -14,11 +15,16 @@ def read_responses_batch(iterable) -> dict:
     res = [json.loads(line) if isinstance(line, str) else line for line in iterable]
     return {res['custom_id']: res['response']['body']['choices'][0]['message']['content'] for res in res}
 
-def read_batch_output(client, batch_id: str) -> list[dict]:
-    file_id = client.batches.retrieve(batch_id).output_file_id
-    file_content_response = client.files.content(file_id)
-    text = file_content_response.content.decode('utf-8')
-    lines = [json.loads(line) for line in text.split('\n') if line.strip()]
+def read_batch_output(client, batch_id: str, batch_file: str | None = None) -> list[dict]:
+    try:
+        file_id = client.batches.retrieve(batch_id).output_file_id
+        file_content_response = client.files.content(file_id)
+        text = file_content_response.content.decode('utf-8')
+        lines = [json.loads(line) for line in text.split('\n') if line.strip()]
+    except NotFoundError as e:
+        print(f"Batch {batch_id} not found: {e} reading from {batch_file}...")
+        with open(batch_file, 'r') as f:
+            lines = [json.loads(line) for line in f]
     return lines
 
 def sanitize_response(response: str, prescription: str | None = None) -> str:
