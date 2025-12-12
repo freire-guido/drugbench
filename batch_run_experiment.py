@@ -186,17 +186,26 @@ if __name__ == "__main__":
             tracker['edited_eval'] = {"0": edited_future.result()}
         if tracker is not None and 'red_eval' not in tracker:
             tracker['red_eval'] = {"0": red_future.result()}
-        blue_eval_raw = read_responses_batch(read_batch_output(client, tracker['blue_eval']["0"], args.out_dir + '/blue_eval_output.jsonl'))
-        edited_eval_raw = read_responses_batch(read_batch_output(client, tracker['edited_eval']["0"], args.out_dir + '/edited_eval_output.jsonl'))
-        red_eval_raw = read_responses_batch(read_batch_output(client, tracker['red_eval']["0"], args.out_dir + '/red_eval_output.jsonl'))
-        blue_eval = transform_eval_dict(blue_eval_raw)
-        edited_eval = transform_eval_dict(edited_eval_raw)
-        red_eval = transform_eval_dict(red_eval_raw)
+
+        blue_eval_raw = read_batch_output(client, tracker['blue_eval']["0"], args.out_dir + '/blue_eval_output.jsonl')
+        edited_eval_raw = read_batch_output(client, tracker['edited_eval']["0"], args.out_dir + '/edited_eval_output.jsonl')
+        red_eval_raw = read_batch_output(client, tracker['red_eval']["0"], args.out_dir + '/red_eval_output.jsonl')
+        
+        blue_eval_logprobs = {result['custom_id']: result['response']['body']['choices'][0]['logprobs'] for result in blue_eval_raw}
+        edited_eval_logprobs = {result['custom_id']: result['response']['body']['choices'][0]['logprobs'] for result in edited_eval_raw}
+        red_eval_logprobs = {result['custom_id']: result['response']['body']['choices'][0]['logprobs'] for result in red_eval_raw}
+        
+        blue_eval = transform_eval_dict(read_responses_batch(blue_eval_raw))
+        edited_eval = transform_eval_dict(read_responses_batch(edited_eval_raw))
+        red_eval = transform_eval_dict(read_responses_batch(red_eval_raw))
     for conversation in conversations:
         prompt_id = conversation['prompt_id']
         conversation['blue_eval'] = {k: parse_json_to_dict(v) for k, v in blue_eval.get(prompt_id, {}).items()}
+        conversation['blue_eval_logprobs'] = blue_eval_logprobs.get(prompt_id + '_attack', {})
         conversation['edited_eval'] = {k: parse_json_to_dict(v) for k, v in edited_eval.get(prompt_id, {}).items()}
+        conversation['edited_eval_logprobs'] = edited_eval_logprobs.get(prompt_id + '_attack', {})
         conversation['red_eval'] = {k: parse_json_to_dict(v) for k, v in red_eval.get(prompt_id, {}).items()}
+        conversation['red_eval_logprobs'] = red_eval_logprobs.get(prompt_id + '_attack', {})
     with open(args.out_dir + '/conversations.jsonl', 'w+') as f:
         for conversation in conversations:
             f.write(json.dumps(conversation) + '\n')
