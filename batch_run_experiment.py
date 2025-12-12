@@ -85,32 +85,38 @@ if __name__ == "__main__":
         tracker = {}
 
     print(f"GENERATING RESPONSES FOR RED TEAM WITH {len(red_prompts)} PROMPTS")
+    red_batch_name = os.path.basename(args.red_prompts).split('.')[0]
     batch_ids_red = pool_batch_run(
         client,
         conversations,
         red_prompts,
         args.red_model,
         args.out_dir,
-        os.path.basename(args.red_prompts).split('.')[0],
+        red_batch_name,
         tracker=tracker,
         verbose=args.verbose
     )
-    responses_red = [read_responses_batch(read_batch_output(client, batch_id)) for batch_id in batch_ids_red]
+    responses_red = []
+    for i, batch_id in enumerate(batch_ids_red):
+        responses_red.append(read_responses_batch(read_batch_output(client, batch_id, args.out_dir + f'{red_batch_name}_{i}_output.jsonl')))
     
     print(f"GENERATING RESPONSES FOR BLUE TEAM WITH {len(blue_prompts)} PROMPTS")
     red_sanitized = {custom_id: sanitize_response(res, responses_red[0].get(custom_id)) for custom_id, res in responses_red[1].items()}
+    blue_batch_name = os.path.basename(args.blue_prompts).split('.')[0]
     batch_ids_blue = pool_batch_run(
         client,
         conversations,
         blue_prompts,
         args.blue_model,
         args.out_dir,
-        os.path.basename(args.blue_prompts).split('.')[0],
+        blue_batch_name,
         prev_responses=red_sanitized,
         tracker=tracker,
         verbose=args.verbose
     )
-    responses_blue = [read_responses_batch(read_batch_output(client, batch_id)) for batch_id in batch_ids_blue]
+    responses_blue = []
+    for i, batch_id in enumerate(batch_ids_blue):
+        responses_blue.append(read_responses_batch(read_batch_output(client, batch_id, args.out_dir + f'{blue_batch_name}_{i}_output.jsonl')))
 
     for conversation in conversations:
         conversation['red_responses'] = {}
@@ -127,7 +133,7 @@ if __name__ == "__main__":
         if tracker is not None and 'blue_eval' in tracker:
             if args.verbose:
                 print(f"Using batch IDs from tracker for blue_eval")
-            blue_eval_raw = read_responses_batch(read_batch_output(client, tracker['blue_eval']["0"]))
+            blue_eval_raw = read_responses_batch(read_batch_output(client, tracker['blue_eval']["0"], args.out_dir + 'blue_eval_output.jsonl'))
             blue_eval = transform_eval_dict(blue_eval_raw)
         else:
             blue_future = executor.submit(
@@ -143,7 +149,7 @@ if __name__ == "__main__":
         if tracker is not None and 'edited_eval' in tracker:
             if args.verbose:
                 print(f"Using batch IDs from tracker for edited_eval")
-            edited_eval_raw = read_responses_batch(read_batch_output(client, tracker['edited_eval']["0"]))
+            edited_eval_raw = read_responses_batch(read_batch_output(client, tracker['edited_eval']["0"], args.out_dir + 'edited_eval_output.jsonl'))
             edited_eval = transform_eval_dict(edited_eval_raw)
         else:
             edited_future = executor.submit(
@@ -159,7 +165,7 @@ if __name__ == "__main__":
         if tracker is not None and 'red_eval' in tracker:
             if args.verbose:
                 print(f"Using batch IDs from tracker for red_eval")
-            red_eval_raw = read_responses_batch(read_batch_output(client, tracker['red_eval']["0"]))
+            red_eval_raw = read_responses_batch(read_batch_output(client, tracker['red_eval']["0"], args.out_dir + 'red_eval_output.jsonl'))
             red_eval = transform_eval_dict(red_eval_raw)
         else:
             red_future = executor.submit(
@@ -180,9 +186,9 @@ if __name__ == "__main__":
             tracker['edited_eval'] = {"0": edited_future.result()}
         if tracker is not None and 'red_eval' not in tracker:
             tracker['red_eval'] = {"0": red_future.result()}
-        blue_eval_raw = read_responses_batch(read_batch_output(client, tracker['blue_eval']["0"]))
-        edited_eval_raw = read_responses_batch(read_batch_output(client, tracker['edited_eval']["0"]))
-        red_eval_raw = read_responses_batch(read_batch_output(client, tracker['red_eval']["0"]))
+        blue_eval_raw = read_responses_batch(read_batch_output(client, tracker['blue_eval']["0"], args.out_dir + 'blue_eval_output.jsonl'))
+        edited_eval_raw = read_responses_batch(read_batch_output(client, tracker['edited_eval']["0"], args.out_dir + 'edited_eval_output.jsonl'))
+        red_eval_raw = read_responses_batch(read_batch_output(client, tracker['red_eval']["0"], args.out_dir + 'red_eval_output.jsonl'))
         blue_eval = transform_eval_dict(blue_eval_raw)
         edited_eval = transform_eval_dict(edited_eval_raw)
         red_eval = transform_eval_dict(red_eval_raw)
