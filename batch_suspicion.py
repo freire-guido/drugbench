@@ -44,7 +44,7 @@ def main(args):
                             'interactions': convo['interactions']
                         }) for prompt in red_prompts[0]
                     ],
-                    model=args.model
+                    model=args.red_model
                 ) for convo in conversations
             ],
             args.out_dir + '/red_interactions_0_input.jsonl',
@@ -58,7 +58,7 @@ def main(args):
                 generate_batch_request(
                     custom_id=convo['prompt_id'],
                     messages=red_prompts[1] + convo['prompt'],
-                    model=args.model
+                    model=args.red_model
                 ) for convo in conversations
             ],
             args.out_dir + '/red_interactions_1_input.jsonl',
@@ -84,7 +84,7 @@ def main(args):
                         'interactions': convo['interactions']
                     }) for prompt in blue_prompts[0]
                 ],
-                model=args.model,
+                model=args.blue_model,
                 top_logprobs=5
             ) for convo in conversations
         ],
@@ -101,9 +101,9 @@ if __name__ == "__main__":
     parser.add_argument("--conversations", type=str, required=True)
     parser.add_argument("--red_prompts", type=str, required=True)
     parser.add_argument("--blue_prompts", type=str, required=True)
-    parser.add_argument("--red_model", type=str, required=True)
-    parser.add_argument("--blue_model", type=str, required=True)
-    parser.add_argument("--tracker", type=str, required=True)
-    parser.add_argument("--out_dir", type=str, required=True)
+    parser.add_argument("--red_model", type=str, default="gpt-5")
+    parser.add_argument("--blue_model", type=str, default="gpt-4o")
+    parser.add_argument("--tracker", type=str, default=None)
+    parser.add_argument("--out_dir", type=str, default='')
     args = parser.parse_args()
     main(args)
