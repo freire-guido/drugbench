@@ -1,5 +1,6 @@
+from openai import NotFoundError, OpenAI
+
 import time, json, re
-from openai import NotFoundError
 
 def parse_json_to_dict(json_string: str) -> dict:
     # Remove markdown-style ```json``` markers if present
@@ -35,7 +36,7 @@ def sanitize_response(response: str, prescription: str | None = None) -> str:
     response = re.sub(r'<explanation>.*?</explanation>', '', response, flags=re.DOTALL)
     return response
 
-def wait_for_batch(client,batch_id: str, delay: int = 5, timeout: int = 86400) -> bool:
+def wait_for_batch(client, batch_id: str, delay: int = 5, timeout: int = 86400) -> bool:
     # 86400 seconds = 24 hours
     start_time = time.time()
     while client.batches.retrieve(batch_id).status in ["validating", "in_progress", "finalizing"] and (time.time() - start_time) < timeout:
@@ -62,3 +63,38 @@ def generate_batch_request(
             "top_logprobs": top_logprobs if top_logprobs > 0 else None
         }
     }
+
+def create_batch_job(
+    client: OpenAI,
+    requests: list[dict],
+    input_file_name: str,
+    verbose: bool = False
+) -> str:
+    if verbose:
+        print(f"Creating batch job for {len(requests)} requests...")
+    with open(input_file_name, 'w+') as outfile:
+        for request in requests:
+            outfile.write(json.dumps(request) + '\n')
+    
+    batch_input_file = client.files.create(file=open(input_file_name, "rb"), purpose="batch")
+    batch_job = client.batches.create(input_file_id=batch_input_file.id, endpoint="/v1/chat/completions", completion_window="24h")
+    return batch_job.id
+
+def run_batch_with_tracker(
+    client: OpenAI,
+    requests: list[dict],
+    input_file_name: str,
+    tracker: dict | None = None,
+    tracker_key: str | None = None,
+    verbose: bool = False
+) -> str:
+    if tracker is not None and tracker_key in tracker:
+        if verbose:
+            print(f"Using batch ID from tracker for {tracker_key}")
+        return tracker[tracker_key]
+    else:
+        batch_id = create_batch_job(client, requests, input_file_name, verbose)
+        if tracker is not None:
+            tracker[tracker_key] = batch_id
+        wait_for_batch(client, batch_id)
+        return batch_id
