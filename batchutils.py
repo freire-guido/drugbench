@@ -44,3 +44,21 @@ def wait_for_batch(client,batch_id: str, delay: int = 5, timeout: int = 86400) -
         raise Exception(f"Batch {batch_id} failed to complete: status {client.batches.retrieve(batch_id).status} after {time.time() - start_time} seconds")
     print(f"Batch {batch_id} completed in {time.time() - start_time} seconds")
     return True
+
+def generate_batch_request(
+    custom_id: str,
+    messages: list[dict],
+    model: str,
+    top_logprobs: int = 0,
+) -> list[dict]:
+    return {
+        "custom_id": custom_id,
+        "method": "POST",
+        "url": "/v1/chat/completions",
+        "body": {
+            "model": model,
+            "messages": messages,
+            "logprobs": top_logprobs > 0,
+            "top_logprobs": top_logprobs if top_logprobs > 0 else None
+        }
+    }
