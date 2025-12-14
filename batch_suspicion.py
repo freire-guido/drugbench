@@ -31,7 +31,7 @@ def main(args):
 
 
     with ThreadPoolExecutor(max_workers=args.n_threads) as executor:
-        executor.submit(run_batch_with_tracker,
+        red_0_future = executor.submit(run_batch_with_tracker,
             client,
             [
                 generate_batch_request(
@@ -50,7 +50,7 @@ def main(args):
             'red_interactions_0',
             verbose=True,
         )
-        executor.submit(run_batch_with_tracker,
+        red_1_future = executor.submit(run_batch_with_tracker,
             client,
             [
                 generate_batch_request(
@@ -64,3 +64,26 @@ def main(args):
             'red_interactions_1',
             verbose=True,
         )
+
+    red_batch_ids = [red_0_future.result(), red_1_future.result()]
+
+    blue_batch_id = run_batch_with_tracker(
+        client,
+        [
+            generate_batch_request(
+                custom_id=convo['prompt_id'],
+                messages=[
+                    format_messages_prompt(prompt, {
+                        'conversation': convo['prompt'],
+                        'output': ,
+                        'interactions': convo['interactions']
+                    }) for prompt in blue_prompts[0]
+                ],
+                model=args.model
+            ) for convo in conversations
+        ],
+        args.out_dir + '/blue_interactions.jsonl',
+        tracker,
+        'blue_interactions_0',
+        verbose=True,
+    )
