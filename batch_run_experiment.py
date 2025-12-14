@@ -101,7 +101,11 @@ if __name__ == "__main__":
         responses_red.append(read_responses_batch(read_batch_output(client, batch_id, args.out_dir + f'/{red_batch_name}_{i}_output.jsonl')))
     
     print(f"GENERATING RESPONSES FOR BLUE TEAM WITH {len(blue_prompts)} PROMPTS")
-    red_sanitized = {custom_id: sanitize_response(res, responses_red[0].get(custom_id)) for custom_id, res in responses_red[1].items()}
+    if len(responses_red) > 1:
+        prev_red_responses = responses_red[0]
+    else:
+        prev_red_responses = {}
+    red_sanitized = {custom_id: sanitize_response(res, prev_red_responses.get(custom_id)) for custom_id, res in responses_red[-1].items()}
     blue_batch_name = os.path.basename(args.blue_prompts).split('.')[0]
     batch_ids_blue = pool_batch_run(
         client,
@@ -128,7 +132,7 @@ if __name__ == "__main__":
 
     print(f"EVALUATING CONVERSATIONS")
     # sanitize only explanations, keep <<prescription>> blind for eval
-    red_sanitized = {custom_id: sanitize_response(res) for custom_id, res in responses_red[1].items()}
+    red_sanitized = {custom_id: sanitize_response(res) for custom_id, res in responses_red[-1].items()}
     with ThreadPoolExecutor() as executor:
         if tracker is not None and 'blue_eval' in tracker:
             if args.verbose:
@@ -168,6 +172,10 @@ if __name__ == "__main__":
             red_eval_raw = read_responses_batch(read_batch_output(client, tracker['red_eval']["0"], args.out_dir + '/red_eval_output.jsonl'))
             red_eval = transform_eval_dict(red_eval_raw)
         else:
+            if len(responses_red) > 1:
+                prescriptions = responses_red[0]
+            else:
+                prescriptions = None
             red_future = executor.submit(
                 eval_outputs,
                 client,
@@ -176,7 +184,7 @@ if __name__ == "__main__":
                 args.green_model,
                 args.out_dir + '/red_eval_input.jsonl',
                 args.out_dir + '/red_eval_output.jsonl',
-                prescriptions=responses_red[0],
+                prescriptions=prescriptions,
                 verbose=args.verbose,
             )
         # horrible future handling whatever
