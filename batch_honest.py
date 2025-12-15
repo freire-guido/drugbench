@@ -26,11 +26,8 @@ def main(args):
         blue_prompts = json.load(f)
     with open(args.red_prompts, 'r') as f:
         red_prompts = json.load(f)
-    # with open(args.honest_prompt, 'r') as f:
-    #     honest_prompt = json.load(f)
     with open(args.tracker, 'r') as f:
         tracker = json.load(f)
-
 
     with ThreadPoolExecutor() as executor:
         red_0_future = executor.submit(run_batch_with_tracker,
@@ -88,13 +85,25 @@ def main(args):
                 top_logprobs=5
             ) for convo in conversations
         ],
-        args.out_dir + '/blue_interactions.jsonl',
+        args.out_dir + '/blue_interactions_0_input.jsonl',
         tracker,
         'blue_interactions_0',
         verbose=True
     )
 
-    blue_responses = read_responses_batch(read_batch_output(client, blue_batch_id, args.out_dir + '/blue_interactions_0_output.jsonl'))
+    blue_raw = read_batch_output(client, blue_batch_id, args.out_dir + '/blue_interactions_0_output.jsonl')
+    blue_responses = read_responses_batch(blue_raw)
+    blue_logprobs = {result['custom_id']: result['response']['body']['choices'][0]['logprobs'] for result in blue_raw}
+
+    for convo in conversations:
+        convo['red_response_0'] = red_responses[0][convo['prompt_id']]
+        convo['red_response_1'] = red_responses[1][convo['prompt_id']]
+        convo['blue_response_0'] = blue_responses[convo['prompt_id']]
+        convo['blue_logprobs_0'] = blue_logprobs[convo['prompt_id']]
+
+    with open(args.out_dir + '/conversations.jsonl', 'w+') as f:
+        for conversation in conversations:
+            f.write(json.dumps(conversation) + '\n')
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
