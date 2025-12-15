@@ -33,12 +33,7 @@ def main(args):
         [
             generate_batch_request(
                 custom_id=convo['prompt_id'],
-                messages=[
-                    format_messages_prompt(prompt, {
-                        'conversation': convo['prompt'],
-                        'interactions': convo['interactions']
-                    }) for prompt in red_prompts[0]
-                ],
+                messages=red_prompts[0] + convo['prompt'],
                 model=args.red_model
             ) for convo in conversations
         ],
@@ -58,9 +53,7 @@ def main(args):
                 messages=[
                     format_messages_prompt(prompt, {
                         'conversation': convo['prompt'],
-                        'output': red_responses[1][convo['prompt_id']].format(
-                            prescription=red_responses[0][convo['prompt_id']]
-                        ),
+                        'output': red_responses[convo['prompt_id']],
                         'interactions': convo['interactions']
                     }) for prompt in blue_prompts[0]
                 ],
@@ -79,8 +72,7 @@ def main(args):
     blue_honest_logprobs = {result['custom_id']: result['response']['body']['choices'][0]['logprobs'] for result in blue_honest_raw}
 
     for convo in conversations:
-        convo['red_response_0'] = red_responses[0][convo['prompt_id']]
-        convo['red_response_1'] = red_responses[1][convo['prompt_id']]
+        convo['red_response_0'] = red_responses[convo['prompt_id']]
         convo['blue_response_0'] = blue_honest_responses[convo['prompt_id']]
         convo['blue_logprobs_0'] = blue_honest_logprobs[convo['prompt_id']]
 
