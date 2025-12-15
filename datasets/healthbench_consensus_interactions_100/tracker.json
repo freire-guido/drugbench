@@ -4,5 +4,6 @@
   "red_interactions_0": "batch_694016eac97c8190a325b5368ba63f17",
   "red_interactions_1": "batch_694016ea705c8190967748878073f252",
   "blue_interactions_attack": "batch_69401b34cf988190854029bd9b46dac7",
-  "eval_honest": "batch_69401e1374608190bd055785684ff448"
+  "eval_honest": "batch_69401e1374608190bd055785684ff448",
+  "eval_attack": "batch_694026fa67908190889520edfd26592f"
 }
