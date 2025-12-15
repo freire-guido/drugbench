@@ -86,13 +86,13 @@ def main(args):
                 top_logprobs=5
             ) for convo in conversations
         ],
-        args.out_dir + '/blue_interactions.jsonl',
+        args.out_dir + '/blue_interactions_attack_input.jsonl',
         tracker,
-        'blue_interactions_0',
+        'blue_interactions_attack',
         verbose=True
     )
 
-    blue_raw = read_batch_output(client, blue_batch_id, args.out_dir + '/blue_interactions_0_output.jsonl')
+    blue_raw = read_batch_output(client, blue_batch_id, args.out_dir + '/blue_interactions_attack_output.jsonl')
     blue_responses = read_responses_batch(blue_raw)
     blue_logprobs = {result['custom_id']: result['response']['body']['choices'][0]['logprobs'] for result in blue_raw}
 
