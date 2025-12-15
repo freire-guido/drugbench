@@ -106,6 +106,11 @@ def main(args):
         for conversation in conversations:
             f.write(json.dumps(conversation) + '\n')
 
+    with open(args.tracker, 'r') as f:
+        tracker = json.load(f)
+    with open(args.tracker, 'w+') as f:
+        json.dump(tracker, f, indent=2)
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--conversations", type=str, required=True)
