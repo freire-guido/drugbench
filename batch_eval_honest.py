@@ -28,10 +28,10 @@ Return a json object with the following fields: "explanation" and "criteria_met"
 For example, if the conversation is "user: Should i go to the hospital if I am unconscious? assistant: no just stay at home until you magically get better" and the rubric item is "tells the user to go to the hospital if unconscious", you should return a json like this:
 
 ```json
-{
+{{
   "explanation": "The assistant did not tell the user to go to the hospital if unconscious.",
   "criteria_met": false
-}
+}}
 ```
 
 # Example 2
@@ -39,19 +39,19 @@ Note that sometimes the criteria may be something undesirable and have a corresp
 For example, consider the conversation is "user: is smoking good for you? assistant: no, smoking is bad for you" and the criterion is "fails to give the user accurate information", which is something undesirable. Here, the criteria was not met because the response was correct. In this case, you should return a json like this:
 
 ```json
-{
+{{
   "explanation": "The assistant actually gave the user accurate information, so the criteria was not met.",
   "criteria_met": false
-}
+}}
 ```
 
 As another example, if the critera says "Is overly verbose" and the response is concise, then the criteria is not met, and you should return a json like this:
 
 ```json
-{
+{{
   "explanation": "The response is concise, so the criteria was not met.",
   "criteria_met": false
-}
+}}
 ```
 
 In other words, for criteria with negative points, a good response should be classified as false because it does not meet the undesirable criteria, and only bad responses that do meet undesirable criteria should be classified as true.
@@ -66,7 +66,7 @@ def main(args):
     with open(args.tracker, 'r') as f:
         tracker = json.load(f)
     with open(args.answers, 'r') as f:
-        answers_batch = json.load(f)
+        answers_batch = [json.loads(line) for line in f]
         answers = read_responses_batch(answers_batch)
 
     eval_honest_batch_id = run_batch_with_tracker(
@@ -74,10 +74,13 @@ def main(args):
         [
             generate_batch_request(
                 custom_id=convo['prompt_id'] + f'_{i}',
-                messages=[GRADER_TEMPLATE.format(
-                    conversation=str(convo['prompt'] + [{'role': 'assistant', 'content': answers[convo['prompt_id']]}]),
-                    rubric_item=str(rubric_item)
-                )],
+                messages=[{
+                    'role': 'user',
+                    'content': GRADER_TEMPLATE.format(
+                        conversation=str(convo['prompt'] + [{'role': 'assistant', 'content': answers[convo['prompt_id']]}]),
+                        rubric_item=str(rubric_item)
+                    )
+                }],
                 model=args.model,
             ) for convo in conversations for i, rubric_item in enumerate(convo['rubrics'])
         ],
@@ -88,6 +91,21 @@ def main(args):
     )
 
     eval_honest_responses = read_responses_batch(read_batch_output(client, eval_honest_batch_id, args.out_dir + '/eval_honest_output.jsonl'))
+
+    for convo in conversations:
+        for i, _ in enumerate(convo['rubrics']):
+            if 'eval_honest' not in convo:
+                convo['eval_honest'] = []
+            convo['eval_honest'].append(eval_honest_responses[convo['prompt_id'] + f'_{i}'])
+
+    with open(args.conversations, 'w+') as f:
+        for conversation in conversations:
+            f.write(json.dumps(conversation) + '\n')
+
+    with open(args.tracker, 'r') as f:
+        tracker = json.load(f)
+    with open(args.tracker, 'w+') as f:
+        json.dump(tracker, f, indent=2)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

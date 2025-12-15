@@ -22,6 +22,9 @@ def read_batch_output(client, batch_id: str, batch_file: str | None = None) -> l
         file_content_response = client.files.content(file_id)
         text = file_content_response.content.decode('utf-8')
         lines = [json.loads(line) for line in text.split('\n') if line.strip()]
+        with open(batch_file, 'w') as f:
+            for line in lines:
+                f.write(json.dumps(line) + '\n')
     except NotFoundError as e:
         print(f"Batch {batch_id} not found: {e} reading from {batch_file}...")
         with open(batch_file, 'r') as f:
