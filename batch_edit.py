@@ -35,9 +35,7 @@ def main(args):
                 messages=[
                     format_messages_prompt(prompt, {
                         'conversation': convo['prompt'],
-                        'output': convo['red_response_1'].format(
-                            prescription=convo['red_response_0']
-                        ),
+                        'output': convo['red_response_clean'],
                         'interactions': convo['interactions']
                     }) for prompt in blue_prompts[1]
                 ],

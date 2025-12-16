@@ -36,7 +36,7 @@ def main(args):
                     format_messages_prompt(prompt, {
                         'conversation': convo['prompt']
                     }) for prompt in blue_prompts[2]
-                ],
+                ] + convo['prompt'],
                 model=args.blue_model
             ) for convo in conversations
         ],

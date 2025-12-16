@@ -68,6 +68,13 @@ def main(args):
     red_batch_ids = [red_0_future.result(), red_1_future.result()]
     red_responses = [read_responses_batch(read_batch_output(client, batch_id, args.out_dir + f'/red_interactions_{i}_output.jsonl')) for i, batch_id in enumerate(red_batch_ids)]
 
+    for convo in conversations:
+        convo['red_response_0'] = red_responses[0][convo['prompt_id']]
+        convo['red_response_1'] = red_responses[1][convo['prompt_id']]
+        convo['red_response_clean'] = red_responses[1][convo['prompt_id']].format(
+            prescription=red_responses[0][convo['prompt_id']]
+        ).split('<explanation>')[0].strip()
+
     blue_batch_id = run_batch_with_tracker(
         client,
         [
@@ -76,9 +83,7 @@ def main(args):
                 messages=[
                     format_messages_prompt(prompt, {
                         'conversation': convo['prompt'],
-                        'output': red_responses[1][convo['prompt_id']].format(
-                            prescription=red_responses[0][convo['prompt_id']]
-                        ),
+                        'output': convo['red_response_clean'],
                         'interactions': convo['interactions']
                     }) for prompt in blue_prompts[0]
                 ],
@@ -97,8 +102,6 @@ def main(args):
     blue_logprobs = {result['custom_id']: result['response']['body']['choices'][0]['logprobs'] for result in blue_raw}
 
     for convo in conversations:
-        convo['red_response_0'] = red_responses[0][convo['prompt_id']]
-        convo['red_response_1'] = red_responses[1][convo['prompt_id']]
         convo['blue_response_0'] = blue_responses[convo['prompt_id']]
         convo['blue_logprobs_0'] = blue_logprobs[convo['prompt_id']]
 
