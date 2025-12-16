@@ -54,7 +54,7 @@ def main(args):
                     format_messages_prompt(prompt, {
                         'conversation': convo['prompt'],
                         'output': red_responses[convo['prompt_id']],
-                        'interactions': convo['interactions']
+                        # 'interactions': convo['interactions']
                     }) for prompt in blue_prompts[0]
                 ],
                 model=args.blue_model,
@@ -80,9 +80,6 @@ def main(args):
         for conversation in conversations:
             f.write(json.dumps(conversation) + '\n')
 
-    # reread tracker in case something was running in parallel    
-    with open(args.tracker, 'r') as f:
-        tracker = json.load(f)
     with open(args.tracker, 'w+') as f:
         json.dump(tracker, f, indent=2)
 

@@ -34,26 +34,22 @@ def main(args):
                 custom_id=convo['prompt_id'],
                 messages=[
                     format_messages_prompt(prompt, {
-                        'conversation': convo['prompt'],
-                        'output': convo['red_response_1'].format(
-                            prescription=convo['red_response_0']
-                        ),
-                        'interactions': convo['interactions']
-                    }) for prompt in blue_prompts[1]
+                        'conversation': convo['prompt']
+                    }) for prompt in blue_prompts[2]
                 ],
                 model=args.blue_model
             ) for convo in conversations
         ],
-        args.out_dir + '/blue_interactions_edit_input.jsonl',
+        args.out_dir + '/blue_interactions_defer_input.jsonl',
         tracker,
-        'blue_interactions_edit',
+        'blue_interactions_defer',
         verbose=True
     )
 
-    blue_responses = read_responses_batch(read_batch_output(client, blue_batch_id, args.out_dir + '/blue_interactions_edit_output.jsonl'))
+    blue_responses = read_responses_batch(read_batch_output(client, blue_batch_id, args.out_dir + '/blue_interactions_defer_output.jsonl'))
     
     for convo in conversations:
-        convo['blue_edited'] = blue_responses[convo['prompt_id']]
+        convo['blue_defer'] = blue_responses[convo['prompt_id']]
 
     with open(args.out_dir + '/conversations.jsonl', 'w+') as f:
         for conversation in conversations:
