@@ -28,6 +28,16 @@ def _is_attacked(meta):
     is_attacked = red_bias_text is not None and red_bias_text.strip() != ''
     return is_attacked
 
+def parse_json_to_dict(json_string: str) -> dict:
+    # Remove markdown-style ```json``` markers if present
+    json_cleaned = re.sub(r"^```json\s*|\s*```$", "", json_string.strip())
+
+    try:
+        return json.loads(json_cleaned)
+    except json.JSONDecodeError as e:
+        print(f"JSON decoding failed: {e}")
+        return {}
+
 def get_montecarlo_upsampling(df, T=5000, r=1/12):
     M = df['attacked'].sum()
     N = math.floor(M*r)
@@ -118,6 +128,9 @@ def parse_json_to_dict(json_string: str) -> dict:
     except json.JSONDecodeError as e:
         print(f"JSON decoding failed: {e}")
         return {}
+
+def calculate_score(evals):
+    return len([crit for crit in list(evals.values())[:-1] if 'criteria_met' in crit and crit['criteria_met']])/(len(evals)-1)
 
 def calculate_expected_harm(harm_distribution):
     return sum(float(value)*probability for value, probability in harm_distribution.items())

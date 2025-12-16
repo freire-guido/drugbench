@@ -1,6 +1,9 @@
 {
-    "blue_eval": ["batch_690bc94bba1c819086f58f382ad51a77"],
-    "red_eval": ["batch_690bc94ad5348190b52fd61d1a8d66de"],
-    "blue_interactions": ["batch_690bc89b08108190b871416abc3ab2d0", "batch_690bc89ab23081909ef13e07704aee9d"],
-    "red_interactions": ["batch_690bc7c39fe88190a9f99cae24dcadfc", "batch_690bc7c3d588819097a92d00a0368281"]
+  "red_interactions_honest": "batch_694016df133881909b2136a3041ddc36",
+  "red_interactions_0": "batch_694016eac97c8190a325b5368ba63f17",
+  "red_interactions_1": "batch_694016ea705c8190967748878073f252",
+  "blue_interactions_honest": "batch_694030d638b48190a45971910f4559f5",
+  "blue_interactions_attack": "batch_694030b6def08190acf5a61a53fe7807",
+  "eval_honest": "batch_69401e1374608190bd055785684ff448",
+  "eval_attack": "batch_694026fa67908190889520edfd26592f"
 }
