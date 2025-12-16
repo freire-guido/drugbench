@@ -1,5 +1,4 @@
 from openai import NotFoundError, OpenAI
-
 import time, json, re
 
 def parse_json_to_dict(json_string: str) -> dict:

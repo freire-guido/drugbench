@@ -205,6 +205,116 @@ def load_conversations(path: str) -> list[dict]:
     return conversations
 
 
+def convert_new_format_to_old(conversation: dict) -> dict:
+    """Convert new format (batch_attack/batch_eval) to old format (batch_run_experiment)."""
+    # Check if already in old format
+    if "red_responses" in conversation and "blue_responses" in conversation:
+        return conversation
+    
+    # Convert red responses
+    red_responses = {}
+    if "red_response_0" in conversation:
+        red_0 = conversation.get("red_response_0", "")
+        red_1 = conversation.get("red_response_1", "")
+        if red_0:
+            red_responses["0"] = red_0
+        if red_1:
+            red_responses["1"] = red_1
+    
+    # Convert blue responses
+    blue_responses = {}
+    if "blue_response_0" in conversation:
+        blue_0 = conversation.get("blue_response_0", "")
+        if blue_0:
+            blue_responses["0"] = blue_0
+    
+    # Convert eval_honest to blue_eval
+    blue_eval = {}
+    if "eval_honest" in conversation:
+        eval_honest = conversation.get("eval_honest", [])
+        if isinstance(eval_honest, list):
+            for i, eval_item in enumerate(eval_honest):
+                if eval_item:
+                    try:
+                        # Try to parse as JSON string
+                        if isinstance(eval_item, str):
+                            eval_str = eval_item.strip()
+                            # Check if it's a JSON string wrapped in markdown code blocks
+                            if eval_str.startswith("```"):
+                                # Extract JSON from markdown code block
+                                lines = eval_str.split("\n")
+                                json_lines = []
+                                in_json = False
+                                for line in lines:
+                                    stripped = line.strip()
+                                    if stripped.startswith("```json") or (stripped.startswith("```") and not in_json):
+                                        in_json = True
+                                        continue
+                                    if in_json and stripped.startswith("```"):
+                                        break
+                                    if in_json:
+                                        json_lines.append(line)
+                                eval_str = "\n".join(json_lines).strip()
+                            # Try to parse as JSON
+                            eval_data = json.loads(eval_str)
+                        elif isinstance(eval_item, dict):
+                            # Already a dict, use as-is
+                            eval_data = eval_item
+                        else:
+                            # Unknown type, wrap it
+                            eval_data = {"explanation": str(eval_item), "criteria_met": None}
+                        blue_eval[str(i)] = eval_data
+                    except (json.JSONDecodeError, TypeError, ValueError) as e:
+                        # If parsing fails, store as-is with error info
+                        blue_eval[str(i)] = {"explanation": str(eval_item), "criteria_met": None, "_parse_error": str(e)}
+    
+    # Convert eval_attack
+    eval_attack = conversation.get("eval_attack")
+    if eval_attack:
+        try:
+            # Try to parse as JSON string
+            if isinstance(eval_attack, str):
+                eval_str = eval_attack.strip()
+                # Check if it's a JSON string wrapped in markdown code blocks
+                if eval_str.startswith("```"):
+                    lines = eval_str.split("\n")
+                    json_lines = []
+                    in_json = False
+                    for line in lines:
+                        stripped = line.strip()
+                        if stripped.startswith("```json") or (stripped.startswith("```") and not in_json):
+                            in_json = True
+                            continue
+                        if in_json and stripped.startswith("```"):
+                            break
+                        if in_json:
+                            json_lines.append(line)
+                    eval_str = "\n".join(json_lines).strip()
+                attack_data = json.loads(eval_str)
+            elif isinstance(eval_attack, dict):
+                # Already a dict, use as-is
+                attack_data = eval_attack
+            else:
+                # Unknown type, wrap it
+                attack_data = {"explanation": str(eval_attack), "criteria_met": None}
+            # Add attack evaluation to blue_eval
+            blue_eval["attack"] = attack_data
+        except (json.JSONDecodeError, TypeError, ValueError) as e:
+            # If parsing fails, store as-is with error info
+            blue_eval["attack"] = {"explanation": str(eval_attack), "criteria_met": None, "_parse_error": str(e)}
+    
+    # Create converted conversation
+    converted = conversation.copy()
+    converted["red_responses"] = red_responses
+    converted["blue_responses"] = blue_responses
+    converted["blue_eval"] = blue_eval
+    # Old format doesn't have red_eval or edited_eval for attack scenarios
+    converted["red_eval"] = {}
+    converted["edited_eval"] = {}
+    
+    return converted
+
+
 def escape(text: str) -> str:
     if text is None:
         return ""
@@ -304,12 +414,25 @@ def extract_attack_evaluation(evaluations: dict | None) -> dict | None:
     entry = evaluations.get("attack")
     if not entry:
         return None
-    fraction = _parse_fraction(entry.get("criteria_met"))
-    if fraction is None:
+    criteria_value = entry.get("criteria_met")
+    if criteria_value is None:
         return None
+    
+    # Handle both 0-100 scale (new format) and 0-1 scale (old format)
+    try:
+        score_float = float(criteria_value)
+        # If score is > 1, assume it's 0-100 scale and normalize to 0-1
+        if score_float > 1.0:
+            score_float = score_float / 100.0
+        # Ensure it's in valid range
+        score_float = max(0.0, min(1.0, score_float))
+    except (TypeError, ValueError):
+        return None
+    
     return {
-        "score": fraction,
+        "score": score_float,
         "explanation": entry.get("explanation"),
+        "raw_score": criteria_value,  # Keep original for display
     }
 
 
@@ -320,7 +443,27 @@ def render_attack_score(item: dict | None) -> str:
     if score is None:
         return ""
     score_float = max(0.0, min(1.0, float(score)))
-    score_display = _format_number(score_float)
+    
+    # Display as 0-100 if raw_score suggests that format, otherwise 0-1
+    raw_score = item.get("raw_score")
+    if raw_score is not None:
+        try:
+            raw_float = float(raw_score)
+            if raw_float > 1.0:
+                # Display as 0-100 scale
+                score_display = _format_number(raw_float)
+                max_display = "100"
+            else:
+                # Display as 0-1 scale
+                score_display = _format_number(score_float)
+                max_display = "1.0"
+        except (TypeError, ValueError):
+            score_display = _format_number(score_float)
+            max_display = "1.0"
+    else:
+        score_display = _format_number(score_float)
+        max_display = "1.0"
+    
     if score_float >= 0.75:
         css_class = "score-negative"
     elif score_float <= 0.25:
@@ -329,7 +472,7 @@ def render_attack_score(item: dict | None) -> str:
         css_class = "score-neutral"
     fragments: list[str] = [
         '<div class="attack-block"><h4>Attack Score</h4>',
-        f'<div class="attack-line"><span class="{css_class}">{score_display}</span> / 1.0</div>',
+        f'<div class="attack-line"><span class="{css_class}">{score_display}</span> / {max_display}</div>',
     ]
     explanation = item.get("explanation")
     if explanation:
@@ -339,11 +482,11 @@ def render_attack_score(item: dict | None) -> str:
 
 
 def is_attacked(responses: dict | None) -> bool:
-    """Check if any red response contains <<prescription>>."""
+    """Check if any red response contains {prescription} or <<prescription>>."""
     if not responses:
         return False
     for value in responses.values():
-        if isinstance(value, str) and "<<prescription>>" in value:
+        if isinstance(value, str) and ("{prescription}" in value or "<<prescription>>" in value):
             return True
     return False
 
@@ -383,6 +526,9 @@ def render_response_column(
 
 
 def render_conversation(conversation: dict, index: int) -> str:
+    # Convert new format to old format if needed
+    conversation = convert_new_format_to_old(conversation)
+    
     prompt_id = conversation.get("prompt_id", f"conversation-{index}")
     tags = ", ".join(conversation.get("example_tags", []))
     red_responses = conversation.get("red_responses") or {}
@@ -404,6 +550,8 @@ def render_conversation(conversation: dict, index: int) -> str:
     prompt_messages = render_messages(conversation.get("prompt"))
 
     red_attacked = is_attacked(red_responses)
+    
+    # Build columns - only show edited responses if they exist
     columns = [
         render_response_column(
             "Red Responses",
@@ -412,13 +560,21 @@ def render_conversation(conversation: dict, index: int) -> str:
             red_attack,
             css_class_modifier="attacked" if red_attacked else None,
         ),
-        render_response_column(
-            "Edited Responses",
-            edited_responses,
-            edited_rubrics,
-            edited_attack,
-            note="All editor revisions; final blue response shown separately.",
-        ),
+    ]
+    
+    # Only add edited responses column if there are any
+    if edited_responses:
+        columns.append(
+            render_response_column(
+                "Edited Responses",
+                edited_responses,
+                edited_rubrics,
+                edited_attack,
+                note="All editor revisions; final blue response shown separately.",
+            )
+        )
+    
+    columns.append(
         render_response_column(
             "Blue Response",
             blue_primary,
@@ -426,7 +582,7 @@ def render_conversation(conversation: dict, index: int) -> str:
             blue_attack,
             note="Latest blue team answer.",
         ),
-    ]
+    )
 
     return (
         '<section class="conversation">'
