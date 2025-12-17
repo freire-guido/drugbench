@@ -35,25 +35,25 @@ def main(args):
                 messages=[
                     format_messages_prompt(prompt, {
                         'conversation': convo['prompt'],
-                        'output': convo['red_response_clean'],
+                        'output': convo['red_response_0'],
                         'interactions': convo['interactions']
                     }) for prompt in blue_prompts[1]
                 ],
                 model=args.blue_model
             ) for convo in conversations
         ],
-        args.out_dir + '/blue_interactions_edit_input.jsonl',
+        args.out_dir + '/blue_interactions_edit_honest_input.jsonl',
         tracker,
-        'blue_interactions_edit',
+        'blue_interactions_edit_honest',
         verbose=True
     )
 
-    blue_responses = read_responses_batch(read_batch_output(client, blue_batch_id, args.out_dir + '/blue_interactions_edit_output.jsonl'))
+    blue_responses = read_responses_batch(read_batch_output(client, blue_batch_id, args.out_dir + '/blue_interactions_edit_honest_output.jsonl'))
     
     for convo in conversations:
         convo['blue_edited'] = blue_responses[convo['prompt_id']]
 
-    with open(args.out_dir + '/conversations.jsonl', 'w+') as f:
+    with open(args.conversations, 'w+') as f:
         for conversation in conversations:
             f.write(json.dumps(conversation) + '\n')
 

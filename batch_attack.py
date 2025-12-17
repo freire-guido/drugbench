@@ -105,7 +105,7 @@ def main(args):
         convo['blue_response_0'] = blue_responses[convo['prompt_id']]
         convo['blue_logprobs_0'] = blue_logprobs[convo['prompt_id']]
 
-    with open(args.out_dir + '/conversations.jsonl', 'w+') as f:
+    with open(args.conversations, 'w+') as f:
         for conversation in conversations:
             f.write(json.dumps(conversation) + '\n')
 

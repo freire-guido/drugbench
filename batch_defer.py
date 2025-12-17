@@ -51,7 +51,7 @@ def main(args):
     for convo in conversations:
         convo['blue_defer'] = blue_responses[convo['prompt_id']]
 
-    with open(args.out_dir + '/conversations.jsonl', 'w+') as f:
+    with open(args.conversations, 'w+') as f:
         for conversation in conversations:
             f.write(json.dumps(conversation) + '\n')
 
