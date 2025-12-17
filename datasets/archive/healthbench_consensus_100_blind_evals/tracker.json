@@ -1,0 +1,12 @@
+{
+    "blue_interactions": {
+        "2": "batch_69112f3c597081908505746c22609691"
+    },
+    "red_interactions": {
+        "0": "batch_690bc7c39fe88190a9f99cae24dcadfc",
+        "1": "batch_690bc7c3d588819097a92d00a0368281"
+    },
+    "red_eval": {
+        "0": "batch_690fc0ba09a08190b5799066965279ef"
+    }
+}

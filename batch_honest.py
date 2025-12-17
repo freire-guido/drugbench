@@ -62,20 +62,20 @@ def main(args):
                 top_logprobs=5
             ) for convo in conversations
         ],
-        args.out_dir + '/blue_honest_0_input.jsonl',
+        args.out_dir + '/blue_0_input.jsonl',
         tracker,
-        'blue_honest_0',
+        'blue_0',
         verbose=True
     )
 
-    blue_honest_raw = read_batch_output(client, blue_honest_batch_id, args.out_dir + '/blue_honest_0_output.jsonl')
+    blue_honest_raw = read_batch_output(client, blue_honest_batch_id, args.out_dir + '/blue_0_output.jsonl')
     blue_honest_responses = read_responses_batch(blue_honest_raw)
     blue_honest_logprobs = {result['custom_id']: result['response']['body']['choices'][0]['logprobs'] for result in blue_honest_raw}
 
     for convo in conversations:
         convo['red_response'] = red_responses[convo['prompt_id']]
-        convo['blue_honest_0'] = blue_honest_responses[convo['prompt_id']]
-        convo['blue_honest_0_logprobs'] = blue_honest_logprobs[convo['prompt_id']]
+        convo['blue_0'] = blue_honest_responses[convo['prompt_id']]
+        convo['blue_0_logprobs'] = blue_honest_logprobs[convo['prompt_id']]
 
     safe_update_jsonl(args.conversations, conversations)
     safe_update_json(args.tracker, tracker)
