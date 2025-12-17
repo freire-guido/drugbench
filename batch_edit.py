@@ -1,8 +1,8 @@
 from batchutils import run_batch_with_tracker, generate_batch_request, read_responses_batch, read_batch_output
+from batchutils import safe_update_jsonl, safe_update_json
 
 from openai import OpenAI
 
-from concurrent.futures import ThreadPoolExecutor
 from dotenv import load_dotenv
 import argparse
 import json
@@ -35,30 +35,26 @@ def main(args):
                 messages=[
                     format_messages_prompt(prompt, {
                         'conversation': convo['prompt'],
-                        'output': convo['red_response_0'],
+                        'output': convo['red_response'],
                         'interactions': convo['interactions']
                     }) for prompt in blue_prompts[1]
                 ],
                 model=args.blue_model
             ) for convo in conversations
         ],
-        args.out_dir + '/blue_interactions_edit_honest_input.jsonl',
+        args.out_dir + '/blue_edit_input.jsonl',
         tracker,
-        'blue_interactions_edit_honest',
+        'blue_edit',
         verbose=True
     )
 
-    blue_responses = read_responses_batch(read_batch_output(client, blue_batch_id, args.out_dir + '/blue_interactions_edit_honest_output.jsonl'))
+    blue_responses = read_responses_batch(read_batch_output(client, blue_batch_id, args.out_dir + '/blue_edit_output.jsonl'))
     
     for convo in conversations:
-        convo['blue_edited'] = blue_responses[convo['prompt_id']]
+        convo['blue_edit'] = blue_responses[convo['prompt_id']]
 
-    with open(args.conversations, 'w+') as f:
-        for conversation in conversations:
-            f.write(json.dumps(conversation) + '\n')
-
-    with open(args.tracker, 'w+') as f:
-        json.dump(tracker, f, indent=2)
+    safe_update_jsonl(args.conversations, conversations)
+    safe_update_json(args.tracker, tracker)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

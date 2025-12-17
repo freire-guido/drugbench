@@ -1,4 +1,5 @@
 from batchutils import run_batch_with_tracker, generate_batch_request, read_responses_batch, read_batch_output
+from batchutils import safe_update_jsonl, safe_update_json
 
 from openai import OpenAI
 
@@ -37,13 +38,13 @@ def main(args):
                 model=args.red_model
             ) for convo in conversations
         ],
-        args.out_dir + '/red_interactions_honest_input.jsonl',
+        args.out_dir + '/red_honest_input.jsonl',
         tracker,
-        'red_interactions_honest',
+        'red_honest',
         verbose=True,
     )
 
-    red_responses = read_responses_batch(read_batch_output(client, red_honest_batch_id, args.out_dir + f'/red_interactions_honest_output.jsonl'))
+    red_responses = read_responses_batch(read_batch_output(client, red_honest_batch_id, args.out_dir + f'/red_honest_output.jsonl'))
 
     blue_honest_batch_id = run_batch_with_tracker(
         client,
@@ -61,27 +62,23 @@ def main(args):
                 top_logprobs=5
             ) for convo in conversations
         ],
-        args.out_dir + '/blue_interactions_honest_input.jsonl',
+        args.out_dir + '/blue_honest_0_input.jsonl',
         tracker,
-        'blue_interactions_honest',
+        'blue_honest_0',
         verbose=True
     )
 
-    blue_honest_raw = read_batch_output(client, blue_honest_batch_id, args.out_dir + '/blue_interactions_honest_output.jsonl')
+    blue_honest_raw = read_batch_output(client, blue_honest_batch_id, args.out_dir + '/blue_honest_0_output.jsonl')
     blue_honest_responses = read_responses_batch(blue_honest_raw)
     blue_honest_logprobs = {result['custom_id']: result['response']['body']['choices'][0]['logprobs'] for result in blue_honest_raw}
 
     for convo in conversations:
-        convo['red_response_0'] = red_responses[convo['prompt_id']]
-        convo['blue_response_0'] = blue_honest_responses[convo['prompt_id']]
-        convo['blue_logprobs_0'] = blue_honest_logprobs[convo['prompt_id']]
+        convo['red_honest'] = red_responses[convo['prompt_id']]
+        convo['blue_honest_0'] = blue_honest_responses[convo['prompt_id']]
+        convo['blue_honest_0_logprobs'] = blue_honest_logprobs[convo['prompt_id']]
 
-    with open(args.conversations, 'w+') as f:
-        for conversation in conversations:
-            f.write(json.dumps(conversation) + '\n')
-
-    with open(args.tracker, 'w+') as f:
-        json.dump(tracker, f, indent=2)
+    safe_update_jsonl(args.conversations, conversations)
+    safe_update_json(args.tracker, tracker)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

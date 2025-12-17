@@ -1,4 +1,5 @@
 from batchutils import run_batch_with_tracker, generate_batch_request, read_responses_batch, read_batch_output
+from batchutils import safe_update_jsonl, safe_update_json
 
 from openai import OpenAI
 
@@ -45,9 +46,9 @@ def main(args):
                     model=args.red_model
                 ) for convo in conversations
             ],
-            args.out_dir + '/red_interactions_0_input.jsonl',
+            args.out_dir + '/red_0_input.jsonl',
             tracker,
-            'red_interactions_0',
+            'red_0',
             verbose=True,
         )
         red_1_future = executor.submit(run_batch_with_tracker,
@@ -59,19 +60,19 @@ def main(args):
                     model=args.red_model
                 ) for convo in conversations
             ],
-            args.out_dir + '/red_interactions_1_input.jsonl',
+            args.out_dir + '/red_1_input.jsonl',
             tracker,
-            'red_interactions_1',
+            'red_1',
             verbose=True,
         )
 
     red_batch_ids = [red_0_future.result(), red_1_future.result()]
-    red_responses = [read_responses_batch(read_batch_output(client, batch_id, args.out_dir + f'/red_interactions_{i}_output.jsonl')) for i, batch_id in enumerate(red_batch_ids)]
+    red_responses = [read_responses_batch(read_batch_output(client, batch_id, args.out_dir + f'/red_{i}_output.jsonl')) for i, batch_id in enumerate(red_batch_ids)]
 
     for convo in conversations:
-        convo['red_response_0'] = red_responses[0][convo['prompt_id']]
-        convo['red_response_1'] = red_responses[1][convo['prompt_id']]
-        convo['red_response_clean'] = red_responses[1][convo['prompt_id']].format(
+        convo['red_0'] = red_responses[0][convo['prompt_id']]
+        convo['red_1'] = red_responses[1][convo['prompt_id']]
+        convo['red_response'] = red_responses[1][convo['prompt_id']].format(
             prescription=red_responses[0][convo['prompt_id']]
         ).split('<explanation>')[0].strip()
 
@@ -83,7 +84,7 @@ def main(args):
                 messages=[
                     format_messages_prompt(prompt, {
                         'conversation': convo['prompt'],
-                        'output': convo['red_response_clean'],
+                        'output': convo['red_response'],
                         'interactions': convo['interactions']
                     }) for prompt in blue_prompts[0]
                 ],
@@ -91,26 +92,22 @@ def main(args):
                 top_logprobs=5
             ) for convo in conversations
         ],
-        args.out_dir + '/blue_interactions_attack_input.jsonl',
+        args.out_dir + '/blue_0_input.jsonl',
         tracker,
-        'blue_interactions_attack',
+        'blue_0',
         verbose=True
     )
 
-    blue_raw = read_batch_output(client, blue_batch_id, args.out_dir + '/blue_interactions_attack_output.jsonl')
+    blue_raw = read_batch_output(client, blue_batch_id, args.out_dir + '/blue_0_output.jsonl')
     blue_responses = read_responses_batch(blue_raw)
     blue_logprobs = {result['custom_id']: result['response']['body']['choices'][0]['logprobs'] for result in blue_raw}
 
     for convo in conversations:
-        convo['blue_response_0'] = blue_responses[convo['prompt_id']]
-        convo['blue_logprobs_0'] = blue_logprobs[convo['prompt_id']]
+        convo['blue_0'] = blue_responses[convo['prompt_id']]
+        convo['blue_0_logprobs'] = blue_logprobs[convo['prompt_id']]
 
-    with open(args.conversations, 'w+') as f:
-        for conversation in conversations:
-            f.write(json.dumps(conversation) + '\n')
-
-    with open(args.tracker, 'w+') as f:
-        json.dump(tracker, f, indent=2)
+    safe_update_jsonl(args.conversations, conversations)
+    safe_update_json(args.tracker, tracker)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

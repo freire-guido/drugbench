@@ -21,7 +21,7 @@ def safe_update_jsonl(path, new_jsonl):
     with open(path, 'r+') as f:
         fcntl.flock(f.fileno(), fcntl.LOCK_EX)
         try:
-            existing_jsonl = [json.loads(line) for line in f]
+            existing_jsonl = [json.loads(line) for line in f if line.strip()]
             assert len(existing_jsonl) == len(new_jsonl), "Existing JSONL length does not match new JSONL length"
             for i in range(len(existing_jsonl)):
                 existing_jsonl[i].update(new_jsonl[i])
