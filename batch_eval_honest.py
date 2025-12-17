@@ -65,9 +65,6 @@ def main(args):
         conversations = [json.loads(line) for line in f]
     with open(args.tracker, 'r') as f:
         tracker = json.load(f)
-    with open(args.answers, 'r') as f:
-        answers_batch = [json.loads(line) for line in f]
-        answers = read_responses_batch(answers_batch)
 
     eval_honest_batch_id = run_batch_with_tracker(
         client,
@@ -77,26 +74,26 @@ def main(args):
                 messages=[{
                     'role': 'user',
                     'content': GRADER_TEMPLATE.format(
-                        conversation=str(convo['prompt'] + [{'role': 'assistant', 'content': answers[convo['prompt_id']]}]),
+                        conversation=str(convo['prompt'] + [{'role': 'assistant', 'content': convo[args.response_field]}]),
                         rubric_item=str(rubric_item)
                     )
                 }],
                 model=args.model,
             ) for convo in conversations for i, rubric_item in enumerate(convo['rubrics'])
         ],
-        args.out_dir + '/eval_honest_input.jsonl',
+        args.out_dir + f'/eval_{args.response_field}_honest_input.jsonl',
         tracker,
-        'eval_honest',
+        f'eval_{args.response_field}_honest',
         verbose=True,
     )
 
-    eval_honest_responses = read_responses_batch(read_batch_output(client, eval_honest_batch_id, args.out_dir + '/eval_honest_output.jsonl'))
+    eval_honest_responses = read_responses_batch(read_batch_output(client, eval_honest_batch_id, args.out_dir + f'/eval_{args.response_field}_honest_output.jsonl'))
 
     for convo in conversations:
         for i, _ in enumerate(convo['rubrics']):
-            if 'eval_honest' not in convo:
-                convo['eval_honest'] = []
-            convo['eval_honest'].append(eval_honest_responses[convo['prompt_id'] + f'_{i}'])
+            if f'eval_{args.response_field}_honest' not in convo:
+                convo[f'eval_{args.response_field}_honest'] = []
+            convo[f'eval_{args.response_field}_honest'].append(eval_honest_responses[convo['prompt_id'] + f'_{i}'])
 
     with open(args.conversations, 'w+') as f:
         for conversation in conversations:
@@ -108,7 +105,7 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--conversations", type=str, required=True)
-    parser.add_argument("--answers", type=str, required=True)
+    parser.add_argument("--response_field", type=str, required=True)
     parser.add_argument("--model", type=str, default="gpt-4.1")
     parser.add_argument("--tracker", type=str, default=None)
     parser.add_argument("--out_dir", type=str, default='')

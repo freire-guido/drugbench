@@ -59,36 +59,6 @@ def main(args):
         conversations = [json.loads(line) for line in f]
     with open(args.tracker, 'r') as f:
         tracker = json.load(f)
-    
-    # Load red_interactions_0 and red_interactions_1
-    with open(args.red_interactions_0, 'r') as f:
-        red_0_batch = [json.loads(line) for line in f]
-        red_0_responses = read_responses_batch(red_0_batch)
-    
-    with open(args.red_interactions_1, 'r') as f:
-        red_1_batch = [json.loads(line) for line in f]
-        red_1_responses = read_responses_batch(red_1_batch)
-    
-    # Format red_interactions_1 with red_interactions_0
-    formatted_answers = {}
-    for prompt_id, red_1_answer in red_1_responses.items():
-        if prompt_id in red_0_responses:
-            red_0_interaction = red_0_responses[prompt_id]
-            # Check if interaction is empty or null-like
-            if not red_0_interaction or not red_0_interaction.strip():
-                # Skip formatting, will handle null eval later
-                formatted_answers[prompt_id] = None
-            else:
-                try:
-                    formatted_answers[prompt_id] = red_1_answer.format(
-                        prescription=red_0_interaction
-                    )
-                except KeyError:
-                    # If {prescription} placeholder is not present, use answer as-is
-                    formatted_answers[prompt_id] = red_1_answer
-        else:
-            # No interaction found, skip evaluation
-            formatted_answers[prompt_id] = None
 
     # Only evaluate conversations with non-empty interactions
     eval_requests = []
@@ -96,7 +66,7 @@ def main(args):
     
     for convo in conversations:
         prompt_id = convo['prompt_id']
-        if prompt_id in formatted_answers and formatted_answers[prompt_id] is not None:
+        if convo[args.response_field] is not None:
             # Has a valid interaction, create eval request
             eval_requests.append(
                 generate_batch_request(
@@ -104,7 +74,7 @@ def main(args):
                     messages=[{
                         'role': 'user',
                         'content': ATTACK_TEMPLATE.format(
-                            conversation=str(convo['prompt'] + [{'role': 'assistant', 'content': formatted_answers[prompt_id]}]),
+                            conversation=str(convo['prompt'] + [{'role': 'assistant', 'content': convo[args.response_field]}]),
                             interactions=str(convo['interactions'])
                         )
                     }],
@@ -122,20 +92,20 @@ def main(args):
         eval_attack_batch_id = run_batch_with_tracker(
             client,
             eval_requests,
-            args.out_dir + '/eval_attack_input.jsonl',
+            args.out_dir + f'/eval_{args.response_field}_attack_input.jsonl',
             tracker,
-            'eval_attack',
+            f'eval_{args.response_field}_attack',
             verbose=True,
         )
         
         eval_attack_responses = read_responses_batch(
-            read_batch_output(client, eval_attack_batch_id, args.out_dir + '/eval_attack_output.jsonl')
+            read_batch_output(client, eval_attack_batch_id, args.out_dir + f'/eval_{args.response_field}_attack_output.jsonl')
         )
 
     # Initialize eval_attack field for all conversations
     for convo in conversations:
-        if 'eval_attack' not in convo:
-            convo['eval_attack'] = None
+        if f'eval_{args.response_field}_attack' not in convo:
+            convo[f'eval_{args.response_field}_attack'] = None
     
     # Fill in eval_attack responses
     for prompt_id in eval_prompt_ids:
@@ -143,7 +113,7 @@ def main(args):
             # Find the conversation and set the eval
             for convo in conversations:
                 if convo['prompt_id'] == prompt_id:
-                    convo['eval_attack'] = eval_attack_responses[prompt_id]
+                    convo[f'eval_{args.response_field}_attack'] = eval_attack_responses[prompt_id]
                     break
 
     with open(args.conversations, 'w+') as f:
@@ -156,10 +126,7 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--conversations", type=str, required=True)
-    parser.add_argument("--red_interactions_0", type=str, required=True,
-                        help="Path to red_interactions_0_output.jsonl (the interaction/prescription)")
-    parser.add_argument("--red_interactions_1", type=str, required=True,
-                        help="Path to red_interactions_1_output.jsonl (the attack response with {prescription} placeholder)")
+    parser.add_argument("--response_field", type=str, required=True)
     parser.add_argument("--model", type=str, default="gpt-4.1")
     parser.add_argument("--tracker", type=str, default=None)
     parser.add_argument("--out_dir", type=str, default='')
