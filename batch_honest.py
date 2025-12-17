@@ -38,13 +38,13 @@ def main(args):
                 model=args.red_model
             ) for convo in conversations
         ],
-        args.out_dir + '/red_honest_input.jsonl',
+        args.out_dir + '/red_response_input.jsonl',
         tracker,
-        'red_honest',
+        'red_response',
         verbose=True,
     )
 
-    red_responses = read_responses_batch(read_batch_output(client, red_honest_batch_id, args.out_dir + f'/red_honest_output.jsonl'))
+    red_responses = read_responses_batch(read_batch_output(client, red_honest_batch_id, args.out_dir + f'/red_response_output.jsonl'))
 
     blue_honest_batch_id = run_batch_with_tracker(
         client,
@@ -73,7 +73,7 @@ def main(args):
     blue_honest_logprobs = {result['custom_id']: result['response']['body']['choices'][0]['logprobs'] for result in blue_honest_raw}
 
     for convo in conversations:
-        convo['red_honest'] = red_responses[convo['prompt_id']]
+        convo['red_response'] = red_responses[convo['prompt_id']]
         convo['blue_honest_0'] = blue_honest_responses[convo['prompt_id']]
         convo['blue_honest_0_logprobs'] = blue_honest_logprobs[convo['prompt_id']]
 
