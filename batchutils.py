@@ -1,5 +1,39 @@
 from openai import NotFoundError, OpenAI
 import time, json, re
+import fcntl
+
+def safe_update_json(path, new_json):
+    with open(path, 'r+') as f:
+        fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+        try:
+            existing_json = json.load(f)
+            existing_json.update(new_json)
+            f.seek(0)
+            json.dump(existing_json, f, indent=2)
+            f.truncate()
+        except json.JSONDecodeError as e:
+            print(f"JSON decoding failed: {e}")
+            raise e
+        finally:
+            fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+
+def safe_update_jsonl(path, new_jsonl):
+    with open(path, 'r+') as f:
+        fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+        try:
+            existing_jsonl = [json.loads(line) for line in f]
+            assert len(existing_jsonl) == len(new_jsonl), "Existing JSONL length does not match new JSONL length"
+            for i in range(len(existing_jsonl)):
+                existing_jsonl[i].update(new_jsonl[i])
+            f.seek(0)
+            for i in range(len(existing_jsonl)):
+                f.write(json.dumps(existing_jsonl[i]) + '\n')
+            f.truncate()
+        except json.JSONDecodeError as e:
+            print(f"JSON decoding failed: {e}")
+            raise e
+        finally:
+            fcntl.flock(f.fileno(), fcntl.LOCK_UN)
 
 def parse_json_to_dict(json_string: str) -> dict:
     # Remove markdown-style ```json``` markers if present

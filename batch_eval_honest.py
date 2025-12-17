@@ -1,4 +1,5 @@
 from batchutils import run_batch_with_tracker, generate_batch_request, read_responses_batch, read_batch_output
+from batchutils import safe_update_jsonl, safe_update_json
 
 from openai import OpenAI
 
@@ -95,12 +96,8 @@ def main(args):
                 convo[f'eval_{args.response_field}_honest'] = []
             convo[f'eval_{args.response_field}_honest'].append(eval_honest_responses[convo['prompt_id'] + f'_{i}'])
 
-    with open(args.conversations, 'w+') as f:
-        for conversation in conversations:
-            f.write(json.dumps(conversation) + '\n')
-
-    with open(args.tracker, 'w+') as f:
-        json.dump(tracker, f, indent=2)
+    safe_update_jsonl(args.conversations, conversations)
+    safe_update_json(args.tracker, tracker)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
