@@ -7,5 +7,7 @@
   "blue_interactions_defer": "batch_6941cd1314c88190bef14c8c08c0388c",
   "eval_honest": "batch_69401e1374608190bd055785684ff448",
   "eval_attack": "batch_694026fa67908190889520edfd26592f",
-  "blue_interactions_attack": "batch_6941d378c7848190ad0bac2bc8741c90"
+  "blue_interactions_attack": "batch_6941d378c7848190ad0bac2bc8741c90",
+  "blue_interactions_edit_honest": "batch_69429be8e29c8190b1ce875b6280e6c3",
+  "blue_interactions_honest_defer": "batch_69429fc6038c8190bc3dd9ee34990b4d"
 }
