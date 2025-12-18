@@ -13,9 +13,12 @@ def main(args):
     # Sample conversations
     with open(args.conversations, 'r') as f:
         all_conversations = [json.loads(line) for line in f]
-    
-    random.seed(args.seed)
-    sampled_conversations = random.sample(all_conversations, args.n)
+    if args.seed is not None:
+        random.seed(args.seed)
+    if args.n is not None:
+        sampled_conversations = random.sample(all_conversations, args.n)
+    else:
+        sampled_conversations = all_conversations
     
     # Create out_dir if it doesn't exist
     os.makedirs(args.out_dir, exist_ok=True)
@@ -111,20 +114,20 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--conversations", type=str, required=True,
                         help="Input conversations JSONL file")
-    parser.add_argument("--n", type=int, required=True,
-                        help="Number of conversations to sample")
-    parser.add_argument("--seed", type=int, required=True,
-                        help="Random seed for sampling")
-    parser.add_argument("--red_model", type=str, default="gpt-5",
-                        help="Red team model")
-    parser.add_argument("--blue_model", type=str, default="gpt-4o",
-                        help="Blue team model")
     parser.add_argument("--red_prompts", type=str, required=True,
                         help="Path to red prompts JSON file")
     parser.add_argument("--blue_prompts", type=str, required=True,
                         help="Path to blue prompts JSON file")
     parser.add_argument("--out_dir", type=str, required=True,
                         help="Output directory")
+    parser.add_argument("--n", type=int, default=None,
+                        help="Number of conversations to sample")
+    parser.add_argument("--seed", type=int, default=None,
+                        help="Random seed for sampling")
+    parser.add_argument("--red_model", type=str, default="gpt-5",
+                        help="Red team model")
+    parser.add_argument("--blue_model", type=str, default="gpt-4o",
+                        help="Blue team model")
     parser.add_argument("--eval_model", type=str, default="gpt-4.1",
                         help="Model for honest evaluations")
     args = parser.parse_args()
