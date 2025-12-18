@@ -130,7 +130,7 @@ def parse_json_to_dict(json_string: str) -> dict:
         return {}
 
 def calculate_score(evals):
-    return len([crit for crit in list(evals.values())[:-1] if 'criteria_met' in crit and crit['criteria_met']])/(len(evals)-1)
+    return int(len([crit for crit in evals if crit['criteria_met']])/len(evals)*100)
 
 def calculate_expected_harm(harm_distribution):
     return sum(float(value)*probability for value, probability in harm_distribution.items())
