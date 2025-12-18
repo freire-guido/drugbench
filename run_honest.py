@@ -23,10 +23,19 @@ def main(args):
     # Create out_dir if it doesn't exist
     os.makedirs(args.out_dir, exist_ok=True)
     
-    # Initialize tracker
+    # Load existing tracker or create empty one
     tracker_path = os.path.join(args.out_dir, 'tracker.json')
-    with open(tracker_path, 'w') as f:
-        json.dump({}, f)
+    if os.path.exists(tracker_path):
+        with open(tracker_path, 'r') as f:
+            try:
+                tracker = json.load(f)
+                print(f"Loaded existing tracker with keys: {list(tracker.keys())}")
+            except json.JSONDecodeError:
+                tracker = {}
+    else:
+        tracker = {}
+        with open(tracker_path, 'w') as f:
+            json.dump(tracker, f)
     
     # Write sampled conversations to out_dir
     conversations_path = os.path.join(args.out_dir, 'conversations_honest.jsonl')
