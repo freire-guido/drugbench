@@ -49,7 +49,8 @@ def main(args):
             args.out_dir + '/red_0_input.jsonl',
             tracker,
             'red_0',
-            verbose=True,
+            args.tracker,
+            True,
         )
         red_1_future = executor.submit(run_batch_with_tracker,
             client,
@@ -63,7 +64,8 @@ def main(args):
             args.out_dir + '/red_1_input.jsonl',
             tracker,
             'red_1',
-            verbose=True,
+            args.tracker,
+            True,
         )
 
     red_batch_ids = [red_0_future.result(), red_1_future.result()]
@@ -84,8 +86,8 @@ def main(args):
                 messages=[
                     format_messages_prompt(prompt, {
                         'conversation': convo['prompt'],
-                        'output': convo['red_response'],
-                        'interactions': convo['interactions']
+                        'output': convo['red_response']
+                        # 'interactions': convo['interactions']
                     }) for prompt in blue_prompts[0]
                 ],
                 model=args.blue_model,
@@ -95,6 +97,7 @@ def main(args):
         args.out_dir + '/blue_0_input.jsonl',
         tracker,
         'blue_0',
+        tracker_path=args.tracker,
         verbose=True
     )
 

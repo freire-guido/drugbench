@@ -41,6 +41,7 @@ def main(args):
         args.out_dir + '/red_response_input.jsonl',
         tracker,
         'red_response',
+        tracker_path=args.tracker,
         verbose=True,
     )
 
@@ -65,6 +66,7 @@ def main(args):
         args.out_dir + '/blue_0_input.jsonl',
         tracker,
         'blue_0',
+        tracker_path=args.tracker,
         verbose=True
     )
 

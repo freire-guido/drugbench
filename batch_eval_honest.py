@@ -85,6 +85,7 @@ def main(args):
         args.out_dir + f'/eval_{args.response_field}_honest_input.jsonl',
         tracker,
         f'eval_{args.response_field}_honest',
+        tracker_path=args.tracker,
         verbose=True,
     )
 

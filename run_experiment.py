@@ -17,6 +17,7 @@ import os
 import sys
 import time
 import threading
+import traceback
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -55,8 +56,10 @@ def run_attack_with_progress(args, tracker: ProgressTracker):
         tracker.log("ATTACK", "✓ Attack pipeline complete")
         return True, None
     except Exception as e:
-        tracker.log("ATTACK", f"✗ Attack pipeline failed: {e}")
-        return False, e
+        tb = traceback.format_exc()
+        tracker.log("ATTACK", f"✗ Attack pipeline failed: {type(e).__name__}: {e}")
+        print(f"\n{'='*60}\nATTACK PIPELINE TRACEBACK:\n{'='*60}\n{tb}", flush=True)
+        return False, tb
 
 
 def run_honest_with_progress(args, tracker: ProgressTracker):
@@ -67,8 +70,10 @@ def run_honest_with_progress(args, tracker: ProgressTracker):
         tracker.log("HONEST", "✓ Honest pipeline complete")
         return True, None
     except Exception as e:
-        tracker.log("HONEST", f"✗ Honest pipeline failed: {e}")
-        return False, e
+        tb = traceback.format_exc()
+        tracker.log("HONEST", f"✗ Honest pipeline failed: {type(e).__name__}: {e}")
+        print(f"\n{'='*60}\nHONEST PIPELINE TRACEBACK:\n{'='*60}\n{tb}", flush=True)
+        return False, tb
 
 
 def main(args):
@@ -166,7 +171,7 @@ if __name__ == "__main__":
     # Required arguments (with sensible defaults)
     parser.add_argument(
         "--conversations", type=str,
-        default="datasets/healthbench_consensus_interactions_100.jsonl",
+        default="datasets/healthbench_consensus_interactions.jsonl",
         help="Input conversations JSONL file"
     )
     

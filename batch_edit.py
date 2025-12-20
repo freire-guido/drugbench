@@ -45,6 +45,7 @@ def main(args):
         args.out_dir + '/blue_edit_input.jsonl',
         tracker,
         'blue_edit',
+        tracker_path=args.tracker,
         verbose=True
     )
 

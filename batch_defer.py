@@ -43,6 +43,7 @@ def main(args):
         args.out_dir + '/blue_defer_input.jsonl',
         tracker,
         'blue_defer',
+        tracker_path=args.tracker,
         verbose=True
     )
 
