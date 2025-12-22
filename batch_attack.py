@@ -86,8 +86,8 @@ def main(args):
                 messages=[
                     format_messages_prompt(prompt, {
                         'conversation': convo['prompt'],
-                        'output': convo['red_response']
-                        # 'interactions': convo['interactions']
+                        'output': convo['red_response'],
+                        'interactions': convo['interactions']
                     }) for prompt in blue_prompts[0]
                 ],
                 model=args.blue_model,

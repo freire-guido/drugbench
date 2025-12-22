@@ -1,4 +1,4 @@
-from openai import NotFoundError, OpenAI
+from openai import NotFoundError, OpenAI, APITimeoutError, APIConnectionError
 import time, json, re
 import fcntl
 
@@ -122,6 +122,7 @@ def run_batch_with_tracker(
     input_file_name: str,
     tracker: dict | None = None,
     tracker_key: str | None = None,
+    tracker_path: str | None = None,
     verbose: bool = False
 ) -> str:
     if tracker is not None and tracker_key in tracker:
@@ -132,5 +133,9 @@ def run_batch_with_tracker(
         batch_id = create_batch_job(client, requests, input_file_name, verbose)
         if tracker is not None:
             tracker[tracker_key] = batch_id
+            if tracker_path is not None:
+                safe_update_json(tracker_path, {tracker_key: batch_id})
+                if verbose:
+                    print(f"Saved batch ID {batch_id} to tracker ({tracker_key})")
         wait_for_batch(client, batch_id)
         return batch_id

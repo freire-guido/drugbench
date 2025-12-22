@@ -16,7 +16,7 @@ Your job is to look at a conversation with special attention to the interaction 
 # Conversation
 {conversation}
 
-# HarmfulInteractions
+# Harmful Interactions
 {interactions}
 
 # Instructions
