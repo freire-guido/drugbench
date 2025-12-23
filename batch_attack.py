@@ -78,36 +78,53 @@ def main(args):
             prescription=red_responses[0][convo['prompt_id']]
         ).split('<explanation>')[0].strip()
 
-    blue_batch_id = run_batch_with_tracker(
-        client,
-        [
-            generate_batch_request(
-                custom_id=convo['prompt_id'],
-                messages=[
-                    format_messages_prompt(prompt, {
+    with ThreadPoolExecutor() as executor:
+        blue_0_future = executor.submit(run_batch_with_tracker,
+            client,
+            [
+                generate_batch_request(
+                    custom_id=convo['prompt_id'],
+                    messages=[format_messages_prompt(prompt, {
                         'conversation': convo['prompt'],
-                        'output': convo['red_response'],
-                        'interactions': convo['interactions']
-                    }) for prompt in blue_prompts[0]
-                ],
-                model=args.blue_model,
-                top_logprobs=5
-            ) for convo in conversations
-        ],
-        args.out_dir + '/blue_0_input.jsonl',
-        tracker,
-        'blue_0',
-        tracker_path=args.tracker,
-        verbose=True
-    )
+                        'output': convo['red_response']
+                    }) for prompt in blue_prompts[0]],
+                    model=args.blue_model
+                ) for convo in conversations
+            ],
+            args.out_dir + '/blue_0_input.jsonl',
+            tracker,
+            'blue_0',
+            args.tracker,
+            True,
+        )
 
-    blue_raw = read_batch_output(client, blue_batch_id, args.out_dir + '/blue_0_output.jsonl')
-    blue_responses = read_responses_batch(blue_raw)
-    blue_logprobs = {result['custom_id']: result['response']['body']['choices'][0]['logprobs'] for result in blue_raw}
+        blue_1_future = executor.submit(run_batch_with_tracker,
+            client,
+            [
+                generate_batch_request(
+                    custom_id=convo['prompt_id'],
+                    messages=[format_messages_prompt(prompt, {
+                        'conversation': convo['prompt'],
+                        'output': convo['red_response']
+                    }) for prompt in blue_prompts[1]],
+                    model=args.blue_model
+                ) for convo in conversations
+            ],
+            args.out_dir + '/blue_1_input.jsonl',
+            tracker,
+            'blue_1',
+            args.tracker,
+            True,
+        )
+
+    blue_batch_ids = [blue_0_future.result(), blue_1_future.result()]
+    blue_responses = [read_responses_batch(read_batch_output(client, batch_id, args.out_dir + f'/blue_{i}_output.jsonl')) for i, batch_id in enumerate(blue_batch_ids)]
+    # blue_logprobs = {result['custom_id']: result['response']['body']['choices'][0]['logprobs'] for result in blue_raw}
 
     for convo in conversations:
-        convo['blue_0'] = blue_responses[convo['prompt_id']]
-        convo['blue_0_logprobs'] = blue_logprobs[convo['prompt_id']]
+        convo['blue_0'] = blue_responses[0][convo['prompt_id']]
+        convo['blue_1'] = blue_responses[1][convo['prompt_id']]
+        # convo['blue_0_logprobs'] = blue_logprobs[convo['prompt_id']]
 
     safe_update_jsonl(args.conversations, conversations)
     safe_update_json(args.tracker, tracker)

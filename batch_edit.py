@@ -37,7 +37,7 @@ def main(args):
                         'conversation': convo['prompt'],
                         'output': convo['red_response'],
                         'interactions': convo['interactions']
-                    }) for prompt in blue_prompts[1]
+                    }) for prompt in blue_prompts[2]
                 ],
                 model=args.blue_model
             ) for convo in conversations
