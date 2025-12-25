@@ -1,0 +1,11 @@
+{
+  "red_0": "batch_694b16c136b88190baf21a3499145cae",
+  "red_1": "batch_694b16c0fa0481909f08adaed876c8c8",
+  "blue_0": "batches/jfy86mrzyy6rz93a2uevznnjo7dggc2trg7j",
+  "blue_1": "batches/41p9mfvwwm2oqmoq2fpz8281s93vrop0o495",
+  "blue_defer": "batches/id4n9xsjdtwrwqyl9hfszpabndamapfd1gns",
+  "eval_blue_defer_attack": "batch_694be4837e7c8190a58a07dcbaece3ac",
+  "eval_red_response_attack": "batch_694d825f887c8190812fc4e6e4935a58",
+  "blue_edit": "batches/0u8cujiys13el6520ozqyz4z5cn9vgd0kb9z",
+  "eval_blue_edit_attack": "batch_694d8a3738608190ad5ed2c38dd8a3d2"
+}

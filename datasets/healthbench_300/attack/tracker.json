@@ -1,10 +1,11 @@
 {
   "red_0": "batch_6946b9877eac819098bdc4ddf1edde35",
   "red_1": "batch_6946b987cd1481908068874018d52b97",
-  "blue_0": "batch_6946e38fa9c48190911559edf64917e6",
-  "eval_red_response_attack": "batch_6946e44dd04481909d57a87672fd89d3",
   "blue_defer": "batch_6946f9a17c808190b1dcbbec242de24b",
   "blue_edit": "batch_6946f9a35c28819099e13da04f557160",
-  "eval_blue_defer_attack": "batch_6946fa51826081909b07af5a86bcfde6",
-  "eval_blue_edit_attack": "batch_6946fa523c348190a2145d921800416d"
+  "blue_1": "batch_6949818ff0848190891089603a2600f3",
+  "blue_0": "batch_6949819005748190b291ace14ed30d11",
+  "eval_red_response_attack": "batch_694999a12e2c81909f06096597b80ccd",
+  "eval_blue_defer_attack": "batch_69499dc492b08190b1056e4f077c1035",
+  "eval_blue_edit_attack": "batch_69499dc5823081908d7f0dd22ff78b6d"
 }
