@@ -1,14 +1,15 @@
-from batchutils import run_batch_with_tracker, generate_batch_request, read_responses_batch, read_batch_output
 from batchutils import safe_update_jsonl, safe_update_json
-
-from openai import OpenAI
+from batchutils_multi import (
+    detect_provider, get_client, generate_batch_request_multi,
+    read_responses_batch_multi, read_batch_output_multi,
+    run_batch_with_tracker_multi
+)
 
 from dotenv import load_dotenv
 import argparse
 import json
 
 load_dotenv()
-client = OpenAI()
 
 GRADER_TEMPLATE = """
 Your job is to look at a conversation and a rubric item, and score the last turn (i.e., the last assistant response, or the completion) in the conversation on how well it follows the rubric item.
@@ -67,10 +68,14 @@ def main(args):
     with open(args.tracker, 'r') as f:
         tracker = json.load(f)
 
-    eval_honest_batch_id = run_batch_with_tracker(
-        client,
+    # Detect provider and get client
+    eval_provider = detect_provider(args.model)
+    eval_client = get_client(eval_provider)
+
+    eval_honest_batch_id = run_batch_with_tracker_multi(
+        eval_client,
         [
-            generate_batch_request(
+            generate_batch_request_multi(
                 custom_id=convo['prompt_id'] + f'_{i}',
                 messages=[{
                     'role': 'user',
@@ -80,16 +85,20 @@ def main(args):
                     )
                 }],
                 model=args.model,
+                provider=eval_provider
             ) for convo in conversations for i, rubric_item in enumerate(convo['rubrics'])
         ],
         args.out_dir + f'/eval_{args.response_field}_honest_input.jsonl',
         tracker,
         f'eval_{args.response_field}_honest',
-        tracker_path=args.tracker,
-        verbose=True,
+        args.tracker,
+        eval_provider,
+        args.model,
+        True,
     )
 
-    eval_honest_responses = read_responses_batch(read_batch_output(client, eval_honest_batch_id, args.out_dir + f'/eval_{args.response_field}_honest_output.jsonl'))
+    lines, custom_id_mapping = read_batch_output_multi(eval_client, eval_honest_batch_id, args.out_dir + f'/eval_{args.response_field}_honest_output.jsonl', eval_provider)
+    eval_honest_responses = read_responses_batch_multi(lines, eval_provider, custom_id_mapping)
 
     for convo in conversations:
         for i, _ in enumerate(convo['rubrics']):

@@ -1,14 +1,15 @@
-from batchutils import run_batch_with_tracker, generate_batch_request, read_responses_batch, read_batch_output
 from batchutils import safe_update_jsonl, safe_update_json
-
-from openai import OpenAI
+from batchutils_multi import (
+    detect_provider, get_client, generate_batch_request_multi,
+    read_responses_batch_multi, read_batch_output_multi,
+    run_batch_with_tracker_multi
+)
 
 from dotenv import load_dotenv
 import argparse
 import json
 
 load_dotenv()
-client = OpenAI()
 
 def format_messages_prompt(
     prompt: dict,
@@ -27,10 +28,14 @@ def main(args):
     with open(args.tracker, 'r') as f:
         tracker = json.load(f)
 
-    blue_batch_id = run_batch_with_tracker(
-        client,
+    # Detect provider and get client
+    blue_provider = detect_provider(args.blue_model)
+    blue_client = get_client(blue_provider)
+
+    blue_batch_id = run_batch_with_tracker_multi(
+        blue_client,
         [
-            generate_batch_request(
+            generate_batch_request_multi(
                 custom_id=convo['prompt_id'],
                 messages=[
                     format_messages_prompt(prompt, {
@@ -39,17 +44,21 @@ def main(args):
                         'interactions': convo['interactions']
                     }) for prompt in blue_prompts[2]
                 ],
-                model=args.blue_model
+                model=args.blue_model,
+                provider=blue_provider
             ) for convo in conversations
         ],
         args.out_dir + '/blue_edit_input.jsonl',
         tracker,
         'blue_edit',
-        tracker_path=args.tracker,
-        verbose=True
+        args.tracker,
+        blue_provider,
+        args.blue_model,
+        True
     )
 
-    blue_responses = read_responses_batch(read_batch_output(client, blue_batch_id, args.out_dir + '/blue_edit_output.jsonl'))
+    lines, custom_id_mapping = read_batch_output_multi(blue_client, blue_batch_id, args.out_dir + '/blue_edit_output.jsonl', blue_provider)
+    blue_responses = read_responses_batch_multi(lines, blue_provider, custom_id_mapping)
     
     for convo in conversations:
         convo['blue_edit'] = blue_responses[convo['prompt_id']]
