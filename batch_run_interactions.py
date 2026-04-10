@@ -6,9 +6,60 @@ import urllib
 
 import argparse
 import json
+import time
 
 load_dotenv()
 client = OpenAI()
+
+# OpenAI structured outputs (json_schema) for batch /v1/chat/completions bodies.
+EXTRACT_DRUGS_JSON_SCHEMA = {
+    "name": "extract_drugs_response",
+    "strict": True,
+    "schema": {
+        "type": "object",
+        "additionalProperties": False,
+        "properties": {
+            "medications": {
+                "type": "array",
+                "description": "Generic medication names relevant to the conversation, at most five.",
+                "items": {"type": "string"},
+                "maxItems": 4,
+            }
+        },
+        "required": ["medications"],
+    },
+}
+
+INTERACTIONS_JSON_SCHEMA = {
+    "name": "label_safety_response",
+    "strict": True,
+    "schema": {
+        "type": "object",
+        "additionalProperties": False,
+        "properties": {
+            "medications": {
+                "type": "array",
+                "description": "Other drugs, classes, or substances to avoid or use with caution.",
+                "items": {"type": "string"},
+                "maxItems": 4,
+            },
+            "diseases": {
+                "type": "array",
+                "description": "Conditions where use is contraindicated or requires caution.",
+                "items": {"type": "string"},
+                "maxItems": 4,
+            },
+            "do_not": {
+                "type": "array",
+                "description": "Actions the patient should not do; short phrases (e.g. drink alcohol).",
+                "items": {"type": "string"},
+                "maxItems": 4,
+            },
+        },
+        "required": ["medications", "diseases", "do_not"],
+    },
+}
+
 
 def fetch_fda_labels(drug: str, limit: int = 3) -> list[str]:
     cache_key = f"{drug.lower()}|{limit}"
@@ -71,7 +122,11 @@ def interactions_request(drug: str, get_interactions_prompt: list[dict]):
         "url": "/v1/chat/completions",
         "body": {
             "model": "gpt-5-nano",
-            "messages": get_interactions_prompt + [{"role": "user", "content": f"=== FDA LABEL TEXT BEGIN ===\n{combined_labels}\n=== FDA LABEL TEXT END ==="}]
+            "messages": get_interactions_prompt + [{"role": "user", "content": f"=== FDA LABEL TEXT BEGIN ===\n{combined_labels}\n=== FDA LABEL TEXT END ==="}],
+            "response_format": {
+                "type": "json_schema",
+                "json_schema": INTERACTIONS_JSON_SCHEMA,
+            },
         }
     }
     return request
@@ -83,7 +138,11 @@ def extract_drugs_request(conversation: dict, extract_prompt: list[dict]):
         "url": "/v1/chat/completions",
         "body": {
             "model": "gpt-5",
-            "messages": [{"role": "user", "content": str(conversation['prompt'])}] + extract_prompt
+            "messages": [{"role": "user", "content": str(conversation['prompt'])}] + extract_prompt,
+            "response_format": {
+                "type": "json_schema",
+                "json_schema": EXTRACT_DRUGS_JSON_SCHEMA,
+            },
         }
     }
     return request
@@ -101,13 +160,14 @@ def main():
         conversations = [json.loads(line) for line in f]
 
     extract_prompt = json.load(open('prompts/extract_drugs.json'))
-    for conversation in conversations:
-        request = extract_drugs_request(conversation, extract_prompt)
-        with open(f'{args.out_dir}/extract_drugs.jsonl', 'w') as f:
+    extract_path = f'{args.out_dir}/extract_drugs.jsonl'
+    with open(extract_path, 'w') as f:
+        for conversation in conversations:
+            request = extract_drugs_request(conversation, extract_prompt)
             f.write(json.dumps(request) + '\n')
 
     batch_input_file = client.files.create(
-        file=open(f'{args.out_dir}/extract_drugs.jsonl', "rb"),
+        file=open(extract_path, "rb"),
         purpose="batch"
     )
     batch_id = client.batches.create(
@@ -116,23 +176,45 @@ def main():
         completion_window="24h",
     )
 
-    wait_for_batch(batch_id)
-    batch_output = read_batch_output(batch_id)
-    
-    drugs = set()
+    wait_for_batch(client, batch_id)
+    batch_output = read_batch_output(
+        client, batch_id, f"{args.out_dir}/extract_drugs_batch_output.jsonl"
+    )
+
+    drugs: set[str] = set()
     for result in batch_output:
-        response = result['response']['body']['choices'][0]['message']['content']
-        if response.lower() not in ['none', 'n/a', 'na', '']:
-            drugs.add([drug.strip() for drug in response.strip().split(',') if drug.strip()])
+        err = result.get("error")
+        if err:
+            print(f"Batch line error: {err}")
+            continue
+        body = result.get("response", {}).get("body") or {}
+        choices = body.get("choices") or []
+        if not choices:
+            continue
+        content = choices[0].get("message", {}).get("content")
+        if not content:
+            continue
+        try:
+            payload = json.loads(content)
+        except json.JSONDecodeError as e:
+            print(f"extract_drugs JSON decode failed: {e}")
+            continue
+        for name in payload.get("medications", []):
+            if not isinstance(name, str):
+                continue
+            s = name.strip()
+            if s and s.lower() not in ("none", "n/a", "na"):
+                drugs.add(s)
 
     get_interactions_prompt = json.load(open('prompts/get_interactions.json'))
-    for drug in drugs:
-        request = interactions_request(drug, get_interactions_prompt)
-        with open(f'{args.out_dir}/get_interactions.jsonl', 'w') as f:
+    interactions_path = f'{args.out_dir}/get_interactions.jsonl'
+    with open(interactions_path, 'w') as f:
+        for drug in drugs:
+            request = interactions_request(drug, get_interactions_prompt)
             f.write(json.dumps(request) + '\n')
 
     batch_input_file = client.files.create(
-        file=open(f'{args.out_dir}/get_interactions.jsonl', "rb"),
+        file=open(interactions_path, "rb"),
         purpose="batch"
     )
     batch_id = client.batches.create(
