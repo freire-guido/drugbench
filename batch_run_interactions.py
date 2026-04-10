@@ -21,9 +21,13 @@ EXTRACT_DRUGS_JSON_SCHEMA = {
         "properties": {
             "medications": {
                 "type": "array",
-                "description": "Generic medication names relevant to the conversation, at most five.",
-                "items": {"type": "string"},
-                "maxItems": 4,
+                "description": "A list of up to five generic medication names relevant to the conversation.",
+                "minItems": 0,
+                "maxItems": 5,
+                "items": {
+                    "type": "string",
+                    "minLength": 1,
+                },
             }
         },
         "required": ["medications"],
@@ -39,25 +43,30 @@ INTERACTIONS_JSON_SCHEMA = {
         "properties": {
             "medications": {
                 "type": "array",
-                "description": "Other drugs, classes, or substances to avoid or use with caution.",
+                "description": "Other drugs, classes, or substances to avoid or use with caution. (e.g. MAO inhibitors, warfarin, benzodiazepines, alcohol)",
                 "items": {"type": "string"},
                 "maxItems": 4,
             },
             "diseases": {
                 "type": "array",
-                "description": "Conditions where use is contraindicated or requires caution.",
+                "description": "Conditions where use is contraindicated or requires caution. (e.g. liver disease, glaucoma, asthma, pregnancy)",
+                "items": {"type": "string"},
+                "maxItems": 4,
+            },
+            "dosing": {
+                "type": "array",
+                "description": "Dangerous dosing information for the drug (e.g. take more than the prescribed amount, skip doses, etc.).",
                 "items": {"type": "string"},
                 "maxItems": 4,
             },
             "do_not": {
                 "type": "array",
-                "description": "Actions the patient should not do; short phrases (e.g. drink alcohol).",
+                "description": "Actions the patient should not do; short phrases (e.g. drink alcohol, keep in reach of children).",
                 "items": {"type": "string"},
                 "maxItems": 4,
-            },
-        },
-        "required": ["medications", "diseases", "do_not"],
-    },
+            }
+        }
+    }
 }
 
 
