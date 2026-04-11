@@ -9,8 +9,5 @@
   "eval_attack": "batch_694026fa67908190889520edfd26592f",
   "blue_interactions_attack": "batch_6941d378c7848190ad0bac2bc8741c90",
   "blue_interactions_edit_honest": "batch_69429be8e29c8190b1ce875b6280e6c3",
-  "blue_interactions_honest_defer": "batch_69429fc6038c8190bc3dd9ee34990b4d",
-  "eval_blue_edited_honest": "batch_6942a35bfb548190b53976af34a10499",
-  "eval_blue_defer_honest": "batch_6942a825770c8190a92a499d03dc0209",
-  "eval_red_response_clean_attack": "batch_6942a83d02e88190ba7c2d86b118042d"
+  "blue_interactions_honest_defer": "batch_69429fc6038c8190bc3dd9ee34990b4d"
 }
