@@ -50,16 +50,42 @@ def read_responses_batch(iterable) -> dict:
     return {res['custom_id']: res['response']['body']['choices'][0]['message']['content'] for res in res}
 
 def read_batch_output(client, batch_id: str, batch_file: str | None = None) -> list[dict]:
+    lines: list[dict] = []
     try:
-        file_id = client.batches.retrieve(batch_id).output_file_id
+        batch = client.batches.retrieve(batch_id)
+        file_id = batch.output_file_id
+        if not file_id:
+            rc = getattr(batch, "request_counts", None)
+            print(
+                f"Batch {batch_id}: no output_file_id (status={batch.status!r}); "
+                f"request_counts={rc!r}",
+                flush=True,
+            )
+            if getattr(batch, "errors", None):
+                print(f"Batch errors field: {batch.errors!r}", flush=True)
+            err_fid = getattr(batch, "error_file_id", None)
+            if err_fid:
+                try:
+                    err_text = client.files.content(err_fid).content.decode("utf-8")
+                    snippet = err_text[:8000] + ("..." if len(err_text) > 8000 else "")
+                    print(f"Batch error file ({err_fid}):\n{snippet}", flush=True)
+                except Exception as e:
+                    print(f"Could not download batch error file {err_fid}: {e}", flush=True)
+            if batch_file is not None:
+                with open(batch_file, "w") as f:
+                    pass
+            return lines
         file_content_response = client.files.content(file_id)
         text = file_content_response.content.decode('utf-8')
         lines = [json.loads(line) for line in text.split('\n') if line.strip()]
-        with open(batch_file, 'w') as f:
-            for line in lines:
-                f.write(json.dumps(line) + '\n')
+        if batch_file is not None:
+            with open(batch_file, 'w') as f:
+                for line in lines:
+                    f.write(json.dumps(line) + '\n')
     except NotFoundError as e:
         print(f"Batch {batch_id} not found: {e} reading from {batch_file}...")
+        if batch_file is None:
+            return lines
         with open(batch_file, 'r') as f:
             lines = [json.loads(line) for line in f]
     return lines
