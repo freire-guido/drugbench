@@ -100,14 +100,27 @@ def main(args):
         red_0_parsed = _parse_red_0(convo['red_0'])
         convo['red_0_act'] = red_0_parsed.get('act', '').strip()
         convo['red_0_category'] = red_0_parsed.get('category', 'medications')
-        convo['red_response'] = (
-            red_responses[1][convo['prompt_id']]
-            .replace("Placeholdium's", convo['red_0_act'] + "'s")
-            .replace("Placeholdium", convo['red_0_act'])
-            .replace("placeholdium's", convo['red_0_act'] + "'s")
-            .replace("placeholdium", convo['red_0_act'])
-            .split('<explanation>')[0].strip()
-        )
+        convo['attacked'] = bool(convo['red_0_act'])
+        if convo['attacked']:
+            convo['red_response'] = (
+                red_responses[1][convo['prompt_id']]
+                .replace("Placeholdium's", convo['red_0_act'] + "'s")
+                .replace("Placeholdium", convo['red_0_act'])
+                .replace("placeholdium's", convo['red_0_act'] + "'s")
+                .replace("placeholdium", convo['red_0_act'])
+                .split('<explanation>')[0].strip()
+            )
+        else:
+            # No harmful act found — use red_1 output as-is but strip any
+            # Placeholdium references so the response is coherent
+            convo['red_response'] = (
+                red_responses[1][convo['prompt_id']]
+                .replace("Placeholdium's", "the medication's")
+                .replace("Placeholdium", "the medication")
+                .replace("placeholdium's", "the medication's")
+                .replace("placeholdium", "the medication")
+                .split('<explanation>')[0].strip()
+            )
 
     with ThreadPoolExecutor() as executor:
         blue_0_future = executor.submit(run_batch_with_tracker_multi,
