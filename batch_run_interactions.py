@@ -7,6 +7,7 @@ import urllib
 import argparse
 import json
 import os
+import random
 import time
 
 load_dotenv()
@@ -214,6 +215,24 @@ def main():
         required=True,
         help="Directory for batch input/output JSONL (extract_drugs.jsonl, batch outputs, get_interactions.jsonl).",
     )
+    parser.add_argument(
+        "--n",
+        type=int,
+        default=None,
+        help="Sample this many conversations at random (default: use all).",
+    )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=42,
+        help="Random seed for sampling (default: 42).",
+    )
+    parser.add_argument(
+        "--out_file",
+        type=str,
+        default=None,
+        help="If provided, write conversations with merged interactions to this JSONL path.",
+    )
     args = parser.parse_args()
 
     os.makedirs(args.out_dir, exist_ok=True)
@@ -222,6 +241,10 @@ def main():
     fda_cache = json.load(open(args.cache)) if args.cache else {}
     with open(args.file, 'r') as f:
         conversations = [json.loads(line) for line in f]
+
+    if args.n is not None:
+        random.seed(args.seed)
+        conversations = random.sample(conversations, min(args.n, len(conversations)))
 
     print(f"Loaded {len(conversations)} conversations from {args.file!r}", flush=True)
 
@@ -306,6 +329,73 @@ def main():
     if args.cache:
         with open(args.cache, 'w') as f:
             json.dump(fda_cache, f)
+
+    if args.out_file:
+        # Build prompt_id → [drug, ...] map from extract_drugs output
+        convo_drugs: dict[str, list[str]] = {}
+        for result in read_batch_output(client, extract_batch_id, f"{args.out_dir}/extract_drugs_batch_output.jsonl"):
+            err = result.get("error")
+            if err:
+                continue
+            body = result.get("response", {}).get("body") or {}
+            choices = body.get("choices") or []
+            if not choices:
+                continue
+            content = choices[0].get("message", {}).get("content")
+            if not content:
+                continue
+            try:
+                payload = json.loads(content)
+            except json.JSONDecodeError:
+                continue
+            drug_list = [
+                s.strip() for s in payload.get("medications", [])
+                if isinstance(s, str) and s.strip() and s.strip().lower() not in ("none", "n/a", "na")
+            ]
+            convo_drugs[result["custom_id"]] = drug_list
+
+        # Build drug → interactions map from get_interactions output
+        drug_interactions: dict[str, dict] = {}
+        interactions_output_path = f"{args.out_dir}/get_interactions_batch_output.jsonl"
+        if os.path.exists(interactions_output_path):
+            with open(interactions_output_path, 'r') as f:
+                for line in f:
+                    result = json.loads(line)
+                    err = result.get("error")
+                    if err:
+                        continue
+                    custom_id = result.get("custom_id", "")
+                    if not custom_id.startswith("interactions_"):
+                        continue
+                    drug_name = custom_id[len("interactions_"):]
+                    body = result.get("response", {}).get("body") or {}
+                    choices = body.get("choices") or []
+                    if not choices:
+                        continue
+                    content = choices[0].get("message", {}).get("content")
+                    if not content:
+                        continue
+                    try:
+                        drug_interactions[drug_name] = json.loads(content)
+                    except json.JSONDecodeError:
+                        continue
+
+        # Merge interactions into conversations and write output
+        for convo in conversations:
+            pid = convo["prompt_id"]
+            drugs_for_convo = convo_drugs.get(pid, [])
+            convo["drugs"] = drugs_for_convo
+            convo["interactions"] = {
+                drug: drug_interactions[drug]
+                for drug in drugs_for_convo
+                if drug in drug_interactions
+            }
+
+        os.makedirs(os.path.dirname(os.path.abspath(args.out_file)), exist_ok=True)
+        with open(args.out_file, 'w') as f:
+            for convo in conversations:
+                f.write(json.dumps(convo) + '\n')
+        print(f"Wrote {len(conversations)} conversations with interactions to {args.out_file!r}", flush=True)
 
 
 if __name__ == "__main__":

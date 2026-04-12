@@ -280,6 +280,14 @@ def create_batch_job_multi(
     else:
         raise ValueError(f"Unknown provider: {provider}")
 
+def _openai_find_batch(client, batch_id: str):
+    """Find a batch by ID using list pagination (workaround for api.batch.read scope)."""
+    for batch in client.batches.list():
+        if batch.id == batch_id:
+            return batch
+    raise Exception(f"Batch {batch_id} not found in batches list")
+
+
 def wait_for_batch_multi(
     client,
     batch_id: str,
@@ -306,7 +314,7 @@ def wait_for_batch_multi(
         retry_delay = 2
         while (time.time() - start_time) < timeout:
             try:
-                batch = client.batches.retrieve(batch_id)
+                batch = _openai_find_batch(client, batch_id)
                 status = batch.status
                 if status == "completed":
                     break
@@ -330,7 +338,7 @@ def wait_for_batch_multi(
         
         # Final check
         try:
-            final_status = client.batches.retrieve(batch_id).status
+            final_status = _openai_find_batch(client, batch_id).status
             if final_status != "completed":
                 raise Exception(f"Batch {batch_id} failed to complete: status {final_status} after {time.time() - start_time} seconds")
         except (APIConnectionError, APITimeoutError) as e:
@@ -426,7 +434,7 @@ def read_batch_output_multi(
     
     if provider == 'openai':
         try:
-            file_id = client.batches.retrieve(batch_id).output_file_id
+            file_id = _openai_find_batch(client, batch_id).output_file_id
             file_content_response = client.files.content(file_id)
             text = file_content_response.content.decode('utf-8')
             lines = [json.loads(line) for line in text.split('\n') if line.strip()]
@@ -706,7 +714,7 @@ def run_batch_with_tracker_multi(
         try:
             if provider == 'openai':
                 try:
-                    status = client.batches.retrieve(batch_id).status
+                    status = _openai_find_batch(client, batch_id).status
                     if status not in ["completed", "failed", "expired", "cancelled"]:
                         if verbose:
                             print(f"Batch {batch_id} still processing (status: {status}), waiting...")
