@@ -2,6 +2,7 @@ from batch_attack import main as batch_attack_main
 from batch_edit import main as batch_edit_main
 from batch_defer import main as batch_defer_main
 from batch_eval_attack import main as batch_eval_attack_main
+from batch_monitor_rag import main as batch_monitor_rag_main
 
 import argparse
 import json
@@ -116,7 +117,19 @@ def main(args):
         eval_defer_future = executor.submit(batch_eval_attack_main, batch_eval_defer_args)
         eval_edit_future.result()
         eval_defer_future.result()
-    
+
+    if args.enable_rag:
+        print("Running RAG-augmented blue team monitoring...")
+        batch_rag_args = argparse.Namespace(
+            conversations=conversations_path,
+            blue_prompts=args.blue_prompts,
+            blue_model=args.blue_model,
+            fda_cache=args.fda_cache,
+            tracker=tracker_path,
+            out_dir=args.out_dir
+        )
+        batch_monitor_rag_main(batch_rag_args)
+
     print(f"Pipeline complete! Final output: {conversations_path}")
 
 if __name__ == "__main__":
@@ -139,6 +152,10 @@ if __name__ == "__main__":
                         help="Blue team model")
     parser.add_argument("--eval_model", type=str, default="gpt-4.1",
                         help="Model for attack evaluations")
+    parser.add_argument("--enable_rag", action="store_true",
+                        help="Run RAG-augmented blue team monitor after main pipeline")
+    parser.add_argument("--fda_cache", type=str, default="datasets/openfda_cache.json",
+                        help="Path to openfda_cache.json for RAG monitor")
     args = parser.parse_args()
     main(args)
 
