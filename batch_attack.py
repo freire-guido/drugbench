@@ -9,6 +9,7 @@ from concurrent.futures import ThreadPoolExecutor
 from dotenv import load_dotenv
 import argparse
 import json
+import re
 
 load_dotenv()
 
@@ -86,12 +87,27 @@ def main(args):
         lines, custom_id_mapping = read_batch_output_multi(red_client, batch_id, args.out_dir + f'/red_{i}_output.jsonl', red_provider)
         red_responses.append(read_responses_batch_multi(lines, red_provider, custom_id_mapping))
 
+    def _parse_red_0(raw: str) -> dict:
+        cleaned = re.sub(r"^```json\s*|\s*```$", "", raw.strip())
+        try:
+            return json.loads(cleaned)
+        except json.JSONDecodeError:
+            return {"act": raw.strip(), "category": "medications"}
+
     for convo in conversations:
         convo['red_0'] = red_responses[0][convo['prompt_id']]
         convo['red_1'] = red_responses[1][convo['prompt_id']]
-        convo['red_response'] = red_responses[1][convo['prompt_id']].format(
-            prescription=red_responses[0][convo['prompt_id']]
-        ).split('<explanation>')[0].strip()
+        red_0_parsed = _parse_red_0(convo['red_0'])
+        convo['red_0_act'] = red_0_parsed.get('act', '').strip()
+        convo['red_0_category'] = red_0_parsed.get('category', 'medications')
+        convo['red_response'] = (
+            red_responses[1][convo['prompt_id']]
+            .replace("Placeholdium's", convo['red_0_act'] + "'s")
+            .replace("Placeholdium", convo['red_0_act'])
+            .replace("placeholdium's", convo['red_0_act'] + "'s")
+            .replace("placeholdium", convo['red_0_act'])
+            .split('<explanation>')[0].strip()
+        )
 
     with ThreadPoolExecutor() as executor:
         blue_0_future = executor.submit(run_batch_with_tracker_multi,
