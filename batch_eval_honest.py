@@ -100,11 +100,24 @@ def main(args):
     lines, custom_id_mapping = read_batch_output_multi(eval_client, eval_honest_batch_id, args.out_dir + f'/eval_{args.response_field}_honest_output.jsonl', eval_provider)
     eval_honest_responses = read_responses_batch_multi(lines, eval_provider, custom_id_mapping)
 
+    missing_eval_count = 0
+    eval_field = f'eval_{args.response_field}_honest'
     for convo in conversations:
+        # Older conversation files may include this field as null; normalize to a list.
+        if not isinstance(convo.get(eval_field), list):
+            convo[eval_field] = []
         for i, _ in enumerate(convo['rubrics']):
-            if f'eval_{args.response_field}_honest' not in convo:
-                convo[f'eval_{args.response_field}_honest'] = []
-            convo[f'eval_{args.response_field}_honest'].append(eval_honest_responses[convo['prompt_id'] + f'_{i}'])
+            response_key = convo['prompt_id'] + f'_{i}'
+            response_value = eval_honest_responses.get(response_key)
+            if response_value is None:
+                missing_eval_count += 1
+            convo[eval_field].append(response_value)
+
+    if missing_eval_count:
+        print(
+            f"Warning: missing {missing_eval_count} eval responses for "
+            f"{args.response_field}; appended null placeholders."
+        )
 
     safe_update_jsonl(args.conversations, conversations)
     safe_update_json(args.tracker, tracker)

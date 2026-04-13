@@ -1,4 +1,4 @@
-from openai import NotFoundError, OpenAI, APITimeoutError, APIConnectionError
+from openai import NotFoundError, OpenAI, APITimeoutError, APIConnectionError, AuthenticationError
 import time, json, re
 import fcntl
 import os
@@ -221,12 +221,32 @@ def create_batch_job_multi(
             outfile.write(json.dumps(request) + '\n')
     
     if provider == 'openai':
-        batch_input_file = client.files.create(file=open(input_file_name, "rb"), purpose="batch")
-        batch_job = client.batches.create(
-            input_file_id=batch_input_file.id,
-            endpoint="/v1/chat/completions",
-            completion_window="24h"
-        )
+        _auth_retries, _auth_delay = 20, 5
+        for _attempt in range(_auth_retries):
+            try:
+                batch_input_file = client.files.create(file=open(input_file_name, "rb"), purpose="batch")
+                break
+            except AuthenticationError as e:
+                if _attempt < _auth_retries - 1:
+                    print(f"  [warn] files.create() auth error (attempt {_attempt+1}/{_auth_retries}), retrying in {_auth_delay}s...")
+                    time.sleep(_auth_delay)
+                else:
+                    raise
+        _auth_retries2, _auth_delay2 = 20, 5
+        for _attempt2 in range(_auth_retries2):
+            try:
+                batch_job = client.batches.create(
+                    input_file_id=batch_input_file.id,
+                    endpoint="/v1/chat/completions",
+                    completion_window="24h"
+                )
+                break
+            except AuthenticationError as e:
+                if _attempt2 < _auth_retries2 - 1:
+                    print(f"  [warn] batches.create() auth error (attempt {_attempt2+1}/{_auth_retries2}), retrying in {_auth_delay2}s...")
+                    time.sleep(_auth_delay2)
+                else:
+                    raise
         return batch_job.id
     elif provider == 'anthropic':
         # Anthropic batch API: create batch with requests directly
@@ -282,10 +302,21 @@ def create_batch_job_multi(
 
 def _openai_find_batch(client, batch_id: str):
     """Find a batch by ID using list pagination (workaround for api.batch.read scope)."""
-    for batch in client.batches.list():
-        if batch.id == batch_id:
-            return batch
-    raise Exception(f"Batch {batch_id} not found in batches list")
+    max_auth_retries = 20
+    auth_delay = 5
+    for auth_attempt in range(max_auth_retries):
+        try:
+            for batch in client.batches.list(limit=100):
+                if batch.id == batch_id:
+                    return batch
+            raise Exception(f"Batch {batch_id} not found in batches list")
+        except AuthenticationError as e:
+            if "api.batch.read" in str(e) and auth_attempt < max_auth_retries - 1:
+                print(f"  [warn] batches.list() auth error (attempt {auth_attempt+1}/{max_auth_retries}), retrying in {auth_delay}s...")
+                time.sleep(auth_delay)
+                auth_delay *= 2
+            else:
+                raise
 
 
 def wait_for_batch_multi(
@@ -434,8 +465,24 @@ def read_batch_output_multi(
     
     if provider == 'openai':
         try:
+            # Fast path: if the output file is already cached on disk, skip all API calls
+            if batch_file and os.path.exists(batch_file):
+                with open(batch_file, 'r') as f:
+                    lines = [json.loads(line) for line in f if line.strip()]
+                return lines, custom_id_mapping
+
             file_id = _openai_find_batch(client, batch_id).output_file_id
-            file_content_response = client.files.content(file_id)
+            _auth_retries, _auth_delay = 20, 5
+            for _attempt in range(_auth_retries):
+                try:
+                    file_content_response = client.files.content(file_id)
+                    break
+                except AuthenticationError as e:
+                    if _attempt < _auth_retries - 1:
+                        print(f"  [warn] files.content() auth error (attempt {_attempt+1}/{_auth_retries}), retrying in {_auth_delay}s...")
+                        time.sleep(_auth_delay)
+                    else:
+                        raise
             text = file_content_response.content.decode('utf-8')
             lines = [json.loads(line) for line in text.split('\n') if line.strip()]
             if batch_file:

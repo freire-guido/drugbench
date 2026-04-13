@@ -65,16 +65,16 @@ def main(args):
         print("Running batch_attack...")
         batch_attack_main(batch_attack_args)
 
-        # Run attack eval for red_response
-        print("Running attack eval for red_response...")
-        batch_eval_red_args = argparse.Namespace(
-            conversations=conversations_path,
-            response_field='red_response',
-            model=args.eval_model,
-            tracker=tracker_path,
-            out_dir=args.out_dir
-        )
-        batch_eval_attack_main(batch_eval_red_args)
+    # Always run attack eval for red_response (runs fresh when tracker key is absent)
+    print("Running attack eval for red_response...")
+    batch_eval_red_args = argparse.Namespace(
+        conversations=conversations_path,
+        response_field='red_response',
+        model=args.eval_model,
+        tracker=tracker_path,
+        out_dir=args.out_dir
+    )
+    batch_eval_attack_main(batch_eval_red_args)
 
     # Run batch_edit and batch_defer in parallel
     print("Running batch_edit and batch_defer in parallel...")
