@@ -6,5 +6,6 @@
   "blue_defer": "batch_69dc3bb1db8c81909a3d5c90ac10788e",
   "blue_edit": "batch_69dc3bb252cc8190b70dfe90532d8fc9",
   "eval_blue_edit_attack": "batches/m3k1qkzpmbki3j5gyj2pahnh1kaxzihpr0x3",
-  "eval_blue_defer_attack": "batches/bk5y838414p6mkqxs6860fg40hs3q94cvohx"
+  "eval_blue_defer_attack": "batches/bk5y838414p6mkqxs6860fg40hs3q94cvohx",
+  "eval_red_response_attack": "batches/vf9yz0cxdli7wp1ulyvi91ot74g5b1fxcw25"
 }
