@@ -1,0 +1,9 @@
+{
+  "red_response": "batch_69dc668c354881909f51d43458099013",
+  "blue_0": "batch_69dc6927d7f881908b806532062d48f5",
+  "blue_1": "batch_69dc692890248190bcf6eb2eef34edb6",
+  "eval_red_response_honest": "batch_69dc69a6e3a48190946e01c3244c5f24",
+  "blue_edit": "batch_69dc6e34481881908aaa3b3016c18db4",
+  "blue_defer": "batch_69dc6e346e58819095b659a681a2693e",
+  "eval_blue_defer_honest": "batch_69dc6ea635bc81909c01778eea30808e"
+}
