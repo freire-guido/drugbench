@@ -38,38 +38,44 @@ def main(args):
         with open(tracker_path, 'w') as f:
             json.dump(tracker, f)
     
-    # Write sampled conversations to out_dir
+    # Write sampled conversations to out_dir (skip if reusing red team outputs)
     conversations_path = os.path.join(args.out_dir, 'conversations_attack.jsonl')
-    with open(conversations_path, 'w') as f:
-        for convo in sampled_conversations:
-            f.write(json.dumps(convo) + '\n')
-    
-    # Create Namespace objects for batch scripts
-    batch_attack_args = argparse.Namespace(
-        conversations=conversations_path,
-        red_prompts=args.red_prompts,
-        blue_prompts=args.blue_prompts,
-        red_model=args.red_model,
-        blue_model=args.blue_model,
-        tracker=tracker_path,
-        out_dir=args.out_dir
-    )
-    
-    # Run batch_attack
-    print("Running batch_attack...")
-    batch_attack_main(batch_attack_args)
-    
-    # Run attack eval for red_response
-    print("Running attack eval for red_response...")
-    batch_eval_red_args = argparse.Namespace(
-        conversations=conversations_path,
-        response_field='red_response',
-        model=args.eval_model,
-        tracker=tracker_path,
-        out_dir=args.out_dir
-    )
-    batch_eval_attack_main(batch_eval_red_args)
-    
+    if args.skip_red:
+        print(f"--skip_red: loading existing {conversations_path}")
+        with open(conversations_path, 'r') as f:
+            sampled_conversations = [json.loads(line) for line in f]
+    else:
+        with open(conversations_path, 'w') as f:
+            for convo in sampled_conversations:
+                f.write(json.dumps(convo) + '\n')
+
+    if not args.skip_red:
+        # Create Namespace objects for batch scripts
+        batch_attack_args = argparse.Namespace(
+            conversations=conversations_path,
+            red_prompts=args.red_prompts,
+            blue_prompts=args.blue_prompts,
+            red_model=args.red_model,
+            blue_model=args.blue_model,
+            tracker=tracker_path,
+            out_dir=args.out_dir
+        )
+
+        # Run batch_attack
+        print("Running batch_attack...")
+        batch_attack_main(batch_attack_args)
+
+        # Run attack eval for red_response
+        print("Running attack eval for red_response...")
+        batch_eval_red_args = argparse.Namespace(
+            conversations=conversations_path,
+            response_field='red_response',
+            model=args.eval_model,
+            tracker=tracker_path,
+            out_dir=args.out_dir
+        )
+        batch_eval_attack_main(batch_eval_red_args)
+
     # Run batch_edit and batch_defer in parallel
     print("Running batch_edit and batch_defer in parallel...")
     batch_edit_args = argparse.Namespace(
@@ -156,6 +162,8 @@ if __name__ == "__main__":
                         help="Run RAG-augmented blue team monitor after main pipeline")
     parser.add_argument("--fda_cache", type=str, default="datasets/openfda_cache.json",
                         help="Path to openfda_cache.json for RAG monitor")
+    parser.add_argument("--skip_red", action="store_true",
+                        help="Skip red team: load existing conversations_attack.jsonl and reuse red responses")
     args = parser.parse_args()
     main(args)
 
