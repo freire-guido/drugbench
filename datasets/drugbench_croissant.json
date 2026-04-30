@@ -1,0 +1,158 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "cr": "http://mlcommons.org/croissant/",
+    "rai": "http://mlcommons.org/croissant/RAI/",
+    "prov": "http://www.w3.org/ns/prov#",
+    "dct": "http://purl.org/dc/terms/",
+    "sc": "https://schema.org/",
+    "wd": "https://www.wikidata.org/wiki/",
+    "conformsTo": "dct:conformsTo",
+    "column": "cr:column",
+    "citeAs": "cr:citeAs",
+    "data": {"@id": "cr:data", "@type": "@json"},
+    "dataType": {"@id": "cr:dataType", "@type": "@vocab"},
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.1",
+  "name": "DrugBench",
+  "description": "DrugBench combines 3,512 multi-turn medical conversations from HealthBench with medication safety information derived from official FDA labels, covering drug interactions, contraindications, dosing constraints and patient action restrictions. It is designed to benchmark AI control protocols for medication-related harm in medical question-answering settings.",
+  "url": "https://www.kaggle.com/datasets/mollejasaurio/drugbench",
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "version": "1",
+  "datePublished": "2026-04-30",
+  "keywords": [
+    "medical AI safety",
+    "drug interactions",
+    "AI control",
+    "HealthBench",
+    "medication harm",
+    "LLM evaluation",
+    "drug-drug interactions",
+    "adversarial evaluation"
+  ],
+  "publisher": {
+    "@type": "sc:Organization",
+    "name": "Kaggle",
+    "url": "https://www.kaggle.com"
+  },
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "Kaggle",
+    "url": "https://www.kaggle.com"
+  },
+  "dateModified": "2026-04-30",
+  "isAccessibleForFree": true,
+
+  "rai:dataLimitations": "DrugBench is limited to English-language conversations and drug information sourced from US FDA labels via OpenFDA. It covers conversations from HealthBench-Consensus, a subset selected for high physician grading agreement, which may not reflect the full distribution of real-world medical queries. The benchmark focuses on medication-related harm (drug interactions, contraindications, dosing, patient actions) and does not cover other categories of medical harm. Severity annotations are ordinal signals with calibration differences across annotators and should not be interpreted as absolute harm scores. This dataset is NOT recommended for training production medical AI systems or for clinical decision support.",
+  "rai:dataBiases": "Conversations originate from HealthBench-Consensus, which was curated and may reflect biases in the underlying HealthBench data collection methodology. Drug labels are sourced from US FDA databases and may not reflect drug availability or labeling in other countries. Physician rubrics were created by US-trained clinicians and may embed clinical norms specific to that context. Human severity annotators were senior medical students, not licensed clinicians, which may introduce calibration differences in severity scores.",
+  "rai:personalSensitiveInformation": "The dataset does not contain real patient data. All conversations are synthetically generated or sourced from HealthBench, which was constructed to avoid real personal health information. No personally identifiable information (PII) is present. Drug label data is sourced from publicly available OpenFDA records. The dataset contains medical content (drug interactions, dosing, contraindications) that is synthetic and not specific to any real individual.",
+  "rai:dataUseCases": "DrugBench is intended for: (1) benchmarking AI control protocols in medical question-answering settings; (2) evaluating the ability of monitors to detect harmful medication advice; (3) studying the trade-off between helpfulness and safety in medical LLM deployments; (4) research on severity-aware safety metrics beyond binary safe/unsafe classifications; (5) cross-provider evaluation of LLM safety behavior. Construct validity has been established for the safety evaluation use case through cross-provider comparison studies and human annotation validation with senior medical students. DrugBench is NOT intended for: training production medical AI systems; clinical decision support; real-world drug safety monitoring; or evaluation of non-medication medical harms.",
+  "rai:dataSocialImpact": "DrugBench enables rigorous evaluation of AI safety protocols before deployment in healthcare contexts and motivates research on severity-aware risk metrics. Potential negative impacts include misuse of harmful model outputs to craft medical disinformation, or misinterpretation of benchmark results as guarantees of real-world safety. The dataset explicitly contains harmful model outputs; these must not be used as medical advice under any circumstances. Mitigations include: CC0 license to encourage open research; canary strings inherited from HealthBench for integrity verification.",
+  "rai:hasSyntheticData": true,
+
+  "prov:wasDerivedFrom": [
+    {
+      "@type": "sc:Dataset",
+      "name": "HealthBench / HealthBench-Consensus",
+      "url": "https://arxiv.org/abs/2505.15965"
+    },
+    {
+      "@type": "sc:Dataset",
+      "name": "OpenFDA Drug Label API",
+      "url": "https://open.fda.gov/apis/drug/label/"
+    }
+  ],
+  "prov:wasGeneratedBy": [
+    {
+      "@type": "prov:Activity",
+      "name": "Drug augmentation pipeline",
+      "description": "A multi-step LLM pipeline identified relevant drug labels from OpenFDA for each HealthBench-Consensus conversation. Drug names were extracted from conversations, matched against FDA drug label records, and summarized into structured interaction, contraindication, dosing, and patient-action fields stored in the interactions column."
+    }
+  ],
+
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "archive.zip",
+      "name": "archive.zip",
+      "description": "Archive containing all files in the DrugBench dataset",
+      "contentUrl": "https://www.kaggle.com/api/v1/datasets/download/mollejasaurio/drugbench?datasetVersionNumber=1",
+      "encodingFormat": "application/zip",
+      "md5": "Z4vfy55pjPs/aNKThvmXcA=="
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "consensus-file",
+      "name": "drugbench_consensus_interactions.jsonl",
+      "description": "DrugBench conversations from HealthBench-Consensus with FDA drug augmentation, red/blue team responses, and green-team severity evaluations.",
+      "containedIn": {"@id": "archive.zip"},
+      "contentUrl": "drugbench_consensus_interactions.jsonl",
+      "encodingFormat": "application/jsonlines",
+      "md5": "50b645bce4117c5117a3835a04c2e7fd"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "hard-file",
+      "name": "drugbench_hard_interactions.jsonl",
+      "description": "DrugBench conversations from the HealthBench-Hard subset with FDA drug augmentation, red/blue team responses, and green-team severity evaluations.",
+      "containedIn": {"@id": "archive.zip"},
+      "contentUrl": "drugbench_hard_interactions.jsonl",
+      "encodingFormat": "application/jsonlines",
+      "md5": "d8c11ba0458118decff3e8b1c0e49397"
+    }
+  ],
+
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "@id": "consensus-interactions",
+      "name": "consensus_interactions",
+      "description": "Records from drugbench_consensus_interactions.jsonl",
+      "source": {"fileObject": {"@id": "consensus-file"}},
+      "field": [
+        {"@type": "cr:Field", "@id": "consensus/prompt_id",      "name": "prompt_id",      "description": "Unique conversation identifier (UUID)", "dataType": "sc:Text", "source": {"fileObject": {"@id": "consensus-file"}, "extract": {"jsonPath": "$.prompt_id"}}},
+        {"@type": "cr:Field", "@id": "consensus/prompt",         "name": "prompt",         "description": "Multi-turn conversation as a list of role/content message objects", "dataType": "sc:Text", "source": {"fileObject": {"@id": "consensus-file"}, "extract": {"jsonPath": "$.prompt"}}},
+        {"@type": "cr:Field", "@id": "consensus/example_tags",   "name": "example_tags",   "description": "HealthBench taxonomy tags (theme, physician category)", "dataType": "sc:Text", "source": {"fileObject": {"@id": "consensus-file"}, "extract": {"jsonPath": "$.example_tags"}}},
+        {"@type": "cr:Field", "@id": "consensus/rubrics",        "name": "rubrics",        "description": "Physician-authored grading rubrics with criteria and point values", "dataType": "sc:Text", "source": {"fileObject": {"@id": "consensus-file"}, "extract": {"jsonPath": "$.rubrics"}}},
+        {"@type": "cr:Field", "@id": "consensus/drugs",          "name": "drugs",          "description": "Drug names relevant to the conversation, identified by the FDA augmentation pipeline", "dataType": "sc:Text", "source": {"fileObject": {"@id": "consensus-file"}, "extract": {"jsonPath": "$.drugs"}}},
+        {"@type": "cr:Field", "@id": "consensus/interactions",   "name": "interactions",   "description": "Structured FDA-derived drug information per drug: interactions, contraindications, dosing, patient actions", "dataType": "sc:Text", "source": {"fileObject": {"@id": "consensus-file"}, "extract": {"jsonPath": "$.interactions"}}},
+        {"@type": "cr:Field", "@id": "consensus/canary",         "name": "canary",         "description": "HealthBench canary string for dataset integrity verification", "dataType": "sc:Text", "source": {"fileObject": {"@id": "consensus-file"}, "extract": {"jsonPath": "$.canary"}}}
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "hard-interactions",
+      "name": "hard_interactions",
+      "description": "Records from drugbench_hard_interactions.jsonl",
+      "source": {"fileObject": {"@id": "hard-file"}},
+      "field": [
+        {"@type": "cr:Field", "@id": "hard/prompt_id",      "name": "prompt_id",      "description": "Unique conversation identifier (UUID)", "dataType": "sc:Text", "source": {"fileObject": {"@id": "hard-file"}, "extract": {"jsonPath": "$.prompt_id"}}},
+        {"@type": "cr:Field", "@id": "hard/prompt",         "name": "prompt",         "description": "Multi-turn conversation as a list of role/content message objects", "dataType": "sc:Text", "source": {"fileObject": {"@id": "hard-file"}, "extract": {"jsonPath": "$.prompt"}}},
+        {"@type": "cr:Field", "@id": "hard/example_tags",   "name": "example_tags",   "description": "HealthBench taxonomy tags (theme, physician category)", "dataType": "sc:Text", "source": {"fileObject": {"@id": "hard-file"}, "extract": {"jsonPath": "$.example_tags"}}},
+        {"@type": "cr:Field", "@id": "hard/rubrics",        "name": "rubrics",        "description": "Physician-authored grading rubrics with criteria and point values", "dataType": "sc:Text", "source": {"fileObject": {"@id": "hard-file"}, "extract": {"jsonPath": "$.rubrics"}}},
+        {"@type": "cr:Field", "@id": "hard/drugs",          "name": "drugs",          "description": "Drug names relevant to the conversation", "dataType": "sc:Text", "source": {"fileObject": {"@id": "hard-file"}, "extract": {"jsonPath": "$.drugs"}}},
+        {"@type": "cr:Field", "@id": "hard/interactions",   "name": "interactions",   "description": "Structured FDA-derived drug information per drug: interactions, contraindications, dosing, patient actions", "dataType": "sc:Text", "source": {"fileObject": {"@id": "hard-file"}, "extract": {"jsonPath": "$.interactions"}}},
+        {"@type": "cr:Field", "@id": "hard/canary",         "name": "canary",         "description": "HealthBench canary string for dataset integrity verification", "dataType": "sc:Text", "source": {"fileObject": {"@id": "hard-file"}, "extract": {"jsonPath": "$.canary"}}}
+      ]
+    }
+  ]
+}

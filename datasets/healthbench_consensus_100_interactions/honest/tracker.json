@@ -6,5 +6,11 @@
   "blue_edit": "batch_69dc6a3400b08190bd9b1f91ca8e7b5d",
   "blue_defer": "batch_69dc6a34e2f88190b4b7c28f4b1a1291",
   "eval_blue_edit_honest": "batch_69dc6ae4fa90819085a48da69c817bee",
-  "eval_blue_defer_honest": "batch_69dd092966488190911f4a4509055c3a"
+  "eval_blue_defer_honest": "batch_69dd092966488190911f4a4509055c3a",
+  "red_resample_0": "batch_69f3a2061d6081909030f62d7ae871fe",
+  "red_resample_1": "batch_69f3a206b4508190b68498ae9c8c654b",
+  "blue_0_resample_0": "batch_69f3a32142308190b8e61030a75dff10",
+  "blue_1_resample_0": "batch_69f3a3213d148190a28ea884661f0f96",
+  "blue_0_resample_1": "batch_69f3a32199b88190a057698f2200cecf",
+  "blue_1_resample_1": "batch_69f3a3249a988190a0adcae5c448517c"
 }
