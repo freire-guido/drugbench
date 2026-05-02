@@ -6,5 +6,9 @@
   "eval_blue_defer_attack": "batch_69dc6103edc4819083b0900f6c726cdf",
   "eval_blue_edit_attack": "batch_69dc61044c9881909ff9efe89c7e0d09",
   "blue_rag_0": "batch_69dc618f03cc819099fed2bb8f50c4e7",
-  "blue_rag_1": "batch_69dc619000c08190b33e05f0e4083f60"
+  "blue_rag_1": "batch_69dc619000c08190b33e05f0e4083f60",
+  "red_resample_1": "batch_69f3da4c13e481909e48d91b2025807c",
+  "red_resample_0": "batch_69f3da4c75848190a7f54960f19baef8",
+  "blue_resample_0": "batch_69f3dad797308190838252945b748216",
+  "blue_resample_1": "batch_69f3dad7d8f8819092cb1c192b99e0e2"
 }
