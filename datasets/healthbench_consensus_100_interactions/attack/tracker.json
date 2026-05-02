@@ -13,5 +13,6 @@
   "blue_1_resample_1": "batch_69f3a8ed7dd08190a8ffa51896ac9d7a",
   "blue_0_resample_1": "batch_69f3a8ed85348190b42273ba4cab4c1a",
   "blue_1_resample_0": "batch_69f3a8edd0608190b7f1b82f1ca8724f",
-  "blue_0_resample_0": "batch_69f3a8edc4dc819090b2b6f904bb8c8a"
+  "blue_0_resample_0": "batch_69f3a8edc4dc819090b2b6f904bb8c8a",
+  "eval_red_resample_attack": "batch_69f6463bd2ac8190a80f8eda09412c0f"
 }
